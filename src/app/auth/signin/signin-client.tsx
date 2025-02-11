@@ -18,7 +18,7 @@ export const SigninClient = () => {
   };
   return (
     <SigninForm onSubmit={handlerSubmit}>
-      <ButtonLoader loadingText="Login...">Login</ButtonLoader>
+      <ButtonLoader loadingText="Signin...">Signin</ButtonLoader>
     </SigninForm>
   );
 };

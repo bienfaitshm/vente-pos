@@ -53,40 +53,43 @@ export const SigninForm: React.FC<React.PropsWithChildren<SigninProps>> = ({
             <CardContent>
               <form>
                 <div className="flex flex-col gap-6">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nom complet</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nom utilisateur</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="grid grid-cols-2 gap-2">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nom complet</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="username"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nom utilisateur</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
                   <FormField
                     control={form.control}
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nom utilisateur</FormLabel>
+                        <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input {...field} />
+                          <Input type="email" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -127,9 +130,12 @@ export const SigninForm: React.FC<React.PropsWithChildren<SigninProps>> = ({
                   {children}
                 </div>
                 <div className="mt-4 text-center text-sm">
-                  Don&apos;t have an account?{" "}
-                  <Link href="#" className="underline underline-offset-4">
-                    Sign up
+                  Already have an account?{" "}
+                  <Link
+                    href="/auth/login"
+                    className="underline underline-offset-4"
+                  >
+                    Login
                   </Link>
                 </div>
               </form>
