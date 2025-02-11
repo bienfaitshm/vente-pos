@@ -33,7 +33,7 @@ interface SigninProps {
   onSubmit?: (value: RegistrationCredential) => void;
 }
 
-export const Signin: React.FC<React.PropsWithChildren<SigninProps>> = ({
+export const SigninForm: React.FC<React.PropsWithChildren<SigninProps>> = ({
   onSubmit,
   children,
 }) => {
