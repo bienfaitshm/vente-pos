@@ -6,6 +6,7 @@ import {
 } from "@/lib/schemas";
 import { actionClient } from "./base";
 import { createUser } from "../db/queries";
+import { hashPassword } from "@/lib/encrypt";
 
 export const loginUser = actionClient
   .schema(LoginCredentialSchemas)
@@ -25,6 +26,12 @@ export const signinUser = actionClient
     async ({
       parsedInput: { confirm, name, email, password, username, image },
     }) => {
-      await createUser({ isAdmin: true, name, email, username });
+      await createUser({
+        isAdmin: true,
+        name,
+        email,
+        username,
+        password: await hashPassword(password),
+      });
     }
   );
