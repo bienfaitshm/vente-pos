@@ -20,9 +20,10 @@ export const users = pgTable("user", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  name: text("name"),
-  username: text("username").unique(),
-  email: text("email").unique(),
+  name: varchar({ length: 255 }),
+  username: varchar({ length: 255 }).unique(),
+  email: varchar({ length: 255 }).unique(),
+  password: varchar({ length: 255 }),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
   isAdmin: boolean("isAdmin").$default(() => false),
@@ -108,3 +109,6 @@ export const clientTable = pgTable("clients", {
   email: varchar({ length: 255 }),
   phoneNumber: varchar({ length: 255 }),
 });
+
+export type InsertUser = typeof users.$inferInsert;
+export type SelectUser = typeof users.$inferSelect;
