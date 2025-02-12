@@ -17,6 +17,9 @@ importers:
       '@neondatabase/serverless':
         specifier: ^0.10.4
         version: 0.10.4
+      '@next-safe-action/adapter-react-hook-form':
+        specifier: ^1.0.13
+        version: 1.0.13(@hookform/resolvers@4.0.0(react-hook-form@7.54.2(react@19.0.0)))(next-safe-action@7.10.3(next@15.1.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.24.1))(next@15.1.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react-hook-form@7.54.2(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-avatar':
         specifier: ^1.1.3
         version: 1.1.3(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -674,6 +677,16 @@ packages:
 
   '@neondatabase/serverless@0.10.4':
     resolution: {integrity: sha512-2nZuh3VUO9voBauuh+IGYRhGU/MskWHt1IuZvHcJw6GLjDgtqj/KViKo7SIrLdGLdot7vFbiRRw+BgEy3wT9HA==}
+
+  '@next-safe-action/adapter-react-hook-form@1.0.13':
+    resolution: {integrity: sha512-J1zfdiVWcs6w388fKwdm0V/2UojU3KkqSQb4dx428HMujuF23UKaZ7v+R10I+AQrkR3yH7RIMIhYOdNwZN33DA==}
+    peerDependencies:
+      '@hookform/resolvers': '>= 3.0.0'
+      next: '>= 14.0.0'
+      next-safe-action: '>= 7.6.0'
+      react: '>= 18.2.0'
+      react-dom: '>= 18.2.0'
+      react-hook-form: '>= 7.0.0'
 
   '@next/env@15.1.6':
     resolution: {integrity: sha512-d9AFQVPEYNr+aqokIiPLNK/MTyt3DWa/dpKveiAaVccUadFbhFEvY6FXYX2LJO2Hv7PHnLBu2oWwB4uBuHjr/w==}
@@ -3450,6 +3463,15 @@ snapshots:
   '@neondatabase/serverless@0.10.4':
     dependencies:
       '@types/pg': 8.11.6
+
+  '@next-safe-action/adapter-react-hook-form@1.0.13(@hookform/resolvers@4.0.0(react-hook-form@7.54.2(react@19.0.0)))(next-safe-action@7.10.3(next@15.1.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.24.1))(next@15.1.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react-hook-form@7.54.2(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@hookform/resolvers': 4.0.0(react-hook-form@7.54.2(react@19.0.0))
+      next: 15.1.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      next-safe-action: 7.10.3(next@15.1.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(zod@3.24.1)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      react-hook-form: 7.54.2(react@19.0.0)
 
   '@next/env@15.1.6': {}
 

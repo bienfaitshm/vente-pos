@@ -6,19 +6,22 @@ import type { LoginCredential } from "@/lib/schemas";
 
 export const LoginClient = () => {
   const mutation = useLoginUser();
-  const handlerSubmit = (value: LoginCredential) => {
-    mutation.mutate(value, {
-      onSuccess: (value) => {
-        console.log("Login success", value);
-      },
-      onError: (error) => {
-        console.log("Login failed", error);
-      },
-    });
-  };
+  // const handlerSubmit = async (value: LoginCredential) => {
+  //  const d =  await mutation.mutateAsync(value);
+  //   mutation.mutate(value, {
+  //     onSuccess: (value) => {
+  //       console.log("Login success", value);
+  //     },
+  //     onError: (error) => {
+  //       console.log("Login failed", error);
+  //     },
+  //   });
+  // };
   return (
-    <LoginForm onSubmit={handlerSubmit}>
-      <ButtonLoader loadingText="Login...">Login</ButtonLoader>
+    <LoginForm onSubmit={mutation.mutateAsync}>
+      <ButtonLoader isLoading={mutation.isPending} loadingText="Login...">
+        Login
+      </ButtonLoader>
     </LoginForm>
   );
 };

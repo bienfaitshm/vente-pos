@@ -21,18 +21,22 @@ import Link from "next/link";
 
 const defaultValues: LoginCredential = { username: "", password: "" };
 interface LoginFormProps {
-  onSubmit?: (value: LoginCredential) => void;
+  onSubmit: (value: LoginCredential) => any;
 }
 
 export const LoginForm: React.FC<React.PropsWithChildren<LoginFormProps>> = ({
   onSubmit,
   children,
 }) => {
-  const form = useForm(LoginCredentialSchemas, { defaultValues });
-  const handleSubmit = (value: LoginCredential) => onSubmit?.(value);
+  const { form, handleSubmitWithAction } = useForm({
+    action: onSubmit,
+    schemas: LoginCredentialSchemas,
+    options: { defaultValues },
+  });
+  // const handleSubmit = (value: LoginCredential) => onSubmit?.(value);
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)}>
+      <form onSubmit={handleSubmitWithAction}>
         <div className="flex flex-col gap-6">
           <Card>
             <CardHeader className="text-center">

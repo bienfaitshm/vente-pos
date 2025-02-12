@@ -1,5 +1,6 @@
 "use server";
-
+import { CredentialsSignin, AuthError } from "next-auth";
+import { returnValidationErrors } from "next-safe-action";
 import {
   LoginCredentialSchemas,
   RegistrationCredentialSchemas,
@@ -7,17 +8,37 @@ import {
 import { actionClient } from "./base";
 import { createUser } from "../db/queries";
 import { hashPassword } from "@/lib/encrypt";
+import { signIn } from "@/auth";
 
 export const loginUser = actionClient
   .schema(LoginCredentialSchemas)
   .action(async ({ parsedInput: { username, password } }) => {
-    if (username === "johndoe" && password === "123456") {
-      return {
-        success: "Successfully logged in",
-      };
+    try {
+      await signIn("credentials", { username, password });
+    } catch (e: any) {
+      if (e instanceof CredentialsSignin) {
+        if (e.code === "invalid_username") {
+          returnValidationErrors(LoginCredentialSchemas, {
+            username: {
+              _errors: ["Invalid username"],
+            },
+          });
+        }
+        if (e.code === "invalid_password") {
+          returnValidationErrors(LoginCredentialSchemas, {
+            password: {
+              _errors: ["Invalid password"],
+            },
+          });
+        }
+        returnValidationErrors(LoginCredentialSchemas, {
+          _errors: [
+            "Invalid credentials",
+            "Veillez vérifier vos informations ou la connexion internet",
+          ],
+        });
+      }
     }
-
-    return { failure: "Incorrect credentials" };
   });
 
 export const signinUser = actionClient

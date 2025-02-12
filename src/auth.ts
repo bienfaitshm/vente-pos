@@ -1,4 +1,8 @@
-import NextAuth, { CredentialsSignin, DefaultSession } from "next-auth";
+import NextAuth, {
+  CredentialsSignin,
+  AuthError,
+  DefaultSession,
+} from "next-auth";
 import Resend from "next-auth/providers/resend";
 import Credentials from "next-auth/providers/credentials";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
@@ -9,9 +13,25 @@ import {
   verificationTokens,
 } from "./server/db/schemas";
 import { db } from "./server/db/db";
+import { getByUsername } from "./server/db/queries";
+import { comparePassword } from "./lib/encrypt";
 
-class InvalidLoginError extends CredentialsSignin {
-  code = "Invalid identifier or password";
+export enum ErrorCode {
+  InvalidUsername = "invalid_username",
+  InvalidPassword = "invalid_password",
+  InvalidCredentials = "invalid_credentials",
+}
+
+class InvalidUsernameError extends CredentialsSignin {
+  code = ErrorCode.InvalidUsername;
+}
+
+class InvalidPasszordError extends CredentialsSignin {
+  code = ErrorCode.InvalidPassword;
+}
+
+class InvalidCredentialsError extends AuthError {
+  code = ErrorCode.InvalidCredentials;
 }
 
 declare module "next-auth" {
@@ -19,9 +39,11 @@ declare module "next-auth" {
     id?: string;
     name?: string | null;
     email?: string | null;
+    emailVerified?: Date | null;
     image?: string | null;
-    isAdmin?: boolean;
-    username?: string;
+    username?: string | null;
+    password?: string | null;
+    isAdmin?: boolean | null;
   }
   interface Session {
     user: {
@@ -66,8 +88,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize({ username, password }) {
-        // const user = await db("users").where({ username }).first();
-        throw new InvalidLoginError();
+        try {
+          // 1. check if username exists
+          const user = await getByUsername(username as string);
+          if (!user) {
+            throw new InvalidUsernameError("No user found");
+          }
+          //3. check password
+          const isValid = await comparePassword(
+            password as string,
+            user.password as string
+          );
+          console.log({ isValid });
+          if (isValid) return user;
+          throw new InvalidPasszordError("Invalid password");
+        } catch (error) {
+          console.log({ error });
+          throw new InvalidCredentialsError("Invalid credentials");
+        }
+
         return null;
       },
     }),
