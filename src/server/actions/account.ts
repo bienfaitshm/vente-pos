@@ -9,18 +9,6 @@ import { createUser } from "../db/queries";
 import { hashPassword } from "@/lib/encrypt";
 import { signIn, ErrorCode, AuthError } from "@/auth";
 
-const valuesError: { [key: string]: any } = {
-  [ErrorCode.InvalidUsername]: {
-    username: {
-      _errors: ["Invalid username"],
-    },
-  },
-  [ErrorCode.InvalidPassword]: {
-    password: {
-      _errors: ["Invalid password"],
-    },
-  },
-};
 export const loginUser = actionClient
   .schema(LoginCredentialSchemas)
   .action(async ({ parsedInput: { username, password } }) => {
@@ -28,7 +16,6 @@ export const loginUser = actionClient
       await signIn("credentials", { username, password });
     } catch (e: any) {
       if (e instanceof AuthError) {
-        console.log("AuthError", e.code);
         if (e.code === ErrorCode.InvalidUsername) {
           returnValidationErrors(LoginCredentialSchemas, {
             username: {
@@ -60,16 +47,12 @@ export const loginUser = actionClient
 
 export const signinUser = actionClient
   .schema(RegistrationCredentialSchemas)
-  .action(
-    async ({
-      parsedInput: { confirm, name, email, password, username, image },
-    }) => {
-      await createUser({
-        isAdmin: true,
-        name,
-        email,
-        username,
-        password: await hashPassword(password),
-      });
-    }
-  );
+  .action(async ({ parsedInput: { name, email, password, username } }) => {
+    await createUser({
+      isAdmin: true,
+      name,
+      email,
+      username,
+      password: await hashPassword(password),
+    });
+  });
