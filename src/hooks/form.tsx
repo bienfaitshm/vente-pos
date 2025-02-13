@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-// import { useForm as useFormHook } from "react-hook-form";
 import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
 import type { FieldValues, UseFormProps } from "react-hook-form";
 import type { ZodType } from "zod";
@@ -20,9 +19,4 @@ export function useForm<
     },
     errorMapProps: {},
   });
-
-  // return useFormHook({
-  //   resolver: zodResolver(schemas),
-  //   ...options,
-  // });
 }
