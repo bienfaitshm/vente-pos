@@ -53,7 +53,6 @@ export const signinUser = actionClient
   .action(async ({ parsedInput: { name, email, password, username } }) => {
     //1. check if email exist
     const isExistEmail = await isEmailExist(email);
-    console.log({ isExistEmail });
     if (isExistEmail) {
       returnValidationErrors(RegistrationCredentialSchemas, {
         email: {
