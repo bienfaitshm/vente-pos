@@ -38,3 +38,19 @@ export const RegistrationCredentialSchemas = UserSchemas.merge(
 export type RegistrationCredential = z.infer<
   typeof RegistrationCredentialSchemas
 >;
+
+export const CategorySchemas = z.object({
+  id: IDSchemas,
+  name: NoEmptyStringSchemas,
+});
+
+export type Category = z.infer<typeof CategorySchemas>;
+
+export const ProductSchemas = z.object({
+  id: IDSchemas,
+  name: NoEmptyStringSchemas,
+  category: IDSchemas,
+  quantity: z.coerce.number().min(0),
+});
+
+export type Product = z.infer<typeof ProductSchemas>;
