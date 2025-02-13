@@ -23,7 +23,7 @@ export const loginUser = actionClient
         redirect: false,
       });
       if (reponse) return { reponse };
-    } catch (e: any) {
+    } catch (e: unknown) {
       if (e instanceof AuthError) {
         if (e.code === ErrorCode.InvalidUsername) {
           returnValidationErrors(LoginCredentialSchemas, {

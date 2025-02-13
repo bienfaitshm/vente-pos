@@ -20,7 +20,9 @@ import {
   RegistrationCredentialSchemas,
   type RegistrationCredential,
 } from "@/lib/schemas";
+import { HookSafeActionFn } from "next-safe-action/hooks";
 import Link from "next/link";
+import { ZodType, ZodTypeDef } from "zod";
 
 const defaultValues: RegistrationCredential = {
   username: "",
@@ -30,7 +32,14 @@ const defaultValues: RegistrationCredential = {
   name: "",
 };
 interface SigninProps {
-  onSubmit: (value: any) => any;
+  onSubmit: HookSafeActionFn<
+    unknown,
+    typeof RegistrationCredentialSchemas,
+    readonly ZodType<unknown, ZodTypeDef, unknown>[],
+    unknown,
+    unknown,
+    unknown
+  >;
 }
 
 export const SigninForm: React.FC<React.PropsWithChildren<SigninProps>> = ({

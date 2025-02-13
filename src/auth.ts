@@ -49,7 +49,7 @@ declare module "next-auth" {
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
-    signIn: "/auth/signin",
+    signIn: "/auth/login",
   },
   adapter: DrizzleAdapter(db, {
     usersTable: users,
@@ -66,12 +66,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (auth) return true;
       return false;
     },
-    session({ session, user }) {
-      return {
-        ...session,
-        user,
-      };
-    },
+    // session({ session, user }) {
+    //   return {
+    //     ...session,
+    //     user,
+    //   };
+    // },
     // redirect({ url, baseUrl }) {
     //   console.log({ url, baseUrl });
     //   return url.startsWith(baseUrl) ? url : baseUrl + "/protected/client";
