@@ -10,6 +10,11 @@ export async function getUserByEmail(email: string) {
   return await db.select().from(userTable).where(eq(userTable.email, email));
 }
 
+/**
+ * Get user by username
+ * @param username
+ * @returns
+ */
 export async function getByUsername(
   username: string
 ): Promise<SelectUser | undefined> {
