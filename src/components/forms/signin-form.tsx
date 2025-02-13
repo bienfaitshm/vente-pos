@@ -30,18 +30,21 @@ const defaultValues: RegistrationCredential = {
   name: "",
 };
 interface SigninProps {
-  onSubmit?: (value: RegistrationCredential) => void;
+  onSubmit: (value: any) => any;
 }
 
 export const SigninForm: React.FC<React.PropsWithChildren<SigninProps>> = ({
   onSubmit,
   children,
 }) => {
-  const form = useForm(RegistrationCredentialSchemas, { defaultValues });
-  const handleSubmit = (value: RegistrationCredential) => onSubmit?.(value);
+  const { form, handleSubmitWithAction } = useForm({
+    action: onSubmit,
+    schemas: RegistrationCredentialSchemas,
+    options: { defaultValues },
+  });
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)}>
+      <form onSubmit={handleSubmitWithAction}>
         <div className="flex flex-col gap-6">
           <Card>
             <CardHeader className="text-center">
