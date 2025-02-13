@@ -16,7 +16,13 @@ export const loginUser = actionClient
   .schema(LoginCredentialSchemas)
   .action(async ({ parsedInput: { username, password } }) => {
     try {
-      await signIn("credentials", { username, password });
+      const reponse = await signIn("credentials", {
+        username,
+        password,
+        redirectTo: "/",
+        redirect: false,
+      });
+      if (reponse) return { reponse };
     } catch (e: any) {
       if (e instanceof AuthError) {
         if (e.code === ErrorCode.InvalidUsername) {

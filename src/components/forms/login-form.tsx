@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "@/hooks/form";
 import { LoginCredentialSchemas, type LoginCredential } from "@/lib/schemas";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const defaultValues: LoginCredential = { username: "", password: "" };
 interface LoginFormProps {
@@ -28,10 +29,18 @@ export const LoginForm: React.FC<React.PropsWithChildren<LoginFormProps>> = ({
   onSubmit,
   children,
 }) => {
+  const router = useRouter();
   const { form, handleSubmitWithAction } = useForm({
     action: onSubmit,
     schemas: LoginCredentialSchemas,
-    options: { defaultValues },
+    options: {
+      formProps: { defaultValues },
+      actionProps: {
+        onSuccess() {
+          router.replace("/");
+        },
+      },
+    },
   });
   // const handleSubmit = (value: LoginCredential) => onSubmit?.(value);
   return (
