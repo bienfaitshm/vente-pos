@@ -7,7 +7,10 @@ import { InsertUser, SelectUser, users as userTable } from "./schemas";
  * @param data
  */
 export async function createUser(data: InsertUser) {
-  await db.insert(userTable).values(data);
+  return await db
+    .insert(userTable)
+    .values(data)
+    .returning({ id: userTable.id });
 }
 
 /**
