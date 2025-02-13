@@ -40,7 +40,7 @@ export const SigninForm: React.FC<React.PropsWithChildren<SigninProps>> = ({
   const { form, handleSubmitWithAction } = useForm({
     action: onSubmit,
     schemas: RegistrationCredentialSchemas,
-    options: { defaultValues },
+    options: { formProps: { defaultValues } },
   });
   return (
     <Form {...form}>
