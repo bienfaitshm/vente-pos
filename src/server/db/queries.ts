@@ -19,11 +19,12 @@ export async function createUser(data: InsertUser) {
  * @returns
  */
 export async function isEmailExist(email: string): Promise<boolean> {
-  return !!(await db
+  const exist = await db
     .select({ id: userTable.id })
     .from(userTable)
     .where(eq(userTable.email, email))
-    .limit(1));
+    .limit(1);
+  return !!exist[0];
 }
 
 /**
@@ -32,11 +33,12 @@ export async function isEmailExist(email: string): Promise<boolean> {
  * @returns
  */
 export async function isUsernameExist(username: string): Promise<boolean> {
-  return !!(await db
+  const exist = await db
     .select({ id: userTable.id })
     .from(userTable)
     .where(eq(userTable.username, username))
-    .limit(1));
+    .limit(1);
+  return !!exist[0];
 }
 
 /**

@@ -5,9 +5,12 @@ import {
   RegistrationCredentialSchemas,
 } from "@/lib/schemas";
 import { actionClient } from "./base";
-import { createUser } from "../db/queries";
+import { createUser, isEmailExist, isUsernameExist } from "../db/queries";
 import { hashPassword } from "@/lib/encrypt";
 import { signIn, ErrorCode, AuthError } from "@/auth";
+import { redirect } from "next/navigation";
+
+const AUTH_LOGIN_ROUTE = "/auth/login";
 
 export const loginUser = actionClient
   .schema(LoginCredentialSchemas)
@@ -48,11 +51,37 @@ export const loginUser = actionClient
 export const signinUser = actionClient
   .schema(RegistrationCredentialSchemas)
   .action(async ({ parsedInput: { name, email, password, username } }) => {
-    await createUser({
+    //1. check if email exist
+    const isExistEmail = await isEmailExist(email);
+    console.log({ isExistEmail });
+    if (isExistEmail) {
+      returnValidationErrors(RegistrationCredentialSchemas, {
+        email: {
+          _errors: ["Already exist email"],
+        },
+      });
+    }
+    // 2. check if username exist
+    const isExistUsername = await isUsernameExist(username);
+    if (isExistUsername) {
+      returnValidationErrors(RegistrationCredentialSchemas, {
+        username: {
+          _errors: ["Already exist username", "Please use an another username"],
+        },
+      });
+    }
+    // 3. hash password
+    const passwordHashed = await hashPassword(password);
+
+    // 4. create new user
+    const newUser = await createUser({
       isAdmin: true,
       name,
       email,
       username,
-      password: await hashPassword(password),
+      password: passwordHashed,
     });
+    if (newUser) {
+      redirect(AUTH_LOGIN_ROUTE);
+    }
   });
