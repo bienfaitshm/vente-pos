@@ -12,6 +12,7 @@ import { useForm } from "@/hooks/form";
 import { ProductSchemas, type Product, type Category } from "@/lib/schemas";
 import { HookSafeActionFn } from "next-safe-action/hooks";
 import { ZodType, ZodTypeDef } from "zod";
+import { SelectCombobox } from "../fields/select-combobox";
 
 const defaultValues: Product = {
   name: "",
@@ -37,6 +38,12 @@ export const ProductForm: React.FC<React.PropsWithChildren<ProductProps>> = ({
   children,
   categories = [],
 }) => {
+  const _cats: { label: string; value: string | number }[] = categories.map(
+    (item) => ({
+      label: item.name,
+      value: item.id,
+    })
+  );
   const { form, handleSubmitWithAction } = useForm({
     action: onSubmit,
     schemas: ProductSchemas,
@@ -54,6 +61,24 @@ export const ProductForm: React.FC<React.PropsWithChildren<ProductProps>> = ({
                 <FormLabel>Nom</FormLabel>
                 <FormControl>
                   <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nom</FormLabel>
+                <FormControl>
+                  <SelectCombobox
+                    selections={_cats}
+                    value={field.value}
+                    onChangeValue={field.onChange}
+                    placeholder="Choisir une cat...."
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
