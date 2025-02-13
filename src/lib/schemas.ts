@@ -40,14 +40,14 @@ export type RegistrationCredential = z.infer<
 >;
 
 export const CategorySchemas = z.object({
-  id: IDSchemas,
+  id: IDSchemas.optional(),
   name: NoEmptyStringSchemas,
 });
 
 export type Category = z.infer<typeof CategorySchemas>;
 
 export const ProductSchemas = z.object({
-  id: IDSchemas,
+  id: IDSchemas.optional(),
   name: NoEmptyStringSchemas,
   category: IDSchemas,
   quantity: z.coerce.number().min(0),
