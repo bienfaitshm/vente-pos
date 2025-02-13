@@ -51,6 +51,15 @@ export const ProductSchemas = z.object({
   name: NoEmptyStringSchemas,
   category: IDSchemas,
   quantity: z.coerce.number().min(0),
+  price: z.coerce.number().min(0),
 });
 
 export type Product = z.infer<typeof ProductSchemas>;
+
+export const ProductQuantitySchemas = z.object({
+  productID: ProductSchemas,
+  quantity: z.coerce.number().min(0),
+  reason: NoEmptyStringSchemas.optional(),
+});
+
+export type ProductQuantity = z.infer<typeof ProductQuantitySchemas>;
