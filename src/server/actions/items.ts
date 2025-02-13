@@ -1,6 +1,10 @@
 "use server";
 import { returnValidationErrors } from "next-safe-action";
-import { CategorySchemas, ProductSchemas } from "@/lib/schemas";
+import {
+  CategorySchemas,
+  ProductSchemas,
+  ProductQuantitySchemas,
+} from "@/lib/schemas";
 
 import { actionClient } from "./base";
 import {} from "../db/queries";
@@ -40,5 +44,5 @@ export const deleteProduct = actionClient
   .action(async ({ parsedInput: { id } }) => {});
 
 export const changeProductQuantity = actionClient
-  .schema(ProductSchemas)
-  .action(async ({ parsedInput: { id, name } }) => {});
+  .schema(ProductQuantitySchemas)
+  .action(async ({ parsedInput: {} }) => {});
