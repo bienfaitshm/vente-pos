@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import { db } from "./db";
 import { InsertUser, SelectUser, users as userTable } from "./schemas";
 
@@ -62,6 +62,27 @@ export async function getByUsername(
     .select()
     .from(userTable)
     .where(eq(userTable.username, username))
+    .limit(1);
+  return users[0];
+}
+
+/**
+ * Get user by username
+ * @param username
+ * @returns
+ */
+export async function getByUsernameOrEmail(
+  usernameOrEmail: string
+): Promise<SelectUser | undefined> {
+  const users = await db
+    .select()
+    .from(userTable)
+    .where(
+      or(
+        eq(userTable.username, usernameOrEmail),
+        eq(userTable.email, usernameOrEmail)
+      )
+    )
     .limit(1);
   return users[0];
 }
