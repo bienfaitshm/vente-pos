@@ -6,7 +6,10 @@ import {
   primaryKey,
   integer,
   varchar,
+  foreignKey,
+  doublePrecision,
 } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 // import { drizzle } from "drizzle-orm/postgres-js";
 import type { AdapterAccountType } from "next-auth/adapters";
 // import postgres from "postgres";
@@ -26,7 +29,7 @@ export const users = pgTable("user", {
   password: varchar({ length: 255 }),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
-  isAdmin: boolean("isAdmin").$default(() => false),
+  isAdmin: boolean("is_admin").$default(() => false),
 });
 
 export const accounts = pgTable(
@@ -102,8 +105,14 @@ export const authenticators = pgTable(
   ]
 );
 
-export const clientTable = pgTable("clients", {
+const commonFieldTable = {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  updatedAt: timestamp("updated_at", { mode: "date" }),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+};
+
+export const Client = pgTable("client", {
+  ...commonFieldTable,
   name: varchar({ length: 255 }).notNull(),
   address: varchar({ length: 255 }),
   email: varchar({ length: 255 }),
@@ -112,3 +121,75 @@ export const clientTable = pgTable("clients", {
 
 export type InsertUser = typeof users.$inferInsert;
 export type SelectUser = typeof users.$inferSelect;
+
+//
+export const Category = pgTable("category", {
+  ...commonFieldTable,
+  name: varchar({ length: 255 }).notNull(),
+});
+
+export type InsertCategory = typeof Category.$inferInsert;
+export type SelectCategory = typeof Category.$inferSelect;
+
+//
+export const Product = pgTable("product", {
+  ...commonFieldTable,
+  name: varchar({ length: 255 }).notNull(),
+  category: integer("category_id")
+    .references(() => Category.id, { onDelete: "cascade" })
+    .notNull(),
+  quantity: integer().notNull(),
+  price: doublePrecision().notNull(),
+});
+
+export const CategoryRelation = relations(Category, ({ many }) => ({
+  products: many(Product),
+}));
+export const ProductRelation = relations(Product, ({ one }) => ({
+  category: one(Category, {
+    fields: [Product.category],
+    references: [Category.id],
+  }),
+}));
+export type InsertProduct = typeof Product.$inferInsert;
+export type SelectProduct = typeof Product.$inferSelect;
+
+//
+export const CommandProduct = pgTable("command_product", {
+  ...commonFieldTable,
+  amount: doublePrecision().notNull(),
+  isConfirmed: boolean("is_confirmed").$default(() => false),
+  client: integer("client_id")
+    .references(() => Client.id, { onDelete: "cascade" })
+    .notNull(),
+  seller: text("seller_id").references(() => users.id, {
+    onDelete: "set null",
+  }),
+});
+
+export type InsertCommandProduct = typeof CommandProduct.$inferInsert;
+export type SelectCommandProduct = typeof CommandProduct.$inferSelect;
+
+//
+export const CommandItem = pgTable("command_item", {
+  amount: doublePrecision().notNull(),
+  quantity: integer().notNull(),
+  product: integer("product_id")
+    .references(() => Product.id)
+    .notNull(),
+  commandProduct: integer("command_id").references(() => CommandProduct.id),
+});
+
+//
+export const CommandProductRelation = relations(CommandProduct, ({ many }) => ({
+  items: many(CommandItem),
+}));
+export const CommandItemRelation = relations(CommandItem, ({ one }) => ({
+  command: one(CommandProduct, {
+    fields: [CommandItem.commandProduct],
+    references: [CommandProduct.id],
+  }),
+}));
+
+export type InsertCommandItem = typeof CommandItem.$inferInsert;
+export type SelectCommandItem = typeof CommandItem.$inferSelect;
