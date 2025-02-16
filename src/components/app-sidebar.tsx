@@ -12,10 +12,14 @@ import {
   PieChart,
   Settings2,
   SquareTerminal,
+  ShoppingBag,
+  Tags,
+  SquareUserRound,
+  UsersRound,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
+import { AdminSideMenus } from "@/components/admin-side-menu";
 import { NavUser } from "@/components/nav-user";
 import { EnterpriseHead } from "@/components/team-switcher";
 import {
@@ -137,21 +141,26 @@ const data = {
       ],
     },
   ],
-  projects: [
+  menuAdmins: [
     {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
+      name: "Produits",
+      url: "/dashboard/products",
+      icon: ShoppingBag,
     },
     {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
+      name: "Categories",
+      url: "/dashboard/categories",
+      icon: Tags,
     },
     {
-      name: "Travel",
-      url: "#",
-      icon: Map,
+      name: "Vendeurs",
+      url: "/dashboard/vendeurs",
+      icon: UsersRound,
+    },
+    {
+      name: "Clients",
+      url: "/dashboard/clients",
+      icon: SquareUserRound,
     },
   ],
 };
@@ -164,8 +173,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <EnterpriseHead />
       </SidebarHeader>
       <SidebarContent>
+        <AdminSideMenus menus={data.menuAdmins} />
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
         {session?.user && <NavUser user={session.user} />}
