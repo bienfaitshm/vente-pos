@@ -30,7 +30,7 @@ export const AddCategoryDialog = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Category</DialogTitle>
-          <DialogDescription>Ajouts de la category</DialogDescription>
+          <DialogDescription>Ajouts de la categorie</DialogDescription>
         </DialogHeader>
         <div>
           <CategoryForm onSubmit={mutation.mutateAsync}>
