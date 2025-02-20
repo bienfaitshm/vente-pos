@@ -12,8 +12,9 @@ import type { ColumnCategoryType } from "./columns/frais-columns";
 
 const DataTableCategory: FunctionComponent<{
   data?: ColumnCategoryType[];
-  header?: ReactNode;
-}> = ({ data = [], header }) => {
+  mainHeader?: ReactNode;
+  rightHeader?: ReactNode;
+}> = ({ data = [], mainHeader, rightHeader }) => {
   const table = useDataTable<ColumnCategoryType>({ data, columns });
   const searchValue =
     (table.getColumn("name")?.getFilterValue() as string) ?? "";
@@ -31,10 +32,11 @@ const DataTableCategory: FunctionComponent<{
               onChange={handlerChangeSearchValue}
               className="h-8 w-[150px] lg:w-[250px]"
             />
+            {mainHeader}
           </div>
           <div className="flex items-center gap-2">
             <DataTableToolbar table={table}></DataTableToolbar>
-            {header}
+            {rightHeader}
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { Badge } from "@/components/ui/badge";
+import { TableFraisRowActions } from "../actions/table-actions";
 
 export type TableStudentColumn = {
   id: number | string;
@@ -58,5 +59,11 @@ export const tableStudentColumn: ColumnDef<TableStudentColumn>[] = [
     ),
     enableSorting: true,
     enableHiding: true,
+  },
+  {
+    id: "actions",
+    cell({ row }) {
+      return <TableFraisRowActions row={row} />;
+    },
   },
 ];

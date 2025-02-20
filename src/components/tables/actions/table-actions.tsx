@@ -15,7 +15,6 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoneyAccountDialog } from "@/components/dialogs/money-account-dialog";
 
 interface TableFraisRowActionsProps<TData> {
   row: Row<TData>;
