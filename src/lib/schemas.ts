@@ -3,6 +3,7 @@ export const NoEmptyStringSchemas = z
   .string()
   .min(1, { message: "Ce Chant est requis" });
 export const IDSchemas = z.union([NoEmptyStringSchemas.trim(), z.number()]);
+export const EmptyObjet = z.object({});
 
 export const UserSchemas = z.object({
   id: IDSchemas.optional(),

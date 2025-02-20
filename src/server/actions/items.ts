@@ -4,18 +4,23 @@ import {
   CategorySchemas,
   ProductSchemas,
   ProductQuantitySchemas,
+  EmptyObjet,
 } from "@/lib/schemas";
 
 import { actionClient } from "./base";
-import {} from "../db/queries";
+import * as queries from "../db/queries";
 
-export const getCategorie = actionClient
-  .schema(CategorySchemas)
-  .action(async ({ parsedInput: {} }) => {});
+export const getCategories = actionClient
+  .schema(EmptyObjet)
+  .action(async ({ parsedInput: {} }) => {
+    return await queries.getCategories();
+  });
 
 export const createCategory = actionClient
   .schema(CategorySchemas)
-  .action(async ({ parsedInput: {} }) => {});
+  .action(async ({ parsedInput: values }) => {
+    return await queries.createCategory(values);
+  });
 
 export const updateCategory = actionClient
   .schema(CategorySchemas)
