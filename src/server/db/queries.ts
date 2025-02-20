@@ -1,6 +1,9 @@
 import { eq, or } from "drizzle-orm";
 import { db } from "./db";
 import { InsertUser, SelectUser, users as userTable } from "./schemas";
+import * as tables from "./schemas";
+
+type TWithID<T = number> = { id: T };
 
 /**
  *
@@ -90,4 +93,37 @@ export async function getByUsernameOrEmail(
     )
     .limit(1);
   return users[0];
+}
+
+// catgories
+export async function createCategory(
+  category: tables.InsertCategory
+): Promise<tables.SelectCategory | undefined> {
+  const categories = await db
+    .insert(tables.Category)
+    .values(category)
+    .returning();
+  return categories[0];
+}
+
+export async function updateCategory({
+  id,
+  ...value
+}: tables.InsertCategory & TWithID) {
+  return await db
+    .update(tables.Category)
+    .set(value)
+    .where(eq(tables.Category.id, id))
+    .returning();
+}
+
+export async function deleteCategory({ id }: TWithID) {
+  return await db
+    .delete(tables.Category)
+    .where(eq(tables.Category.id, id))
+    .returning();
+}
+
+export async function getCategories(): Promise<tables.SelectCategory[]> {
+  return await db.select().from(tables.Category);
 }
