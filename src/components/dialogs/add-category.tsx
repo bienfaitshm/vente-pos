@@ -1,3 +1,4 @@
+"use client";
 import {
   Dialog,
   DialogClose,
@@ -10,8 +11,14 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { PlusCircle } from "lucide-react";
+import { useCreateCategory } from "@/hooks/mutations";
+import { CategoryForm } from "../forms/category-form";
+import React from "react";
+import { ButtonLoader } from "../button-loader";
 
 export const AddCategoryDialog = () => {
+  const btnSubmitRef = React.useRef<HTMLButtonElement>(null);
+  const mutation = useCreateCategory();
   return (
     <Dialog>
       <DialogTrigger>
@@ -26,19 +33,27 @@ export const AddCategoryDialog = () => {
           <DialogDescription>Ajouts de la category</DialogDescription>
         </DialogHeader>
         <div>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae,
-            mollitia, id, error optio fuga aliquid sed nisi aliquam numquam
-            dolores modi officiis laboriosam aperiam molestias est nesciunt
-            reiciendis blanditiis illo!
-          </p>
+          <CategoryForm onSubmit={mutation.mutateAsync}>
+            <Button type="submit" className="hidden" ref={btnSubmitRef} />
+          </CategoryForm>
         </div>
-        <DialogFooter className="sm:justify-start">
+        <DialogFooter>
           <DialogClose asChild>
             <Button type="button" variant="secondary">
               Terminer
             </Button>
           </DialogClose>
+          <div>
+            <ButtonLoader
+              isLoading={mutation.isPending}
+              loadingText="Enregistrement..."
+              onClick={() => {
+                btnSubmitRef.current?.click();
+              }}
+            >
+              Enregistrer
+            </ButtonLoader>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
