@@ -21,8 +21,8 @@ export const AddCategoryDialog = () => {
   const mutation = useCreateCategory();
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button>
+      <DialogTrigger asChild>
+        <Button className="h-8">
           <PlusCircle />
           <span>Ajouter</span>
         </Button>
