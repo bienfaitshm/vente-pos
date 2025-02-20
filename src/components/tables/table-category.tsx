@@ -9,18 +9,39 @@ import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { Input } from "@/components/ui/input";
 import { columnFraisPayment as columns } from "./columns/frais-columns";
 import type { ColumnCategoryType } from "./columns/frais-columns";
+import type { TableOptions } from "@tanstack/react-table";
+
+function useHookTable<ColumnType extends Record<string, unknown>>({
+  searchKey,
+  ...params
+}: Partial<TableOptions<ColumnType>> & { searchKey: keyof ColumnType }) {
+  const table = useDataTable<ColumnType>(params);
+  const value =
+    (table.getColumn(searchKey as string)?.getFilterValue() as string) ?? "";
+  const onChangeValue = (event: ChangeEvent<HTMLInputElement>) => {
+    table.getColumn("name")?.setFilterValue(event.target.value);
+  };
+  return {
+    table,
+    searchField: {
+      value,
+      onChange: onChangeValue,
+    },
+  };
+}
 
 const DataTableCategory: FunctionComponent<{
   data?: ColumnCategoryType[];
   mainHeader?: ReactNode;
   rightHeader?: ReactNode;
 }> = ({ data = [], mainHeader, rightHeader }) => {
-  const table = useDataTable<ColumnCategoryType>({ data, columns });
-  const searchValue =
-    (table.getColumn("name")?.getFilterValue() as string) ?? "";
-  const handlerChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
-    table.getColumn("name")?.setFilterValue(event.target.value);
-  };
+  const { searchField, table } = useHookTable<ColumnCategoryType>({
+    data,
+    columns,
+    enableRowSelection: true,
+    searchKey: "name",
+  });
+
   return (
     <div className="h-full w-full">
       <div className="h-8 max-w-5xl m-auto my-3">
@@ -28,9 +49,8 @@ const DataTableCategory: FunctionComponent<{
           <div className="flex gap-2">
             <Input
               placeholder="Nom..."
-              value={searchValue}
-              onChange={handlerChangeSearchValue}
               className="h-8 w-[150px] lg:w-[250px]"
+              {...searchField}
             />
             {mainHeader}
           </div>
