@@ -4,11 +4,13 @@ import { DataTableCategory } from "@/components/tables/table-category";
 
 export default async function Page() {
   const queries = await getCategories({});
-  console.log({ queries });
   return (
-    <div>
+    <div className="">
       <h1>Categories</h1>
-      <DataTableCategory data={queries?.data} header={<AddCategoryDialog />} />
+      <DataTableCategory
+        data={queries?.data}
+        rightHeader={<AddCategoryDialog />}
+      />
     </div>
   );
 }

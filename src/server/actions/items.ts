@@ -9,6 +9,7 @@ import {
 
 import { actionClient } from "./base";
 import * as queries from "../db/queries";
+import { revalidatePath } from "next/cache";
 
 export const getCategories = actionClient
   .schema(EmptyObjet)
@@ -19,7 +20,9 @@ export const getCategories = actionClient
 export const createCategory = actionClient
   .schema(CategorySchemas)
   .action(async ({ parsedInput: values }) => {
-    return await queries.createCategory(values);
+    const data = await queries.createCategory(values);
+    revalidatePath("/");
+    return data;
   });
 
 export const updateCategory = actionClient
