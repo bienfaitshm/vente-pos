@@ -34,11 +34,11 @@ export function EditDeleteCellAction<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuItem onClick={() => onEdit?.(row)}>
+        <DropdownMenuItem onSelect={() => onEdit?.(row)}>
           Modifier
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => onDelete?.(row)}>
+        <DropdownMenuItem onSelect={() => onDelete?.(row)}>
           Supprimer
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>

@@ -11,7 +11,18 @@ export const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
 }) => {
   return (
     <div>
-      <DataTableCategory data={data} rightHeader={<AddCategoryDialog />} />
+      <DataTableCategory
+        data={data}
+        rightHeader={<AddCategoryDialog />}
+        cellActions={{
+          onDelete(row) {
+            console.log(row);
+          },
+          onEdit(row) {
+            console.log(row);
+          },
+        }}
+      />
     </div>
   );
 };
