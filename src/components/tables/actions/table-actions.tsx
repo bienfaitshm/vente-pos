@@ -1,28 +1,27 @@
 import { Ellipsis } from "lucide-react";
-import { Row } from "@tanstack/react-table";
+import type { Row } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-interface TableFraisRowActionsProps<TData> {
-  row: Row<TData>;
+type WithRowParams<T, TData> = T & { row: Row<TData> };
+export interface IEditDeleteActions<TData> {
+  onDelete?(row: Row<TData>): void;
+  onEdit?(row: Row<TData>): void;
 }
 
-export function TableFraisRowActions<TData>({
+export function EditDeleteCellAction<TData>({
   row,
-}: TableFraisRowActionsProps<TData>): React.JSX.Element {
+  onDelete,
+  onEdit,
+}: WithRowParams<IEditDeleteActions<TData>, TData>) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -35,9 +34,11 @@ export function TableFraisRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuItem>Modifier</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onEdit?.(row)}>
+          Modifier
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onDelete?.(row)}>
           Supprimer
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>
