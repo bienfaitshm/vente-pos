@@ -15,6 +15,51 @@ export type StudentPayementFraisType = {
   motant: number;
 };
 
+type CategoryColumnParams = {};
+
+/**
+ *
+ * @param params
+ * @returns
+ */
+export function getCategoryColumn(
+  params?: CategoryColumnParams
+): ColumnDef<ColumnCategoryType>[] {
+  return [
+    {
+      accessorKey: "id",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="ID" />
+      ),
+      cell: ({ row }) => (
+        <div className="max-w-12 truncate">{row.getValue("id")}</div>
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "name",
+      enableHiding: true,
+      enableResizing: true,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Nom" />
+      ),
+      cell: ({ row }): React.ReactNode => {
+        // const label = labels.find((label) => label.value === row.original.label)
+
+        return (
+          <div className="flex space-x-2">
+            {/* {label && <Badge variant="outline">{label.label}</Badge>} */}
+            <span className="max-w-48 truncate font-medium">
+              {row.getValue("name")}
+            </span>
+          </div>
+        );
+      },
+    },
+  ];
+}
+
 export const columnFraisPayment: ColumnDef<ColumnCategoryType>[] = [
   {
     accessorKey: "id",
