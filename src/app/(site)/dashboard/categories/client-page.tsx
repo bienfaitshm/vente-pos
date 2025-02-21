@@ -16,10 +16,10 @@ export const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
         rightHeader={<AddCategoryDialog />}
         cellActions={{
           onDelete(row) {
-            console.log(row);
+            console.log("onDelete", row.getValue("id"));
           },
           onEdit(row) {
-            console.log(row);
+            console.log("onEdit", row.getValue("id"));
           },
         }}
       />
