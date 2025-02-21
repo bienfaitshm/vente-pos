@@ -1,40 +1,22 @@
 "use client";
-import type { ChangeEvent, FunctionComponent, ReactNode } from "react";
+import { useMemo, type FunctionComponent, type ReactNode } from "react";
+import type { ColumnCategoryType } from "./columns/frais-columns";
 import { DataTable } from "@/components/data-table/data-table";
-import { useDataTable } from "@/components/data-table/table-utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import { Separator } from "@/components/ui/separator";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { Input } from "@/components/ui/input";
-import { columnFraisPayment as columns } from "./columns/frais-columns";
-import type { ColumnCategoryType } from "./columns/frais-columns";
-import type { TableOptions } from "@tanstack/react-table";
-
-function useHookTable<ColumnType extends Record<string, unknown>>({
-  searchKey,
-  ...params
-}: Partial<TableOptions<ColumnType>> & { searchKey: keyof ColumnType }) {
-  const table = useDataTable<ColumnType>(params);
-  const value =
-    (table.getColumn(searchKey as string)?.getFilterValue() as string) ?? "";
-  const onChangeValue = (event: ChangeEvent<HTMLInputElement>) => {
-    table.getColumn("name")?.setFilterValue(event.target.value);
-  };
-  return {
-    table,
-    searchField: {
-      value,
-      onChange: onChangeValue,
-    },
-  };
-}
+import { getCategoryColumn } from "./columns/frais-columns";
+import { useHookTable } from "./core/hooks";
 
 const DataTableCategory: FunctionComponent<{
   data?: ColumnCategoryType[];
   mainHeader?: ReactNode;
   rightHeader?: ReactNode;
 }> = ({ data = [], mainHeader, rightHeader }) => {
+  const columns = useMemo(() => getCategoryColumn(), []);
+
   const { searchField, table } = useHookTable<ColumnCategoryType>({
     data,
     columns,

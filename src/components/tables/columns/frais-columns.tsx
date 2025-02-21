@@ -32,7 +32,7 @@ export function getCategoryColumn(
         <DataTableColumnHeader column={column} title="ID" />
       ),
       cell: ({ row }) => (
-        <div className="max-w-12 truncate">{row.getValue("id")}</div>
+        <div className="max-w-10 w-5 truncate">{row.getValue("id")}</div>
       ),
       enableSorting: false,
       enableHiding: false,
@@ -55,6 +55,12 @@ export function getCategoryColumn(
             </span>
           </div>
         );
+      },
+    },
+    {
+      id: "actions",
+      cell({ row }) {
+        return <TableFraisRowActions row={row} />;
       },
     },
   ];

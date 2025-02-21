@@ -63,7 +63,11 @@ export const tableStudentColumn: ColumnDef<TableStudentColumn>[] = [
   {
     id: "actions",
     cell({ row }) {
-      return <TableFraisRowActions row={row} />;
+      return (
+        <div className="flex w-full justify-end">
+          <TableFraisRowActions row={row} />
+        </div>
+      );
     },
   },
 ];
