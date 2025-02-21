@@ -1,13 +1,13 @@
 "use client";
 import { useMemo, type FunctionComponent, type ReactNode } from "react";
-import type { ColumnCategoryType } from "./columns/frais-columns";
+import type { ColumnCategoryType } from "./columns";
 import { DataTable } from "@/components/data-table/data-table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import { Separator } from "@/components/ui/separator";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { Input } from "@/components/ui/input";
-import { getCategoryColumn } from "./columns/frais-columns";
+import { getCategoryColumn } from "./columns";
 import { useHookTable } from "./core/hooks";
 
 const DataTableCategory: FunctionComponent<{

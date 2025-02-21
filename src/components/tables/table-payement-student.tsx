@@ -10,8 +10,8 @@ import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ListChecks } from "lucide-react";
-import { columnStudentPayementfrais as columns } from "./columns/frais-columns";
-import type { StudentPayementFraisType } from "./columns/frais-columns";
+import { columnStudentPayementfrais as columns } from "./columns";
+import type { StudentPayementFraisType } from "./columns";
 
 const StudentPayementTablel: FunctionComponent<{
   data?: StudentPayementFraisType[];
