@@ -1,7 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { Badge } from "@/components/ui/badge";
-import { TableFraisRowActions } from "../actions/table-actions";
+import {
+  EditDeleteCellAction,
+  IEditDeleteActions,
+} from "../actions/table-actions";
 
 export type ColumnCategoryType = {
   id: number | string;
@@ -15,7 +18,7 @@ export type StudentPayementFraisType = {
   motant: number;
 };
 
-type CategoryColumnParams = {};
+type CategoryColumnParams<T> = { actions?: IEditDeleteActions<T> };
 
 /**
  *
@@ -23,7 +26,7 @@ type CategoryColumnParams = {};
  * @returns
  */
 export function getCategoryColumn(
-  params?: CategoryColumnParams
+  params?: CategoryColumnParams<ColumnCategoryType>
 ): ColumnDef<ColumnCategoryType>[] {
   return [
     {
@@ -60,7 +63,7 @@ export function getCategoryColumn(
     {
       id: "actions",
       cell({ row }) {
-        return <TableFraisRowActions row={row} />;
+        return <EditDeleteCellAction row={row} {...params?.actions} />;
       },
     },
   ];

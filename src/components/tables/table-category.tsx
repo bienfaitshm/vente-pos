@@ -9,13 +9,21 @@ import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { Input } from "@/components/ui/input";
 import { getCategoryColumn } from "./columns";
 import { useHookTable } from "./core/hooks";
+import { IEditDeleteActions } from "./actions/table-actions";
 
-const DataTableCategory: FunctionComponent<{
+interface DataTableCategoryProps {
   data?: ColumnCategoryType[];
   mainHeader?: ReactNode;
   rightHeader?: ReactNode;
-}> = ({ data = [], mainHeader, rightHeader }) => {
-  const columns = useMemo(() => getCategoryColumn(), []);
+  cellActions?: IEditDeleteActions<ColumnCategoryType>;
+}
+const DataTableCategory: FunctionComponent<DataTableCategoryProps> = ({
+  data = [],
+  mainHeader,
+  rightHeader,
+  cellActions: actions,
+}) => {
+  const columns = useMemo(() => getCategoryColumn({ actions }), []);
 
   const { searchField, table } = useHookTable<ColumnCategoryType>({
     data,
