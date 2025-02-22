@@ -130,3 +130,36 @@ export async function getCategories(): Promise<tables.SelectCategory[]> {
     .from(tables.Category)
     .orderBy(asc(tables.Category.id));
 }
+
+// products
+export async function createProduct(
+  product: tables.InsertProduct
+): Promise<tables.SelectProduct | undefined> {
+  const categories = await db
+    .insert(tables.Product)
+    .values(product)
+    .returning();
+  return categories[0];
+}
+
+export async function updateProduct({
+  id,
+  ...value
+}: tables.InsertProduct & TWithID) {
+  return await db
+    .update(tables.Product)
+    .set(value)
+    .where(eq(tables.Product.id, id))
+    .returning();
+}
+
+export async function deleteProduct({ id }: TWithID) {
+  return await db
+    .delete(tables.Product)
+    .where(eq(tables.Product.id, id))
+    .returning();
+}
+
+export async function getProducts(): Promise<tables.SelectProduct[]> {
+  return await db.select().from(tables.Product).orderBy(asc(tables.Product.id));
+}
