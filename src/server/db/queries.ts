@@ -1,4 +1,4 @@
-import { eq, or } from "drizzle-orm";
+import { asc, eq, or } from "drizzle-orm";
 import { db } from "./db";
 import { InsertUser, SelectUser, users as userTable } from "./schemas";
 import * as tables from "./schemas";
@@ -125,5 +125,8 @@ export async function deleteCategory({ id }: TWithID) {
 }
 
 export async function getCategories(): Promise<tables.SelectCategory[]> {
-  return await db.select().from(tables.Category);
+  return await db
+    .select()
+    .from(tables.Category)
+    .orderBy(asc(tables.Category.id));
 }
