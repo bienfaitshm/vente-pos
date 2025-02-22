@@ -28,11 +28,24 @@ export const createCategory = actionClient
 
 export const updateCategory = actionClient
   .schema(CategorySchemas)
-  .action(async ({ parsedInput: {} }) => {});
+  .action(async ({ parsedInput: { name, id } }) => {
+    const data = await queries.updateCategory({
+      id: id as number,
+      name,
+    });
+    revalidatePath("/");
+    return data;
+  });
 
 export const deleteCategory = actionClient
   .schema(IdObjectSchems)
-  .action(async ({ parsedInput: {} }) => {});
+  .action(async ({ parsedInput: { id } }) => {
+    const data = await queries.deleteCategory({
+      id: id as number,
+    });
+    revalidatePath("/");
+    return data;
+  });
 
 //
 
