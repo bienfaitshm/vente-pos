@@ -13,7 +13,8 @@ import { CategorySchemas, type Category } from "@/lib/schemas";
 import { HookSafeActionFn } from "next-safe-action/hooks";
 import { ZodType, ZodTypeDef } from "zod";
 
-const defaultValues: Category = {
+export type TCategoryDefaultValue = Category;
+const defaultValues: TCategoryDefaultValue = {
   name: "",
 };
 interface CategoryProps {
@@ -25,7 +26,7 @@ interface CategoryProps {
     unknown,
     unknown
   >;
-  intialValues?: Partial<Category>;
+  intialValues?: Partial<TCategoryDefaultValue>;
 }
 
 export const CategoryForm: React.FC<React.PropsWithChildren<CategoryProps>> = ({
