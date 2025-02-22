@@ -19,8 +19,15 @@ export const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
 }) => {
   const updateFormRef = useUpdateCategoryFormDialog();
   const deleteDialogRef = useDeleteDialog();
+
+  const onDeleteConfirm = (value: number) => {};
   return (
     <div>
+      <UpdateCategoryDialogForm ref={updateFormRef} />
+      <DialogDeleteAction
+        ref={deleteDialogRef}
+        onConfirm={(value) => onDeleteConfirm(value as number)}
+      />
       <DataTableCategory
         data={data}
         rightHeader={<AddCategoryDialogForm />}
@@ -31,13 +38,6 @@ export const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
           onEdit(row) {
             updateFormRef.current?.update(row.original);
           },
-        }}
-      />
-      <UpdateCategoryDialogForm ref={updateFormRef} />
-      <DialogDeleteAction
-        ref={deleteDialogRef}
-        onConfirm={(value) => {
-          console.log("Confirme delete", value);
         }}
       />
     </div>

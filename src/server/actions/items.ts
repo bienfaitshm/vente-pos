@@ -5,6 +5,7 @@ import {
   ProductSchemas,
   ProductQuantitySchemas,
   EmptyObjet,
+  IdObjectSchems,
 } from "@/lib/schemas";
 
 import { actionClient } from "./base";
@@ -30,7 +31,7 @@ export const updateCategory = actionClient
   .action(async ({ parsedInput: {} }) => {});
 
 export const deleteCategory = actionClient
-  .schema(CategorySchemas)
+  .schema(IdObjectSchems)
   .action(async ({ parsedInput: {} }) => {});
 
 //
