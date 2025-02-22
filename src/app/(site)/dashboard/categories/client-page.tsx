@@ -1,10 +1,10 @@
 "use client";
 
-import { AddCategoryDialog } from "@/components/dialogs/add-category";
+import { AddCategoryDialog } from "@/components/dialogs/category-form-dialog";
 import {
   DialogDeleteAction,
   useDeleteDialog,
-} from "@/components/dialogs/delete-dialog-action";
+} from "@/components/dialogs/delete-action-dialog";
 import { DataTableCategory } from "@/components/tables/table-category";
 
 interface CategoryClientPageProps {
