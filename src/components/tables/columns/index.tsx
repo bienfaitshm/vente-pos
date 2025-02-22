@@ -16,6 +16,7 @@ export type ColumnProductType = {
   name: string;
   price: number;
   quantity: number;
+  category: string | number;
 };
 
 export type StudentPayementFraisType = {
@@ -25,7 +26,7 @@ export type StudentPayementFraisType = {
   motant: number;
 };
 
-type CategoryColumnParams<T> = { actions?: IEditDeleteActions<T> };
+type ColumnParamsWithAction<T> = { actions?: IEditDeleteActions<T> };
 
 /**
  *
@@ -33,7 +34,7 @@ type CategoryColumnParams<T> = { actions?: IEditDeleteActions<T> };
  * @returns
  */
 export function getCategoryColumn(
-  params?: CategoryColumnParams<ColumnCategoryType>
+  params?: ColumnParamsWithAction<ColumnCategoryType>
 ): ColumnDef<ColumnCategoryType>[] {
   return [
     {
@@ -82,8 +83,8 @@ export function getCategoryColumn(
  * @returns
  */
 export function getProductColumns(
-  params?: CategoryColumnParams<ColumnCategoryType>
-): ColumnDef<ColumnCategoryType>[] {
+  params?: ColumnParamsWithAction<ColumnProductType>
+): ColumnDef<ColumnProductType>[] {
   return [
     {
       accessorKey: "id",

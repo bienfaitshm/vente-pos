@@ -50,7 +50,7 @@ export const deleteCategory = actionClient
 //
 
 export const getProducts = actionClient
-  .schema(ProductSchemas)
+  .schema(EmptyObjet)
   .action(async ({ parsedInput: {} }) => {
     return await queries.getProducts();
   });

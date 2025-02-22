@@ -10,18 +10,19 @@ import {
   DialogDeleteAction,
   useDeleteDialog,
 } from "@/components/dialogs/delete-action-dialog";
-import { DataTableCategory } from "@/components/tables/table-category";
-import { useDeleteCategory } from "@/hooks/mutations";
+import { DataTableProduct } from "@/components/tables/table-product";
+import { useDeleteProduct } from "@/hooks/mutations";
+import type { SelectProduct } from "@/server/db";
 
 interface ProductClientPageProps {
-  data?: { id: number; name: string }[];
+  data?: SelectProduct[];
   categories?: { id: number; name: string }[];
 }
 export const ProductClientPage: React.FC<ProductClientPageProps> = ({
   data = [],
   categories = [],
 }) => {
-  const mutation = useDeleteCategory();
+  const mutation = useDeleteProduct();
   const updateFormRef = useUpdateProductFormDialog();
   const deleteDialogRef = useDeleteDialog();
 
@@ -40,7 +41,7 @@ export const ProductClientPage: React.FC<ProductClientPageProps> = ({
         onConfirm={(value) => onDeleteConfirm(value as number)}
       />
       {mutation.isPending && <AlertDelete />}
-      <DataTableCategory
+      <DataTableProduct
         data={data}
         rightHeader={<AddProductDialogForm categories={categories} />}
         cellActions={{
