@@ -69,9 +69,10 @@ export const ProductQuantitySchemas = z.object({
 export type ProductQuantity = z.infer<typeof ProductQuantitySchemas>;
 
 export const PointOfSaleSchemas = z.object({
+  id: IDSchemas.optional(),
   name: NoEmptyStringSchemas,
   description: z.string().optional(),
   address: NoEmptyStringSchemas,
   phoneNumber: NoEmptyStringSchemas,
-  statut: z.enum(["OPEN", "CLOSED", "RENOVATION"]),
+  statut: z.enum(["OPEN", "CLOSE", "RENOVATION"]),
 });

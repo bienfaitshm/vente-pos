@@ -6,6 +6,7 @@ import {
   ProductQuantitySchemas,
   EmptyObjet,
   IdObjectSchems,
+  PointOfSaleSchemas,
 } from "@/lib/schemas";
 
 import { actionClient } from "./base";
@@ -93,3 +94,40 @@ export const deleteProduct = actionClient
 export const changeProductQuantity = actionClient
   .schema(ProductQuantitySchemas)
   .action(async ({ parsedInput: {} }) => {});
+
+// Point of sales
+
+export const getPointOfSales = actionClient
+  .schema(EmptyObjet)
+  .action(async ({ parsedInput: {} }) => {
+    return await queries.getPointOfSales();
+  });
+
+export const createPointOfSale = actionClient
+  .schema(PointOfSaleSchemas)
+  .action(async ({ parsedInput: values }) => {
+    const data = await queries.createPointOfSale(values);
+    revalidatePath("/");
+    return data;
+  });
+
+export const updatePointOfSale = actionClient
+  .schema(PointOfSaleSchemas)
+  .action(async ({ parsedInput: { id, ...values } }) => {
+    const data = await queries.updatePointOfSale({
+      ...values,
+      id: id as number,
+    });
+    revalidatePath("/");
+    return data;
+  });
+
+export const deletePointOfSale = actionClient
+  .schema(IdObjectSchems)
+  .action(async ({ parsedInput: { id } }) => {
+    const data = await queries.deletePointOfSale({
+      id: id as number,
+    });
+    revalidatePath("/");
+    return data;
+  });

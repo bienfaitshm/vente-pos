@@ -7,9 +7,16 @@ import {
   integer,
   varchar,
   doublePrecision,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import type { AdapterAccountType } from "next-auth/adapters";
+
+export const PointOfSaleStatutEnum = pgEnum("statut", [
+  "OPEN",
+  "CLOSE",
+  "RENOVATION",
+]);
 
 export const users = pgTable("user", {
   id: text("id")
@@ -193,6 +200,7 @@ export const PointOfSale = pgTable("point_of_sale", {
   address: varchar({ length: 255 }).notNull(),
   phoneNumber: varchar("phone_number", { length: 255 }),
   description: text(),
+  statut: PointOfSaleStatutEnum().default("OPEN"),
 });
 
 export type InsertPointOfSale = typeof PointOfSale.$inferInsert;
