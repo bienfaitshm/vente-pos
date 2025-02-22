@@ -5,6 +5,7 @@ import type {
   LoginCredential,
   RegistrationCredential,
   Category,
+  Product,
 } from "@/lib/schemas";
 
 export function useLoginUser() {
@@ -44,5 +45,29 @@ export function useDeleteCategory() {
     networkMode: "always",
     mutationKey: ["DELETE_CATEGORY"],
     mutationFn: (id: number | string) => itemActions.deleteCategory({ id }),
+  });
+}
+
+export function useCreateProduct() {
+  return useMutation({
+    networkMode: "always",
+    mutationKey: ["CREATE_PRODUCT"],
+    mutationFn: (value: Product) => itemActions.createProduct(value),
+  });
+}
+
+export function useUpdateProduct() {
+  return useMutation({
+    networkMode: "always",
+    mutationKey: ["UPDATE_PRODUCT"],
+    mutationFn: (value: Product) => itemActions.updateProduct(value),
+  });
+}
+
+export function useDeleteProduct() {
+  return useMutation({
+    networkMode: "always",
+    mutationKey: ["DELETE_PRODUCT"],
+    mutationFn: (id: number | string) => itemActions.deleteProduct({ id }),
   });
 }
