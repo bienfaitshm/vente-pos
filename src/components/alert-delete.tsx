@@ -1,7 +1,5 @@
 import { Loader2 } from "lucide-react";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
 interface AlertDeleteProps {}
 
 export const AlertDelete: React.FC<AlertDeleteProps> = () => {
