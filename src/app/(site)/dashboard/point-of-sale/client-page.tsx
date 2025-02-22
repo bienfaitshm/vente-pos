@@ -2,25 +2,26 @@
 
 import { AlertDelete } from "@/components/alert-delete";
 import {
-  AddCategoryDialogForm,
-  UpdateCategoryDialogForm,
-  useUpdateCategoryFormDialog,
-} from "@/components/dialogs/category-form-dialog";
+  AddPointOfSaleDialogForm,
+  UpdatePointOfSaleDialogForm,
+  useUpdatePointOfSaleFormDialog,
+} from "@/components/dialogs/point-of-sale-form-dialog";
 import {
   DialogDeleteAction,
   useDeleteDialog,
 } from "@/components/dialogs/delete-action-dialog";
-import { DataTableCategory } from "@/components/tables/table-category";
-import { useDeleteCategory } from "@/hooks/mutations";
+import { DataTablePointOfSale } from "@/components/tables/table-point-of-sale";
+import { useDeletePointOfSale } from "@/hooks/mutations";
+import type { SelectPointOfSale } from "@/server/db";
 
-interface CategoryClientPageProps {
-  data?: { id: number; name: string }[];
+interface PointOfSaleClientPageProps {
+  data?: SelectPointOfSale[];
 }
-export const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
+export const PointOfSaleClientPage: React.FC<PointOfSaleClientPageProps> = ({
   data = [],
 }) => {
-  const mutation = useDeleteCategory();
-  const updateFormRef = useUpdateCategoryFormDialog();
+  const mutation = useDeletePointOfSale();
+  const updateFormRef = useUpdatePointOfSaleFormDialog();
   const deleteDialogRef = useDeleteDialog();
 
   const onDeleteConfirm = (value: number) => {
@@ -32,21 +33,24 @@ export const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
   };
   return (
     <div className="space-y-5">
-      <UpdateCategoryDialogForm ref={updateFormRef} />
+      <UpdatePointOfSaleDialogForm ref={updateFormRef} />
       <DialogDeleteAction
         ref={deleteDialogRef}
         onConfirm={(value) => onDeleteConfirm(value as number)}
       />
       {mutation.isPending && <AlertDelete />}
-      <DataTableCategory
+      <DataTablePointOfSale
         data={data}
-        rightHeader={<AddCategoryDialogForm />}
+        rightHeader={<AddPointOfSaleDialogForm />}
         cellActions={{
           onDelete(row) {
             deleteDialogRef.current?.delete(row.original.id);
           },
           onEdit(row) {
-            updateFormRef.current?.update(row.original);
+            updateFormRef.current?.update({
+              ...row.original,
+              description: row.original.description as string | undefined,
+            });
           },
         }}
       />

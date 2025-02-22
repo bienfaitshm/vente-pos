@@ -7,6 +7,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { Input } from "@/components/ui/input";
 import { useForm } from "@/hooks/form";
 import { PointOfSaleSchemas, type PointOfSale } from "@/lib/schemas";
@@ -20,6 +28,7 @@ const defaultValues: TPointOfSaleDefaultValue = {
   address: "",
   phoneNumber: "",
   statut: "OPEN",
+  description: "",
 };
 interface PointOfSaleProps {
   onSubmit: HookSafeActionFn<
@@ -51,7 +60,7 @@ export const PointOfSaleForm: React.FC<
   return (
     <Form {...form}>
       <form onSubmit={handleSubmitWithAction}>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-2">
           <FormField
             control={form.control}
             name="name"
@@ -65,6 +74,47 @@ export const PointOfSaleForm: React.FC<
               </FormItem>
             )}
           />
+          <div className="grid grid-cols-2 gap-2">
+            <FormField
+              control={form.control}
+              name="phoneNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Telephone</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="statut"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Statut</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selectionne le statut du point de vente" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="OPEN">Ouvert</SelectItem>
+                      <SelectItem value="CLOSE">Fermee</SelectItem>
+                      <SelectItem value="RENOVATION">En renomation</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
           <FormField
             control={form.control}
             name="address"
@@ -78,25 +128,13 @@ export const PointOfSaleForm: React.FC<
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="phoneNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Telephone</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
           <FormField
             control={form.control}
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Telephone</FormLabel>
+                <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Textarea {...field} />
                 </FormControl>

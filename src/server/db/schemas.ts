@@ -198,9 +198,9 @@ export const PointOfSale = pgTable("point_of_sale", {
   ...commonFieldTable,
   name: varchar({ length: 255 }).notNull(),
   address: varchar({ length: 255 }).notNull(),
-  phoneNumber: varchar("phone_number", { length: 255 }),
+  phoneNumber: varchar("phone_number", { length: 255 }).notNull(),
   description: text(),
-  statut: PointOfSaleStatutEnum().default("OPEN"),
+  statut: PointOfSaleStatutEnum().default("OPEN").notNull(),
 });
 
 export type InsertPointOfSale = typeof PointOfSale.$inferInsert;

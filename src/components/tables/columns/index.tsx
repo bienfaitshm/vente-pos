@@ -25,9 +25,9 @@ export type ColumnPointOfSaleType = {
   id: number;
   name: string;
   phoneNumber: string;
-  adress: string;
+  address: string;
   statut: "OPEN" | "CLOSE" | "RENOVATION";
-  description?: string;
+  description?: string | null;
 };
 
 export type ColumnSalerType = {
@@ -341,6 +341,23 @@ export function getPointOfSaleColumns(
       },
     },
     {
+      accessorKey: "address",
+      enableHiding: true,
+      enableResizing: true,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Adresse" />
+      ),
+      cell: ({ row }): React.ReactNode => {
+        return (
+          <div className="max-w-48 truncate font-medium">
+            <span className="  truncate font-medium">
+              {row.getValue("address")}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: "description",
       enableHiding: true,
       enableResizing: true,
@@ -349,10 +366,8 @@ export function getPointOfSaleColumns(
       ),
       cell: ({ row }): React.ReactNode => {
         return (
-          <div>
-            <span className="  truncate font-medium">
-              {row.getValue("description")}
-            </span>
+          <div className="max-w-48 truncate font-medium">
+            <span>{row.getValue("description")}</span>
           </div>
         );
       },
