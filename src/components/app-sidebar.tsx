@@ -13,6 +13,7 @@ import {
   Tags,
   SquareUserRound,
   UsersRound,
+  Store,
 } from "lucide-react";
 
 // import { NavMain } from "@/components/nav-main";
@@ -148,6 +149,11 @@ const data = {
       name: "Categories",
       url: "/dashboard/categories",
       icon: Tags,
+    },
+    {
+      name: "Point de ventes",
+      url: "/dashboard/stores",
+      icon: Store,
     },
     {
       name: "Vendeurs",
