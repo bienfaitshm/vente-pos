@@ -59,7 +59,7 @@ export const UpdateCategoryDialogForm: React.FC<
         </DialogHeader>
         <div>
           <CategoryForm
-            intialValues={dialogAction.value}
+            initialValues={dialogAction.value}
             onSubmit={mutation.mutateAsync}
           >
             <Button type="submit" className="hidden" ref={btnSubmitRef} />

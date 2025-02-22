@@ -14,7 +14,8 @@ import { HookSafeActionFn } from "next-safe-action/hooks";
 import { ZodType, ZodTypeDef } from "zod";
 import { SelectCombobox } from "../fields/select-combobox";
 
-const defaultValues: Product = {
+export type TProductDefaultValue = Product;
+const defaultValues: TProductDefaultValue = {
   name: "",
   category: "",
   quantity: 0,
@@ -31,12 +32,14 @@ interface ProductProps {
     unknown
   >;
   categories?: Required<Category>[];
+  initialValues?: TProductDefaultValue;
 }
 
 export const ProductForm: React.FC<React.PropsWithChildren<ProductProps>> = ({
   onSubmit,
   children,
   categories = [],
+  initialValues = defaultValues,
 }) => {
   const _cats: { label: string; value: string | number }[] = categories.map(
     (item) => ({
@@ -47,7 +50,14 @@ export const ProductForm: React.FC<React.PropsWithChildren<ProductProps>> = ({
   const { form, handleSubmitWithAction } = useForm({
     action: onSubmit,
     schemas: ProductSchemas,
-    options: { formProps: { defaultValues } },
+    options: {
+      formProps: { defaultValues: initialValues },
+      actionProps: {
+        onSuccess() {
+          form.reset(defaultValues);
+        },
+      },
+    },
   });
   return (
     <Form {...form}>

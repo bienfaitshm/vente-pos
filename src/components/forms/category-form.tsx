@@ -26,19 +26,19 @@ interface CategoryProps {
     unknown,
     unknown
   >;
-  intialValues?: Partial<TCategoryDefaultValue>;
+  initialValues?: Partial<TCategoryDefaultValue>;
 }
 
 export const CategoryForm: React.FC<React.PropsWithChildren<CategoryProps>> = ({
   onSubmit,
   children,
-  intialValues = defaultValues,
+  initialValues = defaultValues,
 }) => {
   const { form, handleSubmitWithAction } = useForm({
     action: onSubmit,
     schemas: CategorySchemas,
     options: {
-      formProps: { defaultValues: intialValues },
+      formProps: { defaultValues: initialValues },
       actionProps: {
         onSuccess() {
           form.reset(defaultValues);
