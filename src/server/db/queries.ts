@@ -95,6 +95,10 @@ export async function getByUsernameOrEmail(
   return users[0];
 }
 
+export async function getSellers() {
+  return await db.select().from(userTable).where(eq(userTable.isAdmin, false));
+}
+
 // catgories
 export async function createCategory(
   category: tables.InsertCategory
@@ -162,4 +166,40 @@ export async function deleteProduct({ id }: TWithID) {
 
 export async function getProducts(): Promise<tables.SelectProduct[]> {
   return await db.select().from(tables.Product).orderBy(asc(tables.Product.id));
+}
+
+// point of sale
+export async function createPointOfSale(
+  product: tables.InsertPointOfSale
+): Promise<tables.SelectPointOfSale | undefined> {
+  const categories = await db
+    .insert(tables.PointOfSale)
+    .values(product)
+    .returning();
+  return categories[0];
+}
+
+export async function updatePointOfSale({
+  id,
+  ...value
+}: tables.InsertPointOfSale & TWithID) {
+  return await db
+    .update(tables.PointOfSale)
+    .set(value)
+    .where(eq(tables.PointOfSale.id, id))
+    .returning();
+}
+
+export async function deletePointOfSale({ id }: TWithID) {
+  return await db
+    .delete(tables.PointOfSale)
+    .where(eq(tables.PointOfSale.id, id))
+    .returning();
+}
+
+export async function getPointOfSales(): Promise<tables.SelectPointOfSale[]> {
+  return await db
+    .select()
+    .from(tables.PointOfSale)
+    .orderBy(asc(tables.PointOfSale.id));
 }
