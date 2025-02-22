@@ -62,7 +62,7 @@ export const updateProduct = actionClient
   .action(async ({ parsedInput: {} }) => {});
 
 export const deleteProduct = actionClient
-  .schema(ProductSchemas)
+  .schema(IdObjectSchems)
   .action(async ({ parsedInput: {} }) => {});
 
 export const changeProductQuantity = actionClient
