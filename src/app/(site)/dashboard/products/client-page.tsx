@@ -2,10 +2,10 @@
 
 import { AlertDelete } from "@/components/alert-delete";
 import {
-  AddCategoryDialogForm,
-  UpdateCategoryDialogForm,
-  useUpdateCategoryFormDialog,
-} from "@/components/dialogs/category-form-dialog";
+  AddProductDialogForm,
+  UpdateProductDialogForm,
+  useUpdateProductFormDialog,
+} from "@/components/dialogs/product-form-dialog";
 import {
   DialogDeleteAction,
   useDeleteDialog,
@@ -15,12 +15,13 @@ import { useDeleteCategory } from "@/hooks/mutations";
 
 interface CategoryClientPageProps {
   data?: { id: number; name: string }[];
+  categories?: { id: number; name: string }[];
 }
 export const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
   data = [],
 }) => {
   const mutation = useDeleteCategory();
-  const updateFormRef = useUpdateCategoryFormDialog();
+  const updateFormRef = useUpdateProductFormDialog();
   const deleteDialogRef = useDeleteDialog();
 
   const onDeleteConfirm = (value: number) => {
@@ -32,7 +33,7 @@ export const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
   };
   return (
     <div className="space-y-5">
-      <UpdateCategoryDialogForm ref={updateFormRef} />
+      <UpdateProductDialogForm ref={updateFormRef} />
       <DialogDeleteAction
         ref={deleteDialogRef}
         onConfirm={(value) => onDeleteConfirm(value as number)}
@@ -40,7 +41,7 @@ export const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
       {mutation.isPending && <AlertDelete />}
       <DataTableCategory
         data={data}
-        rightHeader={<AddCategoryDialogForm />}
+        rightHeader={<AddProductDialogForm />}
         cellActions={{
           onDelete(row) {
             deleteDialogRef.current?.delete(row.original.id);

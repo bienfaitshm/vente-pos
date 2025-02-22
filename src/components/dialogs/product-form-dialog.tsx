@@ -18,6 +18,9 @@ import { ButtonLoader } from "../button-loader";
 import { useDialogAction } from "@/hooks/dialog-action";
 
 type TProductDefaultValueWithID = { id: number } & TProductDefaultValue;
+type PropsWithCategories<Props> = Props & {
+  categories: { id: number | string; name: string }[];
+};
 interface ProductUpdateFormRef {
   update(value: TProductDefaultValueWithID): void;
 }
@@ -26,6 +29,7 @@ interface AddProductDialogFormProps {}
 
 interface UpdateProductDialogFormProps {
   ref?: React.Ref<ProductUpdateFormRef>;
+  categories: {}[];
 }
 
 /**
@@ -34,8 +38,8 @@ interface UpdateProductDialogFormProps {
  * @returns
  */
 export const UpdateProductDialogForm: React.FC<
-  UpdateProductDialogFormProps
-> = ({ ref }) => {
+  PropsWithCategories<UpdateProductDialogFormProps>
+> = ({ ref, categories }) => {
   const btnSubmitRef = React.useRef<HTMLButtonElement>(null);
 
   const dialogAction = useDialogAction<TProductDefaultValueWithID>();
@@ -59,6 +63,7 @@ export const UpdateProductDialogForm: React.FC<
         </DialogHeader>
         <div>
           <ProductForm
+            categories={categories}
             initialValues={dialogAction.value}
             onSubmit={mutation.mutateAsync}
           >
@@ -92,7 +97,9 @@ export const UpdateProductDialogForm: React.FC<
  * Add new Product Form
  * @returns
  */
-export const AddProductDialogForm: React.FC<AddProductDialogFormProps> = () => {
+export const AddProductDialogForm: React.FC<
+  PropsWithCategories<AddProductDialogFormProps>
+> = ({ categories }) => {
   const btnSubmitRef = React.useRef<HTMLButtonElement>(null);
   const mutation = useCreateProduct();
   return (
@@ -109,7 +116,7 @@ export const AddProductDialogForm: React.FC<AddProductDialogFormProps> = () => {
           <DialogDescription>Ajouts d'un produit</DialogDescription>
         </DialogHeader>
         <div>
-          <ProductForm onSubmit={mutation.mutateAsync}>
+          <ProductForm categories={categories} onSubmit={mutation.mutateAsync}>
             <Button type="submit" className="hidden" ref={btnSubmitRef} />
           </ProductForm>
         </div>
