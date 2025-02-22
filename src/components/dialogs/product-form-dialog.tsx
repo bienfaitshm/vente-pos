@@ -62,6 +62,7 @@ export const UpdateProductDialogForm: React.FC<
         </DialogHeader>
         <div>
           <ProductForm
+            isUpdateForm
             categories={categories}
             initialValues={dialogAction.value}
             onSubmit={mutation.mutateAsync}

@@ -2,6 +2,7 @@
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -33,11 +34,13 @@ interface ProductProps {
   >;
   categories?: Required<Category>[];
   initialValues?: TProductDefaultValue;
+  isUpdateForm?: boolean;
 }
 
 export const ProductForm: React.FC<React.PropsWithChildren<ProductProps>> = ({
   onSubmit,
   children,
+  isUpdateForm,
   categories = [],
   initialValues = defaultValues,
 }) => {
@@ -102,8 +105,9 @@ export const ProductForm: React.FC<React.PropsWithChildren<ProductProps>> = ({
                 <FormItem>
                   <FormLabel>Quantite</FormLabel>
                   <FormControl>
-                    <Input type="number" {...field} />
+                    <Input type="number" disabled={isUpdateForm} {...field} />
                   </FormControl>
+                  <FormDescription>Quantites du stock</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
