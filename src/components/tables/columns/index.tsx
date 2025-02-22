@@ -7,7 +7,7 @@ import {
 } from "../actions/table-actions";
 
 export type ColumnCategoryType = {
-  id: number | string;
+  id: number;
   name: string;
 };
 

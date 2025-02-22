@@ -9,8 +9,9 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useImperativeHandle, useRef, useState } from "react";
+import { useDialogAction } from "@/hooks/dialog-action";
 
-interface DialogDeleteActionRef {
+export interface DialogDeleteActionRef {
   delete<T>(value: T): void;
 }
 
@@ -23,31 +24,26 @@ export const DialogDeleteAction: React.FC<DialogDeleteActionProps> = ({
   ref,
   onConfirm,
 }) => {
-  const [open, setOpen] = useState<boolean>(false);
-  const [value, setValue] = useState<unknown>(null);
+  const dialogAction = useDialogAction();
 
   useImperativeHandle(
     ref,
     () => ({
-      delete(e) {
-        setValue(e);
-        onOpenChange(true);
+      delete(value) {
+        dialogAction.handleOpenDialog(value);
       },
     }),
     []
   );
 
   const handleConfirm = () => {
-    value && onConfirm?.(value);
-    setOpen(false);
+    dialogAction.value && onConfirm?.(dialogAction.value);
+    dialogAction.handleCloseDialog();
   };
   //
-  const onOpenChange = (_open: boolean) => {
-    !_open && setValue(null);
-    setOpen(_open);
-  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={dialogAction.open} onOpenChange={dialogAction.onOpenChange}>
       <DialogContent>
         <DialogHeader className="sm:text-center">
           <DialogTitle>Suppression</DialogTitle>

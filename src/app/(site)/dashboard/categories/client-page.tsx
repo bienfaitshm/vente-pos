@@ -1,6 +1,10 @@
 "use client";
 
-import { AddCategoryDialog } from "@/components/dialogs/category-form-dialog";
+import {
+  AddCategoryDialogForm,
+  UpdateCategoryDialogForm,
+  useUpdateCategoryFormDialog,
+} from "@/components/dialogs/category-form-dialog";
 import {
   DialogDeleteAction,
   useDeleteDialog,
@@ -13,23 +17,23 @@ interface CategoryClientPageProps {
 export const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
   data = [],
 }) => {
+  const updateFormRef = useUpdateCategoryFormDialog();
   const deleteDialogRef = useDeleteDialog();
   return (
     <div>
       <DataTableCategory
         data={data}
-        rightHeader={<AddCategoryDialog />}
+        rightHeader={<AddCategoryDialogForm />}
         cellActions={{
           onDelete(row) {
-            const value = row.getValue("id");
-            console.log("onDelete");
-            deleteDialogRef.current?.delete(value);
+            deleteDialogRef.current?.delete(row.original.id);
           },
           onEdit(row) {
-            console.log("onEdit", row.getValue("id"));
+            updateFormRef.current?.update(row.original);
           },
         }}
       />
+      <UpdateCategoryDialogForm ref={updateFormRef} />
       <DialogDeleteAction
         ref={deleteDialogRef}
         onConfirm={(value) => {
