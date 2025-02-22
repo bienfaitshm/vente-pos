@@ -1,7 +1,7 @@
 export function formatCurrency(
   amount: number,
-  currencyCode: string = "USD", // Default to USD
-  locale?: string // Use browser/system locale if undefined
+  currencyCode: string = "CDF", // Default to CDF
+  locale: string = "fr-CD" // Use browser/system locale if undefined
 ): string {
   try {
     const formatter = new Intl.NumberFormat(locale, {
