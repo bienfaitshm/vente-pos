@@ -37,7 +37,14 @@ export const CategoryForm: React.FC<React.PropsWithChildren<CategoryProps>> = ({
   const { form, handleSubmitWithAction } = useForm({
     action: onSubmit,
     schemas: CategorySchemas,
-    options: { formProps: { defaultValues: intialValues } },
+    options: {
+      formProps: { defaultValues: intialValues },
+      actionProps: {
+        onSuccess() {
+          form.reset(defaultValues);
+        },
+      },
+    },
   });
   return (
     <Form {...form}>

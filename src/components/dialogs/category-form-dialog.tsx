@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { PlusCircle } from "lucide-react";
-import { useCreateCategory } from "@/hooks/mutations";
+import { useCreateCategory, useUpdateCategory } from "@/hooks/mutations";
 import { CategoryForm, TCategoryDefaultValue } from "../forms/category-form";
 import React, { useRef } from "react";
 import { ButtonLoader } from "../button-loader";
@@ -39,7 +39,7 @@ export const UpdateCategoryDialogForm: React.FC<
   const btnSubmitRef = React.useRef<HTMLButtonElement>(null);
 
   const dialogAction = useDialogAction<TCategoryDefaultValueWithID>();
-  const mutation = useCreateCategory();
+  const mutation = useUpdateCategory();
   React.useImperativeHandle(
     ref,
     () => ({
