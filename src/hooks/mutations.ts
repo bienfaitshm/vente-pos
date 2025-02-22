@@ -6,6 +6,7 @@ import type {
   RegistrationCredential,
   Category,
   Product,
+  PointOfSale,
 } from "@/lib/schemas";
 
 export function useLoginUser() {
@@ -69,5 +70,31 @@ export function useDeleteProduct() {
     networkMode: "always",
     mutationKey: ["DELETE_PRODUCT"],
     mutationFn: (id: number | string) => itemActions.deleteProduct({ id }),
+  });
+}
+
+//
+
+export function useCreatePointOfSale() {
+  return useMutation({
+    networkMode: "always",
+    mutationKey: ["CREATE_PointOfSale"],
+    mutationFn: (value: PointOfSale) => itemActions.createPointOfSale(value),
+  });
+}
+
+export function useUpdatePointOfSale() {
+  return useMutation({
+    networkMode: "always",
+    mutationKey: ["UPDATE_PointOfSale"],
+    mutationFn: (value: PointOfSale) => itemActions.updatePointOfSale(value),
+  });
+}
+
+export function useDeletePointOfSale() {
+  return useMutation({
+    networkMode: "always",
+    mutationKey: ["DELETE_PointOfSale"],
+    mutationFn: (id: number | string) => itemActions.deletePointOfSale({ id }),
   });
 }
