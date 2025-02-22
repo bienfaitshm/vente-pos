@@ -78,10 +78,10 @@ export const ProductForm: React.FC<React.PropsWithChildren<ProductProps>> = ({
           />
           <FormField
             control={form.control}
-            name="name"
+            name="category"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nom</FormLabel>
+                <FormLabel>Categorie</FormLabel>
                 <FormControl>
                   <SelectCombobox
                     selections={_cats}
