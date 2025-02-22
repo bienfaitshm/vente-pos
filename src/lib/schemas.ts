@@ -76,3 +76,5 @@ export const PointOfSaleSchemas = z.object({
   phoneNumber: NoEmptyStringSchemas,
   statut: z.enum(["OPEN", "CLOSE", "RENOVATION"]),
 });
+
+export type PointOfSale = z.infer<typeof PointOfSaleSchemas>;

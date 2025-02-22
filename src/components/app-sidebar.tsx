@@ -152,12 +152,12 @@ const data = {
     },
     {
       name: "Point de ventes",
-      url: "/dashboard/stores",
+      url: "/dashboard/point-of-sale",
       icon: Store,
     },
     {
       name: "Vendeurs",
-      url: "/dashboard/sellers",
+      url: "/dashboard/salers",
       icon: UsersRound,
     },
     {
