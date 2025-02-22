@@ -1,5 +1,5 @@
 import { loginUser, signinUser } from "@/server/actions/account";
-import { createCategory } from "@/server/actions/items";
+import * as itemActions from "@/server/actions/items";
 import { useMutation } from "@tanstack/react-query";
 import type {
   LoginCredential,
@@ -27,6 +27,22 @@ export function useCreateCategory() {
   return useMutation({
     networkMode: "always",
     mutationKey: ["CREATE_CATEGORY"],
-    mutationFn: (value: Category) => createCategory(value),
+    mutationFn: (value: Category) => itemActions.createCategory(value),
+  });
+}
+
+export function useUpdateCategory() {
+  return useMutation({
+    networkMode: "always",
+    mutationKey: ["UPDATE_CATEGORY"],
+    mutationFn: (value: Category) => itemActions.updateCategory(value),
+  });
+}
+
+export function useDeleteCategory() {
+  return useMutation({
+    networkMode: "always",
+    mutationKey: ["DELETE_CATEGORY"],
+    mutationFn: (id: number | string) => itemActions.deleteCategory({ id }),
   });
 }
