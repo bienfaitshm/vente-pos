@@ -23,7 +23,7 @@ const DataTableCategory: FunctionComponent<DataTableCategoryProps> = ({
   rightHeader,
   cellActions: actions,
 }) => {
-  const columns = useMemo(() => getCategoryColumn({ actions }), []);
+  const columns = useMemo(() => getCategoryColumn({ actions }), [actions]);
 
   const { searchField, table } = useHookTable<ColumnCategoryType>({
     data,

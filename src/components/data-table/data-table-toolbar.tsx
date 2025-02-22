@@ -4,7 +4,7 @@ import { Table } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import { DataTableViewOptions } from "@/components/data-table/data-table-view-options";
-import { DataTableFacetedFilter, type OptionType } from "./data-table-faceted-filter";
+import { type OptionType } from "./data-table-faceted-filter";
 import type { PropsWithChildren } from "react";
 
 // import {
@@ -13,14 +13,14 @@ import type { PropsWithChildren } from "react";
 // } from "@/components/data-table/data/data";
 // import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
-export type Optiontype = OptionType
+export type Optiontype = OptionType;
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
 
 export function DataTableToolbar<TData>({
   table,
-  children
+  children,
 }: PropsWithChildren<DataTableToolbarProps<TData>>): React.JSX.Element {
   const isFiltered = table.getState().columnFilters.length > 0;
 

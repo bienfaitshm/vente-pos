@@ -25,11 +25,8 @@ interface ProductUpdateFormRef {
   update(value: TProductDefaultValueWithID): void;
 }
 
-interface AddProductDialogFormProps {}
-
 interface UpdateProductDialogFormProps {
   ref?: React.Ref<ProductUpdateFormRef>;
-  categories: {}[];
 }
 
 /**
@@ -51,7 +48,7 @@ export const UpdateProductDialogForm: React.FC<
         dialogAction.handleOpenDialog(value);
       },
     }),
-    []
+    [dialogAction]
   );
 
   return (
@@ -59,7 +56,9 @@ export const UpdateProductDialogForm: React.FC<
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Modification</DialogTitle>
-          <DialogDescription>Modifier l'élément sélectionné </DialogDescription>
+          <DialogDescription>
+            Modifier l&apos;élément sélectionné{" "}
+          </DialogDescription>
         </DialogHeader>
         <div>
           <ProductForm
@@ -97,9 +96,9 @@ export const UpdateProductDialogForm: React.FC<
  * Add new Product Form
  * @returns
  */
-export const AddProductDialogForm: React.FC<
-  PropsWithCategories<AddProductDialogFormProps>
-> = ({ categories }) => {
+export const AddProductDialogForm: React.FC<PropsWithCategories<unknown>> = ({
+  categories,
+}) => {
   const btnSubmitRef = React.useRef<HTMLButtonElement>(null);
   const mutation = useCreateProduct();
   return (
@@ -113,7 +112,7 @@ export const AddProductDialogForm: React.FC<
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Produit</DialogTitle>
-          <DialogDescription>Ajouts d'un produit</DialogDescription>
+          <DialogDescription>Ajouts d&apos;un produit</DialogDescription>
         </DialogHeader>
         <div>
           <ProductForm categories={categories} onSubmit={mutation.mutateAsync}>

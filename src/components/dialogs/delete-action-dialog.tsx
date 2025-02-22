@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useImperativeHandle, useRef, useState } from "react";
+import { useImperativeHandle, useRef } from "react";
 import { useDialogAction } from "@/hooks/dialog-action";
 
 export interface DialogDeleteActionRef {
@@ -33,11 +33,13 @@ export const DialogDeleteAction: React.FC<DialogDeleteActionProps> = ({
         dialogAction.handleOpenDialog(value);
       },
     }),
-    []
+    [dialogAction]
   );
 
   const handleConfirm = () => {
-    dialogAction.value && onConfirm?.(dialogAction.value);
+    if (dialogAction.value) {
+      onConfirm?.(dialogAction.value);
+    }
     dialogAction.handleCloseDialog();
   };
   //
@@ -48,7 +50,7 @@ export const DialogDeleteAction: React.FC<DialogDeleteActionProps> = ({
         <DialogHeader className="sm:text-center">
           <DialogTitle>Suppression</DialogTitle>
           <DialogDescription>
-            Supprimer l'élément sélectionné{" "}
+            Supprimer l&apos;élément sélectionné{" "}
           </DialogDescription>
         </DialogHeader>
         <div>

@@ -22,8 +22,6 @@ interface CategoryUpdateFormRef {
   update(value: TCategoryDefaultValueWithID): void;
 }
 
-interface AddCategoryDialogFormProps {}
-
 interface UpdateCategoryDialogFormProps {
   ref?: React.Ref<CategoryUpdateFormRef>;
 }
@@ -47,7 +45,7 @@ export const UpdateCategoryDialogForm: React.FC<
         dialogAction.handleOpenDialog(value);
       },
     }),
-    []
+    [dialogAction]
   );
 
   return (
@@ -55,7 +53,9 @@ export const UpdateCategoryDialogForm: React.FC<
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Modification</DialogTitle>
-          <DialogDescription>Modifier l'élément sélectionné </DialogDescription>
+          <DialogDescription>
+            Modifier l&apos;élément sélectionné{" "}
+          </DialogDescription>
         </DialogHeader>
         <div>
           <CategoryForm
@@ -92,9 +92,7 @@ export const UpdateCategoryDialogForm: React.FC<
  * Add new Category Form
  * @returns
  */
-export const AddCategoryDialogForm: React.FC<
-  AddCategoryDialogFormProps
-> = () => {
+export const AddCategoryDialogForm: React.FC = () => {
   const btnSubmitRef = React.useRef<HTMLButtonElement>(null);
   const mutation = useCreateCategory();
   return (

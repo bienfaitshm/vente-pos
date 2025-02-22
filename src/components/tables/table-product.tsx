@@ -23,7 +23,7 @@ const DataTableProduct: FunctionComponent<DataTableProductProps> = ({
   rightHeader,
   cellActions: actions,
 }) => {
-  const columns = useMemo(() => getProductColumns({ actions }), []);
+  const columns = useMemo(() => getProductColumns({ actions }), [actions]);
 
   const { searchField, table } = useHookTable<ColumnProductType>({
     data,

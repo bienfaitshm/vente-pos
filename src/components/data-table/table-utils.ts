@@ -17,8 +17,14 @@ import {
 } from "@tanstack/react-table";
 import React from "react";
 
+type State = {
+  sorting: SortingState;
+  columnVisibility: VisibilityState;
+  rowSelection: RowSelectionState;
+  columnFilters: ColumnFiltersState;
+};
 type TTableState = Partial<TableState> & {
-  state: any;
+  state: State;
   onColumnVisibilityChange?: OnChangeFn<VisibilityState>;
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>;
   onRowSelectionChange?: OnChangeFn<RowSelectionState>;
@@ -27,16 +33,13 @@ type TTableState = Partial<TableState> & {
 
 export function useDataStateTable(): TTableState {
   //
-  const [columnVisibility, onColumnVisibilityChange] = React.useState<
-    VisibilityState
-  >({});
-  const [rowSelection, onRowSelectionChange] = React.useState<
-    RowSelectionState
-  >({});
+  const [columnVisibility, onColumnVisibilityChange] =
+    React.useState<VisibilityState>({});
+  const [rowSelection, onRowSelectionChange] =
+    React.useState<RowSelectionState>({});
   const [sorting, onSortingChange] = React.useState<SortingState>([]);
-  const [columnFilters, onColumnFiltersChange] = React.useState<
-    ColumnFiltersState
-  >([]);
+  const [columnFilters, onColumnFiltersChange] =
+    React.useState<ColumnFiltersState>([]);
 
   return {
     state: {

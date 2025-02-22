@@ -4,6 +4,7 @@ import {
   EditDeleteCellAction,
   IEditDeleteActions,
 } from "../actions/table-actions";
+import { formatCurrency } from "@/lib/formater";
 
 export type ColumnCategoryType = {
   id: number;
@@ -114,16 +115,18 @@ export function getProductColumns(
       enableHiding: true,
       enableResizing: true,
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Prix" />
+        <DataTableColumnHeader
+          className="max-w-28"
+          column={column}
+          title="Prix (CDF)"
+        />
       ),
       cell: ({ row }): React.ReactNode => {
-        // const label = labels.find((label) => label.value === row.original.label)
-
+        const price: number = row.getValue("price");
         return (
-          <div className="flex space-x-2">
-            {/* {label && <Badge variant="outline">{label.label}</Badge>} */}
-            <span className="max-w-48 truncate font-medium">
-              {row.getValue("price")}
+          <div className="max-w-28">
+            <span className="  truncate font-medium">
+              {formatCurrency(price, "EUR", "de-DE")}
             </span>
           </div>
         );
