@@ -15,7 +15,7 @@ import {
   UsersRound,
 } from "lucide-react";
 
-import { NavMain } from "@/components/nav-main";
+// import { NavMain } from "@/components/nav-main";
 import { AdminSideMenus } from "@/components/admin-side-menu";
 import { NavUser } from "@/components/nav-user";
 import { EnterpriseHead } from "@/components/team-switcher";
@@ -151,7 +151,7 @@ const data = {
     },
     {
       name: "Vendeurs",
-      url: "/dashboard/vendeurs",
+      url: "/dashboard/sellers",
       icon: UsersRound,
     },
     {
@@ -171,7 +171,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <AdminSideMenus menus={data.menuAdmins} />
-        <NavMain items={data.navMain} />
+        {/* <NavMain items={data.navMain} /> */}
       </SidebarContent>
       <SidebarFooter>
         {session?.user && <NavUser user={session.user} />}
