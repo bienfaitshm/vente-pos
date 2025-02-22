@@ -185,3 +185,15 @@ export const CommandItemRelation = relations(CommandItem, ({ one }) => ({
 
 export type InsertCommandItem = typeof CommandItem.$inferInsert;
 export type SelectCommandItem = typeof CommandItem.$inferSelect;
+
+//
+export const PointOfSale = pgTable("point_of_sale", {
+  ...commonFieldTable,
+  name: varchar({ length: 255 }).notNull(),
+  address: varchar({ length: 255 }).notNull(),
+  phoneNumber: varchar("phone_number", { length: 255 }),
+  description: text(),
+});
+
+export type InsertPointOfSale = typeof PointOfSale.$inferInsert;
+export type SelectPointOfSale = typeof PointOfSale.$inferSelect;
