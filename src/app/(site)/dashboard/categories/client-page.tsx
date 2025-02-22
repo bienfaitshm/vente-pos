@@ -11,6 +11,7 @@ import {
   useDeleteDialog,
 } from "@/components/dialogs/delete-action-dialog";
 import { DataTableCategory } from "@/components/tables/table-category";
+import { useDeleteCategory } from "@/hooks/mutations";
 
 interface CategoryClientPageProps {
   data?: { id: number; name: string }[];
@@ -18,10 +19,17 @@ interface CategoryClientPageProps {
 export const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
   data = [],
 }) => {
+  const mutation = useDeleteCategory();
   const updateFormRef = useUpdateCategoryFormDialog();
   const deleteDialogRef = useDeleteDialog();
 
-  const onDeleteConfirm = (value: number) => {};
+  const onDeleteConfirm = (value: number) => {
+    mutation.mutate(value, {
+      onSuccess() {
+        console.log("Deletation success");
+      },
+    });
+  };
   return (
     <div className="space-y-5">
       <UpdateCategoryDialogForm ref={updateFormRef} />
@@ -29,7 +37,7 @@ export const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
         ref={deleteDialogRef}
         onConfirm={(value) => onDeleteConfirm(value as number)}
       />
-      <AlertDelete />
+      {mutation.isPending && <AlertDelete />}
       <DataTableCategory
         data={data}
         rightHeader={<AddCategoryDialogForm />}
