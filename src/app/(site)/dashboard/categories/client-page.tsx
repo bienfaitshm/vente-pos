@@ -1,5 +1,6 @@
 "use client";
 
+import { AlertDelete } from "@/components/alert-delete";
 import {
   AddCategoryDialogForm,
   UpdateCategoryDialogForm,
@@ -22,12 +23,13 @@ export const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
 
   const onDeleteConfirm = (value: number) => {};
   return (
-    <div>
+    <div className="space-y-5">
       <UpdateCategoryDialogForm ref={updateFormRef} />
       <DialogDeleteAction
         ref={deleteDialogRef}
         onConfirm={(value) => onDeleteConfirm(value as number)}
       />
+      <AlertDelete />
       <DataTableCategory
         data={data}
         rightHeader={<AddCategoryDialogForm />}
