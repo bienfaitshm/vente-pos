@@ -62,7 +62,7 @@ export function getSalerColumns(
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Profile" />
       ),
-      cell: ({ row }): React.ReactNode => {
+      cell: ({}): React.ReactNode => {
         return (
           <div className="flex space-x-2">
             <Avatar className=" h-20 w-20 rounded-md">

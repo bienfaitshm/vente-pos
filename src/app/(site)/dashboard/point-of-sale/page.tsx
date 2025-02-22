@@ -1,4 +1,3 @@
-import { getCategories } from "@/server/actions/items";
 import { PointOfSaleClientPage } from "./client-page";
 import { getPointOfSales } from "@/server/actions/items";
 
