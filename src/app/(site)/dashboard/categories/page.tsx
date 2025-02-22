@@ -1,6 +1,8 @@
 import { getCategories } from "@/server/actions/items";
 import { CategoryClientPage } from "./client-page";
 
+export const dynamic = "force-dynamic";
+
 export default async function Page() {
   const queries = await getCategories({});
   return (
