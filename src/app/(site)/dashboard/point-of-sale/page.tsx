@@ -7,7 +7,7 @@ export default async function Page() {
   const queries = await getPointOfSales({});
   return (
     <div className="">
-      <h1>Categories</h1>
+      <h1>Point de vente</h1>
       <PointOfSaleClientPage data={queries?.data} />
     </div>
   );
