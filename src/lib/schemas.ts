@@ -86,11 +86,14 @@ export const ClientSchemas = z.object({
   address: z.string().optional(),
 });
 
+export type Client = z.infer<typeof ClientSchemas>;
+
 export const CommandItemSchemas = z.object({
   amount: z.coerce.number(),
   quantity: z.coerce.number(),
   product: ProductSchemas,
 });
+export type CommandItem = z.infer<typeof CommandItemSchemas>;
 
 export const InvoiceSchemas = z.object({
   client: ClientSchemas,
@@ -99,3 +102,4 @@ export const InvoiceSchemas = z.object({
     .min(1, { message: "Minimum de produit requis" }),
   seller: IDSchemas,
 });
+export type Invoice = z.infer<typeof InvoiceSchemas>;
