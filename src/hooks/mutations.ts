@@ -1,5 +1,5 @@
 import { loginUser, signinUser } from "@/server/actions/account";
-import * as itemActions from "@/server/actions/items";
+import * as itemActions from "@/server/actions";
 import { useMutation } from "@tanstack/react-query";
 import type {
   LoginCredential,
@@ -7,6 +7,7 @@ import type {
   Category,
   Product,
   PointOfSale,
+  Invoice,
 } from "@/lib/schemas";
 
 export function useLoginUser() {
@@ -25,6 +26,15 @@ export function useSigninUser() {
   });
 }
 
+//
+export function useCommandProduct() {
+  return useMutation({
+    networkMode: "always",
+    mutationKey: ["COMMAND_PRODUCT"],
+    mutationFn: (value: Invoice) => itemActions.commandProduct(value),
+  });
+}
+//
 export function useCreateCategory() {
   return useMutation({
     networkMode: "always",
