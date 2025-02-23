@@ -100,6 +100,6 @@ export const InvoiceSchemas = z.object({
   items: z
     .array(CommandItemSchemas)
     .min(1, { message: "Minimum de produit requis" }),
-  seller: IDSchemas,
+  saler: IDSchemas,
 });
 export type Invoice = z.infer<typeof InvoiceSchemas>;
