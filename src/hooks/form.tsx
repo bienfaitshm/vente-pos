@@ -19,6 +19,18 @@ type TypeParams<
   schemas: ZodType<unknown, ZodTypeDef, unknown>;
   options?: HookProps<ServerError, S, BAS, CVE, CBAVE, Data, FormContext>;
 };
+
+export type HookSafeActionFnSubmiter<
+  TSchemas extends Schema<any, ZodTypeDef, any>
+> = HookSafeActionFn<
+  unknown,
+  TSchemas,
+  readonly ZodType<unknown, ZodTypeDef, unknown>[],
+  unknown,
+  unknown,
+  unknown
+>;
+
 export function useForm<
   ServerError,
   S extends Schema,
