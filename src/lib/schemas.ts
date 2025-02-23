@@ -78,3 +78,24 @@ export const PointOfSaleSchemas = z.object({
 });
 
 export type PointOfSale = z.infer<typeof PointOfSaleSchemas>;
+
+export const ClientSchemas = z.object({
+  id: IDSchemas.optional(),
+  name: NoEmptyStringSchemas,
+  phoneNumber: z.string().optional(),
+  address: z.string().optional(),
+});
+
+export const CommandItemSchemas = z.object({
+  amount: z.coerce.number(),
+  quantity: z.coerce.number(),
+  product: ProductSchemas,
+});
+
+export const InvoiceSchemas = z.object({
+  client: ClientSchemas,
+  items: z
+    .array(CommandItemSchemas)
+    .min(1, { message: "Minimum de produit requis" }),
+  seller: IDSchemas,
+});
