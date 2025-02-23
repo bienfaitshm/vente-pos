@@ -8,8 +8,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { type HookSafeActionFnSubmiter, useForm } from "@/hooks/form";
+import {
+  type HookSafeActionFnSubmiter,
+  TFormReturn,
+  useForm,
+} from "@/hooks/form";
 import { InvoiceSchemas, type Invoice } from "@/lib/schemas";
+import React from "react";
 
 export type TInvoiceDefaultValue = Invoice;
 const defaultValues: TInvoiceDefaultValue = {
@@ -21,6 +26,31 @@ interface InvoiceFormProps {
   onSubmit: HookSafeActionFnSubmiter<typeof InvoiceSchemas>;
   initialValues?: Partial<TInvoiceDefaultValue>;
 }
+
+interface InvoicePropsWithForm {
+  form: TFormReturn<typeof InvoiceSchemas>;
+}
+
+const InputInvoiceForm: React.FC<InvoicePropsWithForm> = ({ form }) => {
+  return (
+    <div>
+      <FormField
+        control={form.control}
+        name="client"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Client</FormLabel>
+            <FormControl>
+              {/* <Input {...field} /> */}
+              <h1>Input client</h1>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
+  );
+};
 
 export const InvoiceForm: React.FC<
   React.PropsWithChildren<InvoiceFormProps>
@@ -40,22 +70,10 @@ export const InvoiceForm: React.FC<
   return (
     <Form {...form}>
       <form onSubmit={handleSubmitWithAction}>
-        <div className="flex flex-col gap-6">
-          <FormField
-            control={form.control}
-            name="client.name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nom</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          {children}
+        <div className="grid grid-cols-2 gap-2">
+          <InputInvoiceForm form={form} />
         </div>
+        {children}
       </form>
     </Form>
   );
