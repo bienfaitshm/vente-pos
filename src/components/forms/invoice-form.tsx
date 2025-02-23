@@ -9,15 +9,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { type HookSafeActionFnSubmiter, useForm } from "@/hooks/form";
-import { CategorySchemas, type Category } from "@/lib/schemas";
+import { InvoiceSchemas, type Invoice } from "@/lib/schemas";
 
-export type TCategoryDefaultValue = Category;
-const defaultValues: TCategoryDefaultValue = {
-  name: "",
+export type TInvoiceDefaultValue = Invoice;
+const defaultValues: TInvoiceDefaultValue = {
+  client: null,
+  items: [],
+  saler: 1,
 };
 interface InvoiceFormProps {
-  onSubmit: HookSafeActionFnSubmiter<typeof CategorySchemas>;
-  initialValues?: Partial<TCategoryDefaultValue>;
+  onSubmit: HookSafeActionFnSubmiter<typeof InvoiceSchemas>;
+  initialValues?: Partial<TInvoiceDefaultValue>;
 }
 
 export const InvoiceForm: React.FC<
@@ -25,7 +27,7 @@ export const InvoiceForm: React.FC<
 > = ({ onSubmit, children, initialValues = defaultValues }) => {
   const { form, handleSubmitWithAction } = useForm({
     action: onSubmit,
-    schemas: CategorySchemas,
+    schemas: InvoiceSchemas,
     options: {
       formProps: { defaultValues: initialValues },
       actionProps: {
@@ -41,7 +43,7 @@ export const InvoiceForm: React.FC<
         <div className="flex flex-col gap-6">
           <FormField
             control={form.control}
-            name="name"
+            name="client.name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Nom</FormLabel>
