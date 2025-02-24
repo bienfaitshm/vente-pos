@@ -165,7 +165,10 @@ export async function deleteProduct({ id }: TWithID) {
 }
 
 export async function getProducts(): Promise<tables.SelectProduct[]> {
-  return await db.select().from(tables.Product).orderBy(asc(tables.Product.id));
+  return await db
+    .select()
+    .from(tables.Product)
+    .orderBy(asc(tables.Product.name));
 }
 
 // point of sale

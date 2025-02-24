@@ -2,13 +2,18 @@
 
 import { InvoiceForm } from "@/components/forms/invoice-form";
 import { useCommandProduct } from "@/hooks/mutations";
+import { SelectProduct } from "@/server/db";
 
-export const SaleClientPage = () => {
+interface SaleClientPageProps {
+  products?: SelectProduct[];
+}
+
+export const SaleClientPage: React.FC<SaleClientPageProps> = ({ products }) => {
   const mutation = useCommandProduct();
   return (
     <div>
       <h1>Client page</h1>
-      <InvoiceForm onSubmit={mutation.mutateAsync} />
+      <InvoiceForm products={products} onSubmit={mutation.mutateAsync} />
     </div>
   );
 };
