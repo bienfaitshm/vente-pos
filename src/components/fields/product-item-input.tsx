@@ -7,6 +7,18 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command";
+
 interface Product {
   name: string;
   price: number;
@@ -38,6 +50,10 @@ export const ProductItemInput: React.FC<ProductItemInputProps> = ({
   onChange,
   ref,
 }) => {
+  const selectedItems = React.useMemo(
+    () => value.map((i) => i.product.id),
+    [value]
+  );
   const productSelectDialogRef = useProductSelectDialog();
   React.useImperativeHandle(
     ref,
@@ -50,7 +66,11 @@ export const ProductItemInput: React.FC<ProductItemInputProps> = ({
   );
   return (
     <div>
-      <ProductSelectDialog ref={productSelectDialogRef} />
+      <ProductSelectDialog
+        selectedItems={selectedItems}
+        products={products}
+        ref={productSelectDialogRef}
+      />
       <h1>Input item</h1>
     </div>
   );
@@ -61,10 +81,14 @@ interface ProductSelectDialogRef {
   closeDialog(): void;
 }
 interface ProductSelectDialogProps {
+  products: Product[];
   ref?: React.Ref<ProductSelectDialogRef>;
+  selectedItems?: (number | string | undefined)[];
 }
 export const ProductSelectDialog: React.FC<ProductSelectDialogProps> = ({
   ref,
+  products,
+  selectedItems = [],
 }) => {
   const [open, setOpen] = React.useState<boolean>(false);
   React.useImperativeHandle(
@@ -87,6 +111,19 @@ export const ProductSelectDialog: React.FC<ProductSelectDialogProps> = ({
           <DialogTitle>Selection du produit</DialogTitle>
           <DialogDescription>Ajouter le produit a vendre</DialogDescription>
         </DialogHeader>
+        <div>
+          <Command>
+            <CommandInput placeholder="Recherche..." />
+            <CommandList>
+              <CommandEmpty>Aucun Resultat.</CommandEmpty>
+              {products.map((product) => (
+                <CommandItem className="capitalize" key={product.id}>
+                  {product.name}
+                </CommandItem>
+              ))}
+            </CommandList>
+          </Command>
+        </div>
       </DialogContent>
     </Dialog>
   );
@@ -98,4 +135,12 @@ export function useProductSelectDialog() {
 
 export function useProductItemInput() {
   return React.useRef<ProductItemInputRef>(null);
+}
+
+function isSelectedIn(
+  id?: number | string,
+  items: (number | string | undefined)[] = []
+): boolean {
+  if (!id) return false;
+  return items.includes(id);
 }
