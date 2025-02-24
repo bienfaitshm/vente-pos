@@ -18,6 +18,8 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "@/components/ui/command";
+import { Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Product {
   name: string;
@@ -119,6 +121,14 @@ export const ProductSelectDialog: React.FC<ProductSelectDialogProps> = ({
               {products.map((product) => (
                 <CommandItem className="capitalize" key={product.id}>
                   {product.name}
+                  <Check
+                    className={cn(
+                      "ml-auto",
+                      isSelectedIn(product.id, selectedItems)
+                        ? "opacity-100"
+                        : "opacity-0"
+                    )}
+                  />
                 </CommandItem>
               ))}
             </CommandList>
