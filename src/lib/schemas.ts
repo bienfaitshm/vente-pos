@@ -103,3 +103,10 @@ export const InvoiceSchemas = z.object({
   saler: IDSchemas,
 });
 export type Invoice = z.infer<typeof InvoiceSchemas>;
+
+//
+export const ItemsSelectSchemas = z.object({
+  items: z.array(CommandItemSchemas).min(1),
+});
+
+export type ItemsSelect = z.infer<typeof ItemsSelectSchemas>;
