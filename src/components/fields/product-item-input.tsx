@@ -50,13 +50,13 @@ interface ProductItem {
   product: Product;
 }
 
-interface ButtonItemQuantityProps {
+interface ButtonTooltipProps {
   icon: React.ReactNode;
   tooltipText: string;
   onClick?(): void;
 }
 
-export const ButtonItemQuantity: React.FC<ButtonItemQuantityProps> = ({
+export const ButtonTooltip: React.FC<ButtonTooltipProps> = ({
   icon,
   tooltipText,
   onClick,
@@ -214,16 +214,16 @@ export const QuantityIncreaser: React.FC<QuantityIncreaserProps> = ({
   };
   return (
     <div className="flex items-center gap-5">
-      <ButtonItemQuantity
-        onClick={handlePlus}
+      <ButtonTooltip
+        onClick={handleMinus}
         tooltipText="Diminuer la quantite"
         icon={<MinusCircle className="h-4 w-4" />}
       />
       <div>
         <p>{value}</p>
       </div>
-      <ButtonItemQuantity
-        onClick={handleMinus}
+      <ButtonTooltip
+        onClick={handlePlus}
         tooltipText="Augmenter la quantite"
         icon={<PlusCircle className="h-4 w-4" />}
       />

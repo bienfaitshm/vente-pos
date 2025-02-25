@@ -24,8 +24,9 @@ import React from "react";
 import { Button } from "../ui/button";
 import { MinusCircle, PlusCircle, X } from "lucide-react";
 import {
-  ButtonItemQuantity,
+  ButtonTooltip,
   ProductSelectDialog,
+  QuantityIncreaser,
   useProductSelectDialog,
 } from "../fields/product-item-input";
 import { SelectProduct } from "@/server/db";
@@ -87,22 +88,11 @@ const InputInvoiceForm: React.FC<
           <FormItem>
             <div className="flex items-center justify-between">
               <FormLabel>Produit</FormLabel>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      type="button"
-                      size="icon"
-                      onClick={handleOpenInputProductInput}
-                    >
-                      <PlusCircle />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-xs">Ajouter un produit</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <ButtonTooltip
+                icon={<PlusCircle />}
+                tooltipText="Ajouter de produits"
+                onClick={handleOpenInputProductInput}
+              />
             </div>
             <div>
               <ProductSelectDialog
@@ -117,7 +107,7 @@ const InputInvoiceForm: React.FC<
                     key={item.product.id}
                     className="p-2 rounded-md border flex items-center justify-between"
                   >
-                    <div className="w-full grid grid-cols-3 gap-2">
+                    <div className="w-full grid grid-cols-3 gap-2 ">
                       <div className="col-span-1">
                         <small>Produit</small>
                         <p className="capitalize">{item.product.name}</p>
@@ -128,38 +118,27 @@ const InputInvoiceForm: React.FC<
                         name={`items.${index}.quantity`}
                         render={({ field }) => {
                           return (
-                            <FormItem className="grid grid-cols-2 gap-2">
-                              <div className="flex flex-col items-center">
-                                <small className="text-center">Quantite</small>
-                                {/* Quantity */}
-                                <FormControl>
-                                  <div className="flex items-center gap-5">
-                                    <ButtonItemQuantity
-                                      onClick={() =>
-                                        field.onChange(field.value - 1)
-                                      }
-                                      tooltipText="Diminuer la quantite"
-                                      icon={<MinusCircle className="h-4 w-4" />}
-                                    />
-                                    <div>
-                                      <p>{field.value}</p>
-                                    </div>
-                                    <ButtonItemQuantity
-                                      onClick={() =>
-                                        field.onChange(field.value + 1)
-                                      }
-                                      tooltipText="Augmenter la quantite"
-                                      icon={<PlusCircle className="h-4 w-4" />}
-                                    />
-                                  </div>
-                                </FormControl>
-                              </div>
-                              <div>
-                                <small>Prix total</small>
+                            <FormItem className="col-span-2">
+                              {/* Quantity */}
+                              <div className="grid grid-cols-2 gap-2 bg-yellow-300">
                                 <div>
-                                  {formatCurrency(
-                                    item.product.price * field.value
-                                  )}
+                                  <small className="text-center">
+                                    Quantite
+                                  </small>
+                                  <FormControl>
+                                    <QuantityIncreaser
+                                      value={field.value}
+                                      onChange={field.onChange}
+                                    />
+                                  </FormControl>
+                                </div>
+                                <div>
+                                  <small>Prix total</small>
+                                  <div>
+                                    {formatCurrency(
+                                      item.product.price * field.value
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                             </FormItem>
@@ -167,7 +146,7 @@ const InputInvoiceForm: React.FC<
                         }}
                       />
                     </div>
-                    <ButtonItemQuantity
+                    <ButtonTooltip
                       onClick={() => arrayAction.remove(index)}
                       tooltipText="Retirer de la selection"
                       icon={<X className="h-4 w-4" />}
