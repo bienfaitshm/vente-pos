@@ -206,3 +206,33 @@ export async function getPointOfSales(): Promise<tables.SelectPointOfSale[]> {
     .from(tables.PointOfSale)
     .orderBy(asc(tables.PointOfSale.id));
 }
+
+// Client
+export async function createClient(
+  product: tables.InsertClient
+): Promise<tables.SelectClient | undefined> {
+  const values = await db.insert(tables.Client).values(product).returning();
+  return values[0];
+}
+
+export async function updateClient({
+  id,
+  ...value
+}: tables.InsertPointOfSale & TWithID) {
+  return await db
+    .update(tables.Client)
+    .set(value)
+    .where(eq(tables.Client.id, id))
+    .returning();
+}
+
+export async function deleteClient({ id }: TWithID) {
+  return await db
+    .delete(tables.Client)
+    .where(eq(tables.Client.id, id))
+    .returning();
+}
+
+export async function getClients(): Promise<tables.SelectClient[]> {
+  return await db.select().from(tables.Client).orderBy(asc(tables.Client.id));
+}

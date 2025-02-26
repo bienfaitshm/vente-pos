@@ -118,6 +118,9 @@ export const Client = pgTable("client", {
   phoneNumber: varchar({ length: 255 }),
 });
 
+export type InsertClient = typeof Client.$inferInsert;
+export type SelectClient = typeof Client.$inferSelect;
+
 export type InsertUser = typeof users.$inferInsert;
 export type SelectUser = typeof users.$inferSelect;
 

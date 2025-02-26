@@ -134,14 +134,39 @@ export const deletePointOfSale = actionClient
   });
 
 // Client
-export const createClient = actionClient
-  .schema(ClientSchemas)
-  .action(async ({ parsedInput }) => {
-    console.log({ parsedInput });
-  });
-
 export const getClients = actionClient
   .schema(EmptyObjet)
   .action(async ({ parsedInput: {} }) => {
-    return [];
+    return await queries.getClients();
+  });
+
+export const createClient = actionClient
+  .schema(ClientSchemas)
+  .action(async ({ parsedInput: values }) => {
+    const data = await queries.createClient(values);
+    revalidatePath("/");
+    return data;
+  });
+
+export const updateClient = actionClient
+  .schema(ClientSchemas)
+  .action(async ({ parsedInput: { id, phoneNumber, address, ...values } }) => {
+    const data = await queries.updateClient({
+      ...values,
+      id: id as number,
+      address: address as string,
+      phoneNumber: phoneNumber as string,
+    });
+    revalidatePath("/");
+    return data;
+  });
+
+export const deleteClient = actionClient
+  .schema(IdObjectSchems)
+  .action(async ({ parsedInput: { id } }) => {
+    const data = await queries.deleteClient({
+      id: id as number,
+    });
+    revalidatePath("/");
+    return data;
   });
