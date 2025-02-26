@@ -12,7 +12,6 @@ export const SaleClientPage: React.FC<SaleClientPageProps> = ({ products }) => {
   const mutation = useCommandProduct();
   return (
     <div>
-      <h1>Client page</h1>
       <InvoiceForm products={products} onSubmit={mutation.mutateAsync} />
     </div>
   );

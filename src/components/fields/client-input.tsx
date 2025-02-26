@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, UserPlus2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const frameworks = [
   {
@@ -42,7 +51,17 @@ const frameworks = [
   },
 ];
 
-export const ClientInput: React.FC = () => {
+interface ClientInputProps {}
+export const ClientInput: React.FC<ClientInputProps> = ({}) => {
+  return (
+    <div className="w-full flex flex-row gap-2">
+      <ClientSelect />
+      <ClientDialog />
+    </div>
+  );
+};
+
+const ClientSelect: React.FC = () => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
 
@@ -53,17 +72,17 @@ export const ClientInput: React.FC = () => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-full justify-between"
         >
           {value
             ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select framework..."}
+            : "Selection du client"}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-full p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." className="h-9" />
+          <CommandInput placeholder="Recherche du client..." className="h-9" />
           <CommandList>
             <CommandEmpty>No framework found.</CommandEmpty>
             <CommandGroup>
@@ -90,5 +109,27 @@ export const ClientInput: React.FC = () => {
         </Command>
       </PopoverContent>
     </Popover>
+  );
+};
+
+interface ClientDialogProps {}
+
+export const ClientDialog: React.FC<ClientDialogProps> = ({}) => {
+  return (
+    <div>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button variant="ghost" type="button">
+            <UserPlus2 />
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Nouveau client</DialogTitle>
+            <DialogDescription>Ajouter un nouveau client</DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 };

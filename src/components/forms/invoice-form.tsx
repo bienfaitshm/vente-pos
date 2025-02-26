@@ -2,6 +2,7 @@
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -14,7 +15,7 @@ import {
 } from "@/hooks/form";
 import { InvoiceSchemas, type Invoice } from "@/lib/schemas";
 import React from "react";
-import { PlusCircle, X } from "lucide-react";
+import { PlusCircle, UserRoundPlus, X } from "lucide-react";
 import {
   ButtonTooltip,
   ProductDisplay,
@@ -62,11 +63,20 @@ const InputInvoiceForm: React.FC<
         control={form.control}
         name="client"
         render={({}) => (
-          <FormItem>
+          <FormItem className="flex flex-col gap-2">
             <FormLabel>Client</FormLabel>
             <FormControl>
               <ClientInput />
             </FormControl>
+            <FormDescription>
+              <span>
+                {" "}
+                Pour sélectionner un client existant, choisissez-le dans la
+                liste ci-dessous. Si vous souhaitez ajouter un nouveau client,
+                veuillez cliquer sur le bouton
+              </span>{" "}
+              <UserRoundPlus className="h-4 w-4 inline-flex mb-2" />
+            </FormDescription>
             <FormMessage />
           </FormItem>
         )}
@@ -84,6 +94,11 @@ const InputInvoiceForm: React.FC<
                 onClick={handleOpenInputProductInput}
               />
             </div>
+            <FormDescription>
+              Pour ajouter un produit, cliquez sur le bouton{" "}
+              <PlusCircle className="h-3 w-3 inline-flex" />. Une fois le
+              produit ajouté, vous pourrez modifier la quantité souhaitée.
+            </FormDescription>
             <div>
               <FormControl>
                 <ProductSelectDialog
