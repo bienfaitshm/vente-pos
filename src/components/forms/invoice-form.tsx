@@ -26,6 +26,7 @@ import {
 } from "../fields/product-item-input";
 import { SelectProduct } from "@/server/db";
 import { formatCurrency } from "@/lib/formater";
+import { ClientInput } from "../fields/client-input";
 
 export type TInvoiceDefaultValue = Invoice;
 const defaultValues: TInvoiceDefaultValue = {
@@ -64,8 +65,7 @@ const InputInvoiceForm: React.FC<
           <FormItem>
             <FormLabel>Client</FormLabel>
             <FormControl>
-              {/* <Input {...field} /> */}
-              <h1>Input client</h1>
+              <ClientInput />
             </FormControl>
             <FormMessage />
           </FormItem>
