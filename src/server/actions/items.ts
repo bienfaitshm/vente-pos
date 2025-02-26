@@ -7,6 +7,7 @@ import {
   EmptyObjet,
   IdObjectSchems,
   PointOfSaleSchemas,
+  ClientSchemas,
 } from "@/lib/schemas";
 
 import { actionClient } from "./base";
@@ -130,4 +131,17 @@ export const deletePointOfSale = actionClient
     });
     revalidatePath("/");
     return data;
+  });
+
+// Client
+export const createClient = actionClient
+  .schema(ClientSchemas)
+  .action(async ({ parsedInput }) => {
+    console.log({ parsedInput });
+  });
+
+export const getClients = actionClient
+  .schema(EmptyObjet)
+  .action(async ({ parsedInput: {} }) => {
+    return [];
   });

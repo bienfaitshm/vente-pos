@@ -23,10 +23,14 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ClientForm, useClientForm } from "../forms/client-form";
+import { ButtonLoader } from "../button-loader";
+import { useCreateClient } from "@/hooks/mutations";
 
 const frameworks = [
   {
@@ -115,6 +119,8 @@ const ClientSelect: React.FC = () => {
 interface ClientDialogProps {}
 
 export const ClientDialog: React.FC<ClientDialogProps> = ({}) => {
+  const clientFormRef = useClientForm();
+  const mutation = useCreateClient();
   return (
     <div>
       <Dialog>
@@ -128,6 +134,21 @@ export const ClientDialog: React.FC<ClientDialogProps> = ({}) => {
             <DialogTitle>Nouveau client</DialogTitle>
             <DialogDescription>Ajouter un nouveau client</DialogDescription>
           </DialogHeader>
+          <div>
+            <ClientForm ref={clientFormRef} onSubmit={mutation.mutateAsync} />
+          </div>
+          <DialogFooter>
+            <ButtonLoader
+              type="button"
+              isLoading={mutation.isPending}
+              loadingText="Enregristement..."
+              onClick={() => {
+                clientFormRef.current?.submit();
+              }}
+            >
+              Enregistrer
+            </ButtonLoader>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

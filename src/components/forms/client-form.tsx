@@ -41,7 +41,7 @@ interface ClientFormProps {
 
 export const ClientForm: React.FC<ClientFormProps> = ({
   onSubmit,
-  initialValues,
+  initialValues = defaultValues,
   ref,
 }) => {
   const { form, handleSubmitWithAction } = useForm({

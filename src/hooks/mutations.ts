@@ -8,6 +8,7 @@ import type {
   Product,
   PointOfSale,
   Invoice,
+  Client,
 } from "@/lib/schemas";
 
 export function useLoginUser() {
@@ -106,5 +107,13 @@ export function useDeletePointOfSale() {
     networkMode: "always",
     mutationKey: ["DELETE_PointOfSale"],
     mutationFn: (id: number | string) => itemActions.deletePointOfSale({ id }),
+  });
+}
+
+export function useCreateClient() {
+  return useMutation({
+    networkMode: "always",
+    mutationKey: ["CREATE_CLIENT"],
+    mutationFn: (value: Client) => itemActions.createClient(value),
   });
 }
