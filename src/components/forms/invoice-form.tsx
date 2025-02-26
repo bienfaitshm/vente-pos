@@ -25,7 +25,7 @@ import {
   QuantityIncreaser,
   useProductSelectDialog,
 } from "../fields/product-item-input";
-import { SelectProduct } from "@/server/db";
+import { SelectClient, SelectProduct } from "@/server/db";
 import { formatCurrency } from "@/lib/formater";
 import { ClientInput } from "../fields/client-input";
 
@@ -39,6 +39,7 @@ interface InvoiceFormProps {
   onSubmit: HookSafeActionFnSubmiter<typeof InvoiceSchemas>;
   initialValues?: Partial<TInvoiceDefaultValue>;
   products?: SelectProduct[];
+  clients?: SelectClient[];
 }
 
 interface InvoicePropsWithForm {
@@ -51,12 +52,16 @@ interface InvoicePropsWithForm {
  * @returns
  */
 const InputInvoiceForm: React.FC<
-  InvoicePropsWithForm & { products?: SelectProduct[] }
-> = ({ form, products = [] }) => {
+  InvoicePropsWithForm & {
+    products?: SelectProduct[];
+    clients?: SelectClient[];
+  }
+> = ({ form, products = [], clients = [] }) => {
   const productSelectDialogRef = useProductSelectDialog();
   const handleOpenInputProductInput = () => {
     productSelectDialogRef.current?.openDialog();
   };
+  console.log({ clients });
   return (
     <div className="space-y-2">
       <FormField
@@ -198,7 +203,13 @@ const InvoiceFormReviewView: React.FC<InvoicePropsWithForm> = ({}) => {
  */
 export const InvoiceForm: React.FC<
   React.PropsWithChildren<InvoiceFormProps>
-> = ({ onSubmit, children, initialValues = defaultValues, products = [] }) => {
+> = ({
+  onSubmit,
+  children,
+  initialValues = defaultValues,
+  products = [],
+  clients = [],
+}) => {
   const { form, handleSubmitWithAction } = useForm({
     action: onSubmit,
     schemas: InvoiceSchemas,
