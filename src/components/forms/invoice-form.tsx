@@ -75,7 +75,7 @@ const InputInvoiceForm: React.FC<
                 liste ci-dessous. Si vous souhaitez ajouter un nouveau client,
                 veuillez cliquer sur le bouton
               </span>{" "}
-              <UserRoundPlus className="h-4 w-4 inline-flex mb-2" />
+              <UserRoundPlus className="h-3 w-3 inline-flex mb-2" />
             </FormDescription>
             <FormMessage />
           </FormItem>
