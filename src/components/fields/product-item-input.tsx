@@ -231,6 +231,37 @@ export const QuantityIncreaser: React.FC<QuantityIncreaserProps> = ({
   );
 };
 
+export const ProductDisplay: React.FC<
+  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+> = ({ className, ...props }) => {
+  return <div className={cn("flex flex-col py-1", className)} {...props} />;
+};
+
+export const ProductDisplayTitle: React.FC<
+  React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLParagraphElement>,
+    HTMLParagraphElement
+  >
+> = ({ className, ...props }) => {
+  return (
+    <p className={cn("text-xs text-muted-foreground", className)} {...props} />
+  );
+};
+
+export const ProductDisplayContent: React.FC<
+  React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLParagraphElement>,
+    HTMLParagraphElement
+  >
+> = ({ className, ...props }) => {
+  return (
+    <p
+      className={cn("text-xs md:text-sm font-medium capitalize", className)}
+      {...props}
+    />
+  );
+};
+
 export function useProductSelectDialog() {
   return React.useRef<ProductSelectDialogRef>(null);
 }

@@ -8,29 +8,23 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
-import {
   type HookSafeActionFnSubmiter,
   TFormReturn,
   useForm,
 } from "@/hooks/form";
 import { InvoiceSchemas, type Invoice } from "@/lib/schemas";
 import React from "react";
-import { Button } from "../ui/button";
-import { MinusCircle, PlusCircle, X } from "lucide-react";
+import { PlusCircle, X } from "lucide-react";
 import {
   ButtonTooltip,
+  ProductDisplay,
+  ProductDisplayContent,
+  ProductDisplayTitle,
   ProductSelectDialog,
   QuantityIncreaser,
   useProductSelectDialog,
 } from "../fields/product-item-input";
 import { SelectProduct } from "@/server/db";
-import { useFieldArray } from "react-hook-form";
 import { formatCurrency } from "@/lib/formater";
 
 export type TInvoiceDefaultValue = Invoice;
@@ -58,10 +52,6 @@ const InputInvoiceForm: React.FC<
   InvoicePropsWithForm & { products?: SelectProduct[] }
 > = ({ form, products = [] }) => {
   const productSelectDialogRef = useProductSelectDialog();
-  const arrayAction = useFieldArray({
-    control: form.control,
-    name: "items",
-  });
   const handleOpenInputProductInput = () => {
     productSelectDialogRef.current?.openDialog();
   };
@@ -95,24 +85,27 @@ const InputInvoiceForm: React.FC<
               />
             </div>
             <div>
-              <ProductSelectDialog
-                ref={productSelectDialogRef}
-                products={products}
-                items={field.value}
-                onChange={field.onChange}
-              />
+              <FormControl>
+                <ProductSelectDialog
+                  ref={productSelectDialogRef}
+                  products={products}
+                  items={field.value}
+                  onChange={field.onChange}
+                />
+              </FormControl>
               <div className="space-y-2">
                 {field.value.map((item, index) => (
                   <div
                     key={item.product.id}
                     className="p-2 rounded-md border flex items-center justify-between"
                   >
-                    <div className="w-full grid grid-cols-3 gap-2 ">
-                      <div className="col-span-1">
-                        <small>Produit</small>
-                        <p className="capitalize">{item.product.name}</p>
-                      </div>
-
+                    <div className="w-full grid grid-cols-3 gap-2 mr-5">
+                      <ProductDisplay>
+                        <ProductDisplayTitle>Produit</ProductDisplayTitle>
+                        <ProductDisplayContent>
+                          {item.product.name}
+                        </ProductDisplayContent>
+                      </ProductDisplay>
                       <FormField
                         control={form.control}
                         name={`items.${index}.quantity`}
@@ -120,26 +113,28 @@ const InputInvoiceForm: React.FC<
                           return (
                             <FormItem className="col-span-2">
                               {/* Quantity */}
-                              <div className="grid grid-cols-2 gap-2 bg-yellow-300">
-                                <div>
-                                  <small className="text-center">
+                              <div className="flex flex-row justify-between">
+                                <ProductDisplay className="items-center">
+                                  <ProductDisplayTitle>
                                     Quantite
-                                  </small>
+                                  </ProductDisplayTitle>
                                   <FormControl>
                                     <QuantityIncreaser
                                       value={field.value}
                                       onChange={field.onChange}
                                     />
                                   </FormControl>
-                                </div>
-                                <div>
-                                  <small>Prix total</small>
-                                  <div>
+                                </ProductDisplay>
+                                <ProductDisplay className="items-end">
+                                  <ProductDisplayTitle>
+                                    Prix total
+                                  </ProductDisplayTitle>
+                                  <ProductDisplayContent>
                                     {formatCurrency(
                                       item.product.price * field.value
                                     )}
-                                  </div>
-                                </div>
+                                  </ProductDisplayContent>
+                                </ProductDisplay>
                               </div>
                             </FormItem>
                           );
@@ -147,7 +142,12 @@ const InputInvoiceForm: React.FC<
                       />
                     </div>
                     <ButtonTooltip
-                      onClick={() => arrayAction.remove(index)}
+                      onClick={() => {
+                        const newArray = field.value.filter(
+                          (_item) => _item.product.id !== item.product.id
+                        );
+                        field.onChange(newArray);
+                      }}
                       tooltipText="Retirer de la selection"
                       icon={<X className="h-4 w-4" />}
                     />
@@ -199,7 +199,7 @@ export const InvoiceForm: React.FC<
   return (
     <Form {...form}>
       <form onSubmit={handleSubmitWithAction}>
-        <div className="grid grid-cols-3 gap-5">
+        <div className="grid md:grid-cols-3 gap-5">
           <div className="col-span-2">
             <InputInvoiceForm products={products} form={form} />
           </div>
