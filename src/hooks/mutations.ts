@@ -1,6 +1,6 @@
 import { loginUser, signinUser } from "@/server/actions/account";
 import * as itemActions from "@/server/actions";
-import { useMutation } from "@tanstack/react-query";
+import { DefaultError, useMutation } from "@tanstack/react-query";
 import type {
   LoginCredential,
   RegistrationCredential,
@@ -110,10 +110,16 @@ export function useDeletePointOfSale() {
   });
 }
 
-export function useCreateClient() {
+export function useCreateClient(params?: {
+  onSuccess?: (
+    data: Awaited<ReturnType<typeof itemActions.createClient>>
+  ) => void;
+  onError?: (error: DefaultError) => void;
+}) {
   return useMutation({
     networkMode: "always",
     mutationKey: ["CREATE_CLIENT"],
     mutationFn: (value: Client) => itemActions.createClient(value),
+    ...params,
   });
 }

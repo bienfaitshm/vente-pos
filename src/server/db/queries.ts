@@ -209,9 +209,9 @@ export async function getPointOfSales(): Promise<tables.SelectPointOfSale[]> {
 
 // Client
 export async function createClient(
-  product: tables.InsertClient
+  client: tables.InsertClient
 ): Promise<tables.SelectClient | undefined> {
-  const values = await db.insert(tables.Client).values(product).returning();
+  const values = await db.insert(tables.Client).values(client).returning();
   return values[0];
 }
 
@@ -234,5 +234,8 @@ export async function deleteClient({ id }: TWithID) {
 }
 
 export async function getClients(): Promise<tables.SelectClient[]> {
-  return await db.select().from(tables.Client).orderBy(asc(tables.Client.id));
+  return await db
+    .select()
+    .from(tables.Client)
+    .orderBy(asc(tables.Client.createdAt));
 }

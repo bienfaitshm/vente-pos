@@ -6,6 +6,7 @@ export default async function Page() {
     getProducts({}),
     getClients({}),
   ]);
+
   return (
     <div className="w-full">
       <div className="max-w-screen-md mx-auto space-y-5">

@@ -67,11 +67,15 @@ const InputInvoiceForm: React.FC<
       <FormField
         control={form.control}
         name="client"
-        render={({}) => (
+        render={({ field }) => (
           <FormItem className="flex flex-col gap-2">
             <FormLabel>Client</FormLabel>
             <FormControl>
-              <ClientInput />
+              <ClientInput
+                clients={clients}
+                value={field.value as SelectClient}
+                onChange={field.onChange}
+              />
             </FormControl>
             <FormDescription>
               <span>
@@ -227,7 +231,11 @@ export const InvoiceForm: React.FC<
       <form onSubmit={handleSubmitWithAction}>
         <div className="grid md:grid-cols-3 gap-5">
           <div className="col-span-2">
-            <InputInvoiceForm products={products} form={form} />
+            <InputInvoiceForm
+              clients={clients}
+              products={products}
+              form={form}
+            />
           </div>
           <div className="col-span-1">
             <InvoiceFormReviewView form={form} />
