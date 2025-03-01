@@ -1,12 +1,12 @@
 import { z } from "zod";
+
+// Schemas
 export const NoEmptyStringSchemas = z
   .string()
   .min(1, { message: "Ce Chant est requis" });
 export const IDSchemas = z.union([NoEmptyStringSchemas.trim(), z.number()]);
 export const EmptyObjet = z.object({});
-export const IdObjectSchems = z.object({
-  id: IDSchemas,
-});
+export const IdObjectSchems = z.object({ id: IDSchemas });
 
 export const UserSchemas = z.object({
   id: IDSchemas.optional(),
@@ -26,15 +26,14 @@ export const LoginCredentialSchemas = z.object({
     message: "Le mot de passe doit containir plus de 6 caracteres",
   }),
 });
+
 export type LoginCredential = z.infer<typeof LoginCredentialSchemas>;
 
 export const RegistrationCredentialSchemas = UserSchemas.merge(
   LoginCredentialSchemas
 )
-  .extend({
-    confirm: NoEmptyStringSchemas,
-  })
-  .refine((schema) => !(schema.password !== schema.confirm), {
+  .extend({ confirm: NoEmptyStringSchemas })
+  .refine((schema) => schema.password === schema.confirm, {
     message: "mot de passe n'est pas le meme",
     path: ["confirm"],
   });
@@ -88,23 +87,48 @@ export const ClientSchemas = z.object({
 
 export type Client = z.infer<typeof ClientSchemas>;
 
-export const CommandItemSchemas = z.object({
-  amount: z.coerce.number(),
-  quantity: z.coerce.number(),
-  product: ProductSchemas,
-});
+export const CommandItemSchemas = z
+  .object({
+    quantity: z.coerce.number().min(1),
+    product: z
+      .object({
+        id: IDSchemas,
+        name: NoEmptyStringSchemas,
+        category: IDSchemas,
+        price: z.coerce.number(),
+      })
+      .nullable(),
+  })
+  .refine((schema) => schema.product !== null, {
+    message: "Produit est requis",
+    path: ["product"],
+  });
+
 export type CommandItem = z.infer<typeof CommandItemSchemas>;
 
-export const InvoiceSchemas = z.object({
-  client: ClientSchemas.nullable(),
-  items: z
-    .array(CommandItemSchemas)
-    .min(1, { message: "Minimum de produit requis" }),
-  saler: IDSchemas,
-});
+export const InvoiceSchemas = z
+  .object({
+    client: ClientSchemas.nullable(),
+    items: z
+      .array(CommandItemSchemas)
+      .min(1, { message: "Minimum de produit requis" })
+      .superRefine((val, ctx) => {
+        if (val.length !== new Set(val.map((item) => item.product?.id)).size) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Produit dupliqué non autorisé.",
+          });
+        }
+      }),
+    saler: IDSchemas,
+  })
+  .refine((schema) => schema.client !== null, {
+    message: "Veiller ajouter le client",
+    path: ["client"],
+  });
+
 export type Invoice = z.infer<typeof InvoiceSchemas>;
 
-//
 export const ItemsSelectSchemas = z.object({
   items: z.array(CommandItemSchemas).min(1),
 });

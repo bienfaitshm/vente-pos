@@ -24,15 +24,9 @@ import {
 } from "@/components/ui/command";
 import { Check, MinusCircle, PlusCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
+import { Button, ButtonProps } from "../ui/button";
 import { useForm } from "react-hook-form";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
+import { FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ItemsSelect, ItemsSelectSchemas } from "@/lib/schemas";
 
@@ -54,12 +48,16 @@ interface ButtonTooltipProps {
   icon: React.ReactNode;
   tooltipText: string;
   onClick?(): void;
+  buttonProps?: React.ForwardRefExoticComponent<
+    ButtonProps & React.RefAttributes<HTMLButtonElement>
+  >;
 }
 
 export const ButtonTooltip: React.FC<ButtonTooltipProps> = ({
   icon,
   tooltipText,
   onClick,
+  buttonProps,
 }) => {
   return (
     <TooltipProvider>
@@ -71,6 +69,7 @@ export const ButtonTooltip: React.FC<ButtonTooltipProps> = ({
             size="icon"
             className="h-7 w-7"
             onClick={onClick}
+            {...buttonProps}
           >
             {icon}
           </Button>
