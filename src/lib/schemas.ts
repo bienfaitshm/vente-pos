@@ -87,22 +87,15 @@ export const ClientSchemas = z.object({
 
 export type Client = z.infer<typeof ClientSchemas>;
 
-export const CommandItemSchemas = z
-  .object({
-    quantity: z.coerce.number().min(1),
-    product: z
-      .object({
-        id: IDSchemas,
-        name: NoEmptyStringSchemas,
-        category: IDSchemas,
-        price: z.coerce.number(),
-      })
-      .nullable(),
-  })
-  .refine((schema) => schema.product !== null, {
-    message: "Produit est requis",
-    path: ["product"],
-  });
+export const CommandItemSchemas = z.object({
+  quantity: z.coerce.number().min(1),
+  product: z.object({
+    id: IDSchemas,
+    name: NoEmptyStringSchemas,
+    category: IDSchemas,
+    price: z.coerce.number(),
+  }),
+});
 
 export type CommandItem = z.infer<typeof CommandItemSchemas>;
 

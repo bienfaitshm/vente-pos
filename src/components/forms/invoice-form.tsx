@@ -8,12 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+
 import {
   type HookSafeActionFnSubmiter,
   TFormReturn,
@@ -21,18 +16,18 @@ import {
 } from "@/hooks/form";
 import { InvoiceSchemas, type Invoice } from "@/lib/schemas";
 import React from "react";
-import { PlusCircle, UserRoundPlus, X } from "lucide-react";
+import { PlusCircle, UserRoundPlus } from "lucide-react";
 import { SelectClient, SelectProduct } from "@/server/db";
 import { ClientInput } from "../fields/client-input";
 import { Separator } from "../ui/separator";
+
+import { ProductItem } from "../fields/client-field/client-field";
 import {
-  ButtonAddProduct,
-  ItemProductSelect,
-  ItemQuantityInput,
-} from "../fields/item-quatity-input";
-import { Input } from "../ui/input";
-import { Control, useFieldArray } from "react-hook-form";
+  ClientDrawerForm,
+  useClientDrawerForm,
+} from "../fields/client-field/client-drawer-form";
 import { Button } from "../ui/button";
+import { formatCurrency } from "@/lib/formater";
 
 export type TInvoiceDefaultValue = Invoice;
 const defaultValues: Partial<TInvoiceDefaultValue> = {
@@ -57,10 +52,7 @@ const InvoiceFormFields: React.FC<
     clients?: SelectClient[];
   }
 > = ({ form, products = [], clients = [] }) => {
-  const arrayFields = useFieldArray({
-    control: form.control,
-    name: "items",
-  });
+  const clientDrawerForm = useClientDrawerForm();
 
   return (
     <div className="space-y-2">
@@ -92,7 +84,7 @@ const InvoiceFormFields: React.FC<
       <FormField
         control={form.control}
         name="items"
-        render={() => (
+        render={({ field }) => (
           <FormItem>
             <FormLabel>Produits</FormLabel>
             <FormDescription>
@@ -101,35 +93,57 @@ const InvoiceFormFields: React.FC<
               produit ajouté, vous pourrez modifier la quantité souhaitée.
             </FormDescription>
             <div>
+              <ClientDrawerForm
+                onSubmit={({ isEdit, value }) => {
+                  const updatedItems = field.value.map((item) =>
+                    item.product.id === value.product.id ? value : item
+                  );
+                  field.onChange(
+                    isEdit ? updatedItems : [...field.value, value]
+                  );
+                }}
+                products={products}
+                ref={clientDrawerForm}
+              />
               <FormControl>
                 <div className="space-y-2">
-                  {arrayFields.fields.map((_, index) => (
+                  {field.value.map((item, index) => (
                     <FormField
-                      key={index}
+                      key={item.product.id}
                       control={form.control}
                       name={`items.${index}`}
-                      render={() => (
+                      render={({ field: itemField }) => (
                         <FormItem>
                           <FormControl>
-                            <ProductQuantityInput
-                              control={form.control}
-                              index={index}
-                              products={products}
-                              onRemove={() => {
-                                arrayFields.remove(index);
+                            <ProductItem
+                              product={item.product?.name || ""}
+                              quantity={item.quantity}
+                              amount={formatCurrency(
+                                item.product.price * item.quantity
+                              )}
+                              onEdit={() => {
+                                clientDrawerForm.current?.open(itemField.value);
+                              }}
+                              onDelete={() => {
+                                field.onChange(
+                                  field.value.filter((_, i) => i !== index)
+                                );
                               }}
                             />
                           </FormControl>
-                          <FormMessage />
                         </FormItem>
                       )}
                     />
                   ))}
-                  <ButtonAddProduct
-                    onChange={() =>
-                      arrayFields.append({ product: null, quantity: 0 })
-                    }
-                  />
+                  <Button
+                    className="px-0 underline-offset-4 underline"
+                    type="button"
+                    variant="link"
+                    onClick={() => clientDrawerForm.current?.open()}
+                  >
+                    Ajouter un produit
+                    <PlusCircle />
+                  </Button>
                 </div>
               </FormControl>
             </div>
@@ -138,72 +152,6 @@ const InvoiceFormFields: React.FC<
         )}
       />
     </div>
-  );
-};
-
-const ProductQuantityInput: React.FC<{
-  control: Control<TInvoiceDefaultValue, unknown>;
-  products: SelectProduct[];
-  index: number;
-  onRemove?: () => void;
-}> = ({ control, index, products, onRemove }) => {
-  return (
-    <ItemQuantityInput>
-      <div className="w-full grid grid-cols-3 gap-2 mr-5">
-        <FormField
-          control={control}
-          name={`items.${index}.product`}
-          render={({ field }) => (
-            <FormItem className="col-span-2">
-              <FormLabel className="text-xs text-muted-foreground">
-                Produit
-              </FormLabel>
-              <FormControl>
-                <ItemProductSelect
-                  products={products}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name={`items.${index}.quantity`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-xs text-muted-foreground">
-                Quantité
-              </FormLabel>
-              <FormControl>
-                <Input className="text-sm h-8" type="number" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              type="button"
-              size="icon"
-              className="h-7 w-7 rounded-full absolute right-1 top-1"
-              onClick={onRemove}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p className="text-xs">Retirer de la liste</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </ItemQuantityInput>
   );
 };
 
