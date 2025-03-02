@@ -12,7 +12,6 @@ import {
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -26,7 +25,6 @@ import React from "react";
 import { PlusCircle, UserRoundPlus } from "lucide-react";
 import { SelectClient, SelectProduct } from "@/server/db";
 import { ClientInput } from "../fields/client-input";
-import { Separator } from "../ui/separator";
 
 import { ProductItem } from "../fields/client-field/client-field";
 import {
@@ -36,6 +34,7 @@ import {
 import { Button } from "../ui/button";
 import { formatCurrency } from "@/lib/formater";
 import { Control, useFieldArray } from "react-hook-form";
+import { sumSubTotal } from "@/lib/utils";
 
 export type TInvoiceDefaultValue = Invoice;
 const defaultValues: Partial<TInvoiceDefaultValue> = {
@@ -177,8 +176,7 @@ const InvoiceSummary: React.FC<InvoicePropsWithForm> = ({ control }) => {
         control={control}
         name="items"
         render={({ field }) => (
-          <Table>
-            <TableCaption>A list of your recent invoices.</TableCaption>
+          <Table className="text-xs">
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[100px]">Designation</TableHead>
@@ -204,28 +202,19 @@ const InvoiceSummary: React.FC<InvoicePropsWithForm> = ({ control }) => {
             <TableFooter>
               <TableRow>
                 <TableCell colSpan={3}>Total</TableCell>
-                <TableCell className="text-right">$2,500.00</TableCell>
+                <TableCell className="text-right">
+                  {formatCurrency(
+                    sumSubTotal(
+                      field.value,
+                      (i) => i.quantity * i.product.price
+                    )
+                  )}
+                </TableCell>
               </TableRow>
             </TableFooter>
           </Table>
         )}
       />
-      <div className="text-xs"></div>
-      <div className="flex flex-col gap-2 border rounded-md p-2 text-sm capitalize">
-        <div className="flex justify-between">
-          <p className="text-muted-foreground">Sous total</p>
-          <p className="font-black">20FC</p>
-        </div>
-        <div className="flex justify-between">
-          <p className="text-muted-foreground">Taxe</p>
-          <p className="font-black">20FC</p>
-        </div>
-        <Separator />
-        <div className="flex justify-between">
-          <p className="text-muted-foreground">Total</p>
-          <p className="font-black">1220FC</p>
-        </div>
-      </div>
     </div>
   );
 };
