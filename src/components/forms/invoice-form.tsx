@@ -28,6 +28,7 @@ import {
 } from "../fields/client-field/client-drawer-form";
 import { Button } from "../ui/button";
 import { formatCurrency } from "@/lib/formater";
+import { useFieldArray } from "react-hook-form";
 
 export type TInvoiceDefaultValue = Invoice;
 const defaultValues: Partial<TInvoiceDefaultValue> = {
@@ -53,6 +54,10 @@ const InvoiceFormFields: React.FC<
   }
 > = ({ form, products = [], clients = [] }) => {
   const clientDrawerForm = useClientDrawerForm();
+  const { update, append, remove, fields } = useFieldArray({
+    control: form.control,
+    name: "items",
+  });
 
   return (
     <div className="space-y-2">
@@ -84,7 +89,7 @@ const InvoiceFormFields: React.FC<
       <FormField
         control={form.control}
         name="items"
-        render={({ field }) => (
+        render={() => (
           <FormItem>
             <FormLabel>Produits</FormLabel>
             <FormDescription>
@@ -94,22 +99,21 @@ const InvoiceFormFields: React.FC<
             </FormDescription>
             <div>
               <ClientDrawerForm
-                onSubmit={({ isEdit, value }) => {
-                  const updatedItems = field.value.map((item) =>
-                    item.product.id === value.product.id ? value : item
-                  );
-                  field.onChange(
-                    isEdit ? updatedItems : [...field.value, value]
-                  );
+                onSubmit={(newValue) => {
+                  if (newValue.isEdit) {
+                    update(newValue.index, newValue.value);
+                  } else {
+                    append(newValue.value);
+                  }
                 }}
                 products={products}
                 ref={clientDrawerForm}
               />
               <FormControl>
                 <div className="space-y-2">
-                  {field.value.map((item, index) => (
+                  {fields.map((item, index) => (
                     <FormField
-                      key={item.product.id}
+                      key={item.id}
                       control={form.control}
                       name={`items.${index}`}
                       render={({ field: itemField }) => (
@@ -122,12 +126,13 @@ const InvoiceFormFields: React.FC<
                                 item.product.price * item.quantity
                               )}
                               onEdit={() => {
-                                clientDrawerForm.current?.open(itemField.value);
+                                clientDrawerForm.current?.open({
+                                  index: index,
+                                  ...itemField.value,
+                                });
                               }}
                               onDelete={() => {
-                                field.onChange(
-                                  field.value.filter((_, i) => i !== index)
-                                );
+                                remove(index);
                               }}
                             />
                           </FormControl>

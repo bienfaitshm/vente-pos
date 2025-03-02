@@ -49,16 +49,21 @@ const DEFAULT_VALUE: Partial<CommandItemSchemasType> = {
   quantity: 0,
 };
 
+type TSubmitValueParams =
+  | {
+      isEdit: true;
+      index: number;
+      value: CommandItemSchemasType;
+    }
+  | { isEdit: false; value: CommandItemSchemasType };
+
 interface ClientDrawerFormRef {
-  open: (initialValues?: CommandItemSchemasType) => void;
+  open: (initialValues?: CommandItemSchemasType & { index: number }) => void;
   close: () => void;
 }
 interface ClientDrawerFormProps {
   ref?: React.Ref<ClientDrawerFormRef>;
-  onSubmit?: (value: {
-    isEdit: boolean;
-    value: CommandItemSchemasType;
-  }) => void;
+  onSubmit?: (value: TSubmitValueParams) => void;
   products?: SelectProduct[];
 }
 
@@ -93,8 +98,9 @@ export const ClientDrawerForm: React.FC<ClientDrawerFormProps> = ({
 }) => {
   const itemForm = useItemForm();
   const [open, setOpen] = React.useState<boolean>(false);
-  const [initialValues, setInitialValues] =
-    React.useState<CommandItemSchemasType | null>(null);
+  const [initialValues, setInitialValues] = React.useState<
+    (CommandItemSchemasType & { index: number }) | null
+  >(null);
 
   React.useImperativeHandle(
     ref,
@@ -115,7 +121,10 @@ export const ClientDrawerForm: React.FC<ClientDrawerFormProps> = ({
   );
   const handleSubmit = React.useCallback(
     (value: CommandItemSchemasType) => {
-      onSubmit?.({ isEdit: !!initialValues, value });
+      const _value: TSubmitValueParams = initialValues
+        ? { isEdit: true, index: initialValues.index, value }
+        : { isEdit: false, value };
+      onSubmit?.(_value);
     },
     [initialValues, onSubmit]
   );

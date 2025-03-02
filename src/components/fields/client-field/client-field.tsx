@@ -85,18 +85,18 @@ export const ProductItem: React.FC<ProductItemProps> = ({
   quantity,
 }) => {
   return (
-    <div className="flex w-full flex-col items-start justify-between rounded-md border px-4 py-3 sm:flex-row sm:items-center">
+    <div className="flex w-full flex-row items-start justify-between rounded-md border px-4 py-3">
       <div className="text-sm font-medium leading-none ">
-        <div className="grid grid-cols-3 gap-5">
-          <div>
+        <div className="grid grid-cols-3 gap-5 truncate">
+          <div className="w-16">
             <p className="text-xs text-muted-foreground">Produit</p>
             <p className="font-medium">{product}</p>
           </div>
-          <div>
+          <div className="w-14">
             <p className="text-xs text-muted-foreground">Quantite</p>
             <p className="font-medium">{quantity}</p>
           </div>
-          <div>
+          <div className="w-14">
             <p className="text-xs text-muted-foreground">Total</p>
             <p className="font-medium">{amount}</p>
           </div>
