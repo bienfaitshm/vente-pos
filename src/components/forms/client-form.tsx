@@ -64,7 +64,7 @@ export const ClientForm: React.FC<ClientFormProps> = ({
         handleSubmitWithAction();
       },
     }),
-    []
+    [handleSubmitWithAction]
   );
   return (
     <Form {...form}>
