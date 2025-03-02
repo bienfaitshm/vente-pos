@@ -1,4 +1,8 @@
-import NextAuth, { AuthError as AuthjsError, DefaultSession } from "next-auth";
+import NextAuth, {
+  AuthError as AuthjsError,
+  DefaultSession,
+  User,
+} from "next-auth";
 import Resend from "next-auth/providers/resend";
 import Credentials from "next-auth/providers/credentials";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
@@ -11,6 +15,7 @@ import {
 import { db } from "./server/db/db";
 import { getByUsername } from "./server/db/queries";
 import { comparePassword } from "./lib/encrypt";
+import { AdapterUser } from "next-auth/adapters";
 
 export enum ErrorCode {
   InvalidUsername = "invalid_username",
@@ -66,16 +71,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (auth) return true;
       return false;
     },
-    // session({ session, user }) {
-    //   return {
-    //     ...session,
-    //     user,
-    //   };
-    // },
-    // redirect({ url, baseUrl }) {
-    //   console.log({ url, baseUrl });
-    //   return url.startsWith(baseUrl) ? url : baseUrl + "/protected/client";
-    // },
+    jwt({ token, account, user }) {
+      if (account) {
+        token.user = user;
+      }
+      return token;
+    },
+    session({ token, session }) {
+      session.user = token.user as AdapterUser & {
+        isAdmin: boolean;
+        username: string;
+      } & User;
+      return session;
+    },
   },
   providers: [
     Resend({
@@ -97,6 +105,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           password as string,
           user.password as string
         );
+
+        console.log("authorize user", user);
         if (isValid) return user;
         if (!isValid)
           throw new AuthError(ErrorCode.InvalidPassword, "Invalid password");

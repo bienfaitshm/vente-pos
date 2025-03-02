@@ -239,3 +239,48 @@ export async function getClients(): Promise<tables.SelectClient[]> {
     .from(tables.Client)
     .orderBy(asc(tables.Client.createdAt));
 }
+
+// CommandProduct
+export async function createCommandProduct(
+  commandProduct: tables.InsertCommandProduct
+): Promise<tables.SelectCommandProduct | undefined> {
+  const values = await db
+    .insert(tables.CommandProduct)
+    .values(commandProduct)
+    .returning();
+  return values[0];
+}
+
+export async function updateCommandProduct({
+  id,
+  ...value
+}: tables.InsertCommandProduct & TWithID) {
+  return await db
+    .update(tables.CommandProduct)
+    .set(value)
+    .where(eq(tables.CommandProduct.id, id))
+    .returning();
+}
+
+export async function deleteCommandProduct({ id }: TWithID) {
+  return await db
+    .delete(tables.CommandProduct)
+    .where(eq(tables.CommandProduct.id, id))
+    .returning();
+}
+
+export async function getCommandProducts(): Promise<
+  tables.SelectCommandProduct[]
+> {
+  return await db
+    .select()
+    .from(tables.CommandProduct)
+    .orderBy(asc(tables.CommandProduct.createdAt));
+}
+
+// command items
+export async function createCommandItems(
+  items: tables.InsertCommandItem[]
+): Promise<tables.InsertCommandItem[]> {
+  return await db.insert(tables.CommandItem).values(items).returning();
+}

@@ -9,17 +9,19 @@ import { Banknote } from "lucide-react";
 interface SaleClientPageProps {
   products?: SelectProduct[];
   clients?: SelectClient[];
+  saler?: string | number;
 }
 
 export const SaleClientPage: React.FC<SaleClientPageProps> = ({
   products,
   clients,
+  saler,
 }) => {
   const mutation = useCommandProduct();
   return (
     <div>
       <InvoiceForm
-        initialValues={{ saler: "1" }}
+        initialValues={{ saler }}
         products={products}
         clients={clients}
         onSubmit={mutation.mutateAsync}
