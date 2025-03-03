@@ -1,3 +1,4 @@
+import { PageProps } from "@/app/type";
 import { Button } from "@/components/ui/button";
 
 interface Invoice {
@@ -22,7 +23,10 @@ const invoice: Invoice = {
   ],
   totalAmount: 200,
 };
-const Page: React.FC = () => {
+const Page: React.FC<PageProps<{ invoice: number }>> = async ({
+  params: { invoice: invoiceID },
+}) => {
+  console.log(invoiceID);
   return (
     <div className="max-w-screen-md mx-auto p-4 space-y-5">
       <div className="flex justify-between items-center">

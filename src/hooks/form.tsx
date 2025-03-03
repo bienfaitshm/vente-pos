@@ -23,7 +23,7 @@ type TypeParams<
 };
 
 export type HookSafeActionFnSubmiter<
-  TSchemas extends Schema<any, ZodTypeDef, any>
+  TSchemas extends Schema<unknown, ZodTypeDef, unknown>
 > = HookSafeActionFn<
   unknown,
   TSchemas,
@@ -33,10 +33,10 @@ export type HookSafeActionFnSubmiter<
   unknown
 >;
 
-export type TFormReturn<S, FormContext = unknown> = UseFormReturn<
-  S extends Schema ? Infer<S> : any,
-  FormContext
->;
+export type TFormReturn<
+  S extends Schema,
+  FormContext = unknown
+> = UseFormReturn<Infer<S>, FormContext>;
 
 export function useForm<
   ServerError,

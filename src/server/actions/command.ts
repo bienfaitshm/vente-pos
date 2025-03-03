@@ -1,8 +1,9 @@
 "use server";
-import { InvoiceSchemas } from "@/lib/schemas";
+import { EmptyObjet, IdObjectSchems, InvoiceSchemas } from "@/lib/schemas";
 import { actionClient } from "./base";
 import { sumSubTotal } from "@/lib/utils";
 import { createCommandItems, createCommandProduct } from "../db/queries";
+import * as queries from "../db/queries";
 
 export const commandProduct = actionClient
   .schema(InvoiceSchemas)
@@ -31,4 +32,19 @@ export const commandProduct = actionClient
     );
 
     return { command, items: invoiceItems };
+  });
+
+export const getInvoices = actionClient
+  .schema(EmptyObjet)
+  .action(async () => {});
+
+export const getInvoice = actionClient
+  .schema(IdObjectSchems)
+  .action(async ({ parsedInput: { id } }) => {
+    const [command, items] = await Promise.all([
+      queries.getCommandProduct(id),
+      queries.getCommandItems(id as number),
+    ]);
+
+    return { ...command, items };
   });

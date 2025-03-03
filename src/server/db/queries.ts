@@ -278,9 +278,28 @@ export async function getCommandProducts(): Promise<
     .orderBy(asc(tables.CommandProduct.createdAt));
 }
 
+export async function getCommandProduct(
+  id: number | string
+): Promise<tables.SelectCommandProduct | undefined> {
+  const command = await db
+    .select()
+    .from(tables.CommandProduct)
+    .where(eq(tables.CommandProduct, id));
+  return command[0];
+}
+
 // command items
 export async function createCommandItems(
   items: tables.InsertCommandItem[]
 ): Promise<tables.InsertCommandItem[]> {
   return await db.insert(tables.CommandItem).values(items).returning();
+}
+
+export async function getCommandItems(
+  commandProduct: number
+): Promise<tables.SelectCommandItem[]> {
+  return await db
+    .select()
+    .from(tables.CommandItem)
+    .where(eq(tables.CommandItem.commandProduct, commandProduct));
 }
