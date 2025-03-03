@@ -106,7 +106,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           user.password as string
         );
 
-        console.log("authorize user", user);
         if (isValid) return user;
         if (!isValid)
           throw new AuthError(ErrorCode.InvalidPassword, "Invalid password");
