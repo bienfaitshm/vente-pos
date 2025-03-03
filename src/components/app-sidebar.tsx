@@ -5,7 +5,6 @@ import {
   AudioWaveform,
   Command,
   GalleryVerticalEnd,
-  SquareTerminal,
   ShoppingBag,
   Tags,
   SquareUserRound,
@@ -55,15 +54,15 @@ const data = {
       items: [
         {
           title: "Ventes",
-          url: "#",
+          url: "/sales",
         },
         {
           title: "Stocks",
-          url: "#",
+          url: "/stocks",
         },
         {
           title: "Progression",
-          url: "#",
+          url: "/progression",
         },
       ],
     },
