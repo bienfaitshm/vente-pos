@@ -23,7 +23,7 @@ const invoice: Invoice = {
   ],
   totalAmount: 200,
 };
-const Page: React.FC<PageProps<{ invoice: number }>> = async ({
+const Page: React.FC<PageProps<{ invoice: string }>> = async ({
   params: { invoice: invoiceID },
 }) => {
   console.log(invoiceID);
