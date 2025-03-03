@@ -11,6 +11,7 @@ import {
   SquareUserRound,
   UsersRound,
   Store,
+  Shapes,
 } from "lucide-react";
 
 // import { NavMain } from "@/components/nav-main";
@@ -49,7 +50,7 @@ const data = {
     {
       title: "Acces rapide",
       url: "#",
-      icon: SquareTerminal,
+      icon: Shapes,
       isActive: true,
       items: [
         {
