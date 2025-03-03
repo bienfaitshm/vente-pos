@@ -23,9 +23,10 @@ const invoice: Invoice = {
   ],
   totalAmount: 200,
 };
-const Page: React.FC<PageProps<{ invoice: string }>> = async ({
+
+export default function Page({
   params: { invoice: invoiceID },
-}) => {
+}: PageProps<{ invoice: string }>) {
   console.log(invoiceID);
   return (
     <div className="max-w-screen-md mx-auto p-4 space-y-5">
@@ -68,6 +69,4 @@ const Page: React.FC<PageProps<{ invoice: string }>> = async ({
       </div>
     </div>
   );
-};
-
-export default Page;
+}
