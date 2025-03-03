@@ -1,4 +1,3 @@
-import { PageProps } from "@/app/type";
 import { Button } from "@/components/ui/button";
 
 interface Invoice {
@@ -24,10 +23,8 @@ const invoice: Invoice = {
   totalAmount: 200,
 };
 
-export default async function Page({
-  params: { invoice: invoiceID },
-}: PageProps<{ invoice: string }>) {
-  console.log(invoiceID);
+export default async function Page() {
+  // console.log(invoiceID);
   return (
     <div className="max-w-screen-md mx-auto p-4 space-y-5">
       <div className="flex justify-between items-center">
