@@ -24,7 +24,7 @@ const invoice: Invoice = {
   totalAmount: 200,
 };
 
-export default function Page({
+export default async function Page({
   params: { invoice: invoiceID },
 }: PageProps<{ invoice: string }>) {
   console.log(invoiceID);
