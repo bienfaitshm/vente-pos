@@ -95,10 +95,6 @@ export async function getByUsernameOrEmail(
   return users[0];
 }
 
-export async function getSellers() {
-  return await db.select().from(userTable).where(eq(userTable.isAdmin, false));
-}
-
 // catgories
 export async function createCategory(
   category: tables.InsertCategory

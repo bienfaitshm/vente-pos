@@ -208,3 +208,5 @@ export const PointOfSale = pgTable("point_of_sale", {
 
 export type InsertPointOfSale = typeof PointOfSale.$inferInsert;
 export type SelectPointOfSale = typeof PointOfSale.$inferSelect;
+
+// stock

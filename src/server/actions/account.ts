@@ -90,3 +90,5 @@ export const signinUser = actionClient
       redirect(AUTH_LOGIN_ROUTE);
     }
   });
+
+// export const getSalers = actionClient.schema
