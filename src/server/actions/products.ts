@@ -21,7 +21,7 @@ export const getCategories = actionClient
   });
 
 export const createCategory = actionClient
-  .schema(CategorySchemas.merge(IdObjectSchems))
+  .schema(CategorySchemas)
   .action(async ({ parsedInput: values }) => {
     const data = await queries.createCategory(values);
     revalidatePath("/");

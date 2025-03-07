@@ -43,14 +43,12 @@ export type RegistrationCredential = z.infer<
 >;
 
 export const CategorySchemas = z.object({
-  id: IDSchemas.optional(),
   name: NoEmptyStringSchemas,
 });
 
 export type Category = z.infer<typeof CategorySchemas>;
 
 export const ProductSchemas = z.object({
-  id: IDSchemas.optional(),
   name: NoEmptyStringSchemas,
   category: IDSchemas,
   quantity: z.coerce.number().min(0),
@@ -68,7 +66,6 @@ export const ProductQuantitySchemas = z.object({
 export type ProductQuantity = z.infer<typeof ProductQuantitySchemas>;
 
 export const PointOfSaleSchemas = z.object({
-  id: IDSchemas.optional(),
   name: NoEmptyStringSchemas,
   description: z.string().optional(),
   address: NoEmptyStringSchemas,
@@ -79,7 +76,6 @@ export const PointOfSaleSchemas = z.object({
 export type PointOfSale = z.infer<typeof PointOfSaleSchemas>;
 
 export const ClientSchemas = z.object({
-  id: IDSchemas.optional(),
   name: NoEmptyStringSchemas,
   phoneNumber: z.string().optional(),
   address: z.string().optional(),
