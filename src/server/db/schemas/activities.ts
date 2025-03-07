@@ -36,7 +36,7 @@ export const CommandProduct = pgTable("command_product", {
   ...commonFieldTable,
   amount: doublePrecision().notNull(),
   isConfirmed: boolean("is_confirmed").$default(() => false),
-  client: varchar("client_id")
+  client: varchar("client_id", { length: 10 })
     .references(() => Client.id, { onDelete: "cascade" })
     .notNull(),
   seller: text("seller_id").references(() => users.id, {
@@ -51,7 +51,7 @@ export type SelectCommandProduct = typeof CommandProduct.$inferSelect;
 export const CommandItem = pgTable("command_item", {
   amount: doublePrecision().notNull(),
   quantity: integer().notNull(),
-  product: varchar("product_id")
+  product: varchar("product_id", { length: 10 })
     .references(() => Product.id)
     .notNull(),
   commandProduct: varchar("command_id").references(() => CommandProduct.id),

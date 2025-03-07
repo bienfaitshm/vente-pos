@@ -19,7 +19,7 @@ export type SelectCategory = typeof Category.$inferSelect;
 export const Product = pgTable("product", {
   ...commonFieldTable,
   name: varchar({ length: 255 }).notNull(),
-  category: varchar("category_id")
+  category: varchar("category_id", { length: 10 })
     .references(() => Category.id, { onDelete: "cascade" })
     .notNull(),
   quantity: integer().notNull(),
