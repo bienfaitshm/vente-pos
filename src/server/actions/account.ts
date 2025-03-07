@@ -5,10 +5,12 @@ import {
   RegistrationCredentialSchemas,
 } from "@/lib/schemas";
 import { actionClient } from "./base";
-import { createUser, isEmailExist, isUsernameExist } from "../db/queries";
 import { hashPassword } from "@/lib/encrypt";
 import { signIn, ErrorCode, AuthError } from "@/auth";
 import { redirect } from "next/navigation";
+import * as queries from "@/server/db/queries";
+import * as schemas from "@/lib/schemas";
+import { revalidatePath } from "next/cache";
 
 const AUTH_LOGIN_ROUTE = "/auth/login";
 
@@ -58,7 +60,7 @@ export const signinUser = actionClient
   .schema(RegistrationCredentialSchemas)
   .action(async ({ parsedInput: { name, email, password, username } }) => {
     //1. check if email exist
-    const isExistEmail = await isEmailExist(email);
+    const isExistEmail = await queries.isEmailExist(email);
     if (isExistEmail) {
       returnValidationErrors(RegistrationCredentialSchemas, {
         email: {
@@ -67,7 +69,7 @@ export const signinUser = actionClient
       });
     }
     // 2. check if username exist
-    const isExistUsername = await isUsernameExist(username);
+    const isExistUsername = await queries.isUsernameExist(username);
     if (isExistUsername) {
       returnValidationErrors(RegistrationCredentialSchemas, {
         username: {
@@ -79,7 +81,7 @@ export const signinUser = actionClient
     const passwordHashed = await hashPassword(password);
 
     // 4. create new user
-    const newUser = await createUser({
+    const newUser = await queries.createUser({
       isAdmin: true,
       name,
       email,
@@ -91,4 +93,17 @@ export const signinUser = actionClient
     }
   });
 
-// export const getSalers = actionClient.schema
+//
+export const getSalers = actionClient
+  .schema(schemas.EmptyObjet)
+  .action(async ({ parsedInput: {} }) => {
+    return await queries.getSalers();
+  });
+
+export const deleteSaler = actionClient
+  .schema(schemas.IdObjectSchems)
+  .action(async ({ parsedInput: values }) => {
+    const data = await queries.deleteSaler(values);
+    revalidatePath("/");
+    return data;
+  });
