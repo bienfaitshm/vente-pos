@@ -1,7 +1,7 @@
 import { asc, eq, or } from "drizzle-orm";
 import { db } from "./db";
-import { InsertUser, SelectUser, users as userTable } from "./schemas";
-import * as tables from "./schemas";
+import { InsertUser, SelectUser, users as userTable } from "./schemas/schemas";
+import * as tables from "./schemas/schemas";
 
 type TWithID<T = number> = { id: T };
 
