@@ -4,6 +4,7 @@ import ShortUniqueId from "short-unique-id";
 const shordId = new ShortUniqueId({ length: 5 });
 export const commonFieldTable = {
   id: varchar("id", { length: 10 })
+    .notNull()
     .primaryKey()
     .$defaultFn(() => shordId.randomUUID()),
   updatedAt: timestamp("updated_at", { mode: "date" }),

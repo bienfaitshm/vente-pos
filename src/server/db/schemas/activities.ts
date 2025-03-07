@@ -89,8 +89,11 @@ export type SelectPointOfSale = typeof PointOfSale.$inferSelect;
 // Stock
 export const Stock = pgTable("stock", {
   ...commonFieldTable,
-  user: text().references(() => users.id),
-  product: varchar("product_id", { length: 10 }).references(() => Product.id),
+  quantity: integer().notNull(),
+  saler: text().references(() => users.id),
+  product: varchar("product_id", { length: 10 })
+    .notNull()
+    .references(() => Product.id),
 });
 
 export type InsertStock = typeof Stock.$inferInsert;
@@ -101,10 +104,18 @@ export const StockHistory = pgTable("stock_history", {
   ...commonFieldTable,
   quantity: integer().notNull(),
   action: StockHistoryActionEnum().default("ADD").notNull(),
-  stock: varchar("stock_id").references(() => Stock.id),
-  saler: text("saler_id").references(() => users.id),
-  admin: text("admin_id").references(() => users.id),
-  pos: varchar("pos_id", { length: 10 }).references(() => PointOfSale.id),
+  stock: varchar("stock_id")
+    .notNull()
+    .references(() => Stock.id),
+  saler: text("saler_id")
+    .notNull()
+    .references(() => users.id),
+  admin: text("admin_id")
+    .notNull()
+    .references(() => users.id),
+  pos: varchar("pos_id", { length: 10 })
+    .notNull()
+    .references(() => PointOfSale.id),
 });
 
 export type InsertStockHistory = typeof StockHistory.$inferInsert;
