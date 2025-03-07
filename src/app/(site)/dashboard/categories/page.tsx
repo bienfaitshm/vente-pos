@@ -1,4 +1,4 @@
-import { getCategories } from "@/server/actions/items";
+import { getCategories } from "@/server/actions/products";
 import { CategoryClientPage } from "./client-page";
 
 export const dynamic = "force-dynamic";

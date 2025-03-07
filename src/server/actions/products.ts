@@ -21,7 +21,7 @@ export const getCategories = actionClient
   });
 
 export const createCategory = actionClient
-  .schema(CategorySchemas)
+  .schema(CategorySchemas.merge(IdObjectSchems))
   .action(async ({ parsedInput: values }) => {
     const data = await queries.createCategory(values);
     revalidatePath("/");
@@ -29,27 +29,22 @@ export const createCategory = actionClient
   });
 
 export const updateCategory = actionClient
-  .schema(CategorySchemas)
-  .action(async ({ parsedInput: { name, id } }) => {
-    const data = await queries.updateCategory({
-      id: id as number,
-      name,
-    });
+  .schema(CategorySchemas.merge(IdObjectSchems))
+  .action(async ({ parsedInput }) => {
+    const data = await queries.updateCategory(parsedInput);
     revalidatePath("/");
     return data;
   });
 
 export const deleteCategory = actionClient
   .schema(IdObjectSchems)
-  .action(async ({ parsedInput: { id } }) => {
-    const data = await queries.deleteCategory({
-      id: id as number,
-    });
+  .action(async ({ parsedInput }) => {
+    const data = await queries.deleteCategory(parsedInput);
     revalidatePath("/");
     return data;
   });
 
-//
+// Products
 
 export const getProducts = actionClient
   .schema(EmptyObjet)
@@ -60,38 +55,28 @@ export const getProducts = actionClient
 export const createProduct = actionClient
   .schema(ProductSchemas)
   .action(async ({ parsedInput: values }) => {
-    const data = await queries.createProduct({
-      ...values,
-      category: values.category as number,
-    });
+    const data = await queries.createProduct(values);
     revalidatePath("/");
     return data;
   });
 
 export const updateProduct = actionClient
-  .schema(ProductSchemas)
-  .action(async ({ parsedInput: { id, category, name, price, quantity } }) => {
-    const data = await queries.updateProduct({
-      id: id as number,
-      category: category as number,
-      name,
-      price,
-      quantity,
-    });
+  .schema(ProductSchemas.merge(IdObjectSchems))
+  .action(async ({ parsedInput: values }) => {
+    const data = await queries.updateProduct(values);
     revalidatePath("/");
     return data;
   });
 
 export const deleteProduct = actionClient
   .schema(IdObjectSchems)
-  .action(async ({ parsedInput: { id } }) => {
-    const data = await queries.deleteProduct({
-      id: id as number,
-    });
+  .action(async ({ parsedInput: values }) => {
+    const data = await queries.deleteProduct(values);
     revalidatePath("/");
     return data;
   });
 
+// TODO: add functionnality
 export const changeProductQuantity = actionClient
   .schema(ProductQuantitySchemas)
   .action(async ({ parsedInput: {} }) => {});
@@ -113,22 +98,17 @@ export const createPointOfSale = actionClient
   });
 
 export const updatePointOfSale = actionClient
-  .schema(PointOfSaleSchemas)
-  .action(async ({ parsedInput: { id, ...values } }) => {
-    const data = await queries.updatePointOfSale({
-      ...values,
-      id: id as number,
-    });
+  .schema(PointOfSaleSchemas.merge(IdObjectSchems))
+  .action(async ({ parsedInput: values }) => {
+    const data = await queries.updatePointOfSale(values);
     revalidatePath("/");
     return data;
   });
 
 export const deletePointOfSale = actionClient
   .schema(IdObjectSchems)
-  .action(async ({ parsedInput: { id } }) => {
-    const data = await queries.deletePointOfSale({
-      id: id as number,
-    });
+  .action(async ({ parsedInput: values }) => {
+    const data = await queries.deletePointOfSale(values);
     revalidatePath("/");
     return data;
   });
@@ -149,13 +129,12 @@ export const createClient = actionClient
   });
 
 export const updateClient = actionClient
-  .schema(ClientSchemas)
-  .action(async ({ parsedInput: { id, phoneNumber, address, ...values } }) => {
+  .schema(ClientSchemas.merge(IdObjectSchems))
+  .action(async ({ parsedInput: { address, phoneNumber, ...values } }) => {
     const data = await queries.updateClient({
       ...values,
-      id: id as number,
-      address: address as string,
-      phoneNumber: phoneNumber as string,
+      address: address || "",
+      phoneNumber: phoneNumber || "",
     });
     revalidatePath("/");
     return data;
@@ -163,10 +142,8 @@ export const updateClient = actionClient
 
 export const deleteClient = actionClient
   .schema(IdObjectSchems)
-  .action(async ({ parsedInput: { id } }) => {
-    const data = await queries.deleteClient({
-      id: id as number,
-    });
+  .action(async ({ parsedInput: values }) => {
+    const data = await queries.deleteClient(values);
     revalidatePath("/");
     return data;
   });

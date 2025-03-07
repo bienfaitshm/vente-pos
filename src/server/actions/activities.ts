@@ -17,7 +17,7 @@ export const commandProduct = actionClient
     //2. create command
     const command = await createCommandProduct({
       amount,
-      client: client?.id as number,
+      client: client?.id as string,
       isConfirmed: true,
       seller: saler as string,
     });
@@ -25,8 +25,8 @@ export const commandProduct = actionClient
     const invoiceItems = await createCommandItems(
       items.map((item) => ({
         amount: item.quantity * item.product.price,
-        command: command?.id as number,
-        product: item.product.id as number,
+        command: command?.id as string,
+        product: item.product.id as string,
         quantity: item.quantity,
       }))
     );
@@ -43,7 +43,7 @@ export const getInvoice = actionClient
   .action(async ({ parsedInput: { id } }) => {
     const [command, items] = await Promise.all([
       queries.getCommandProduct(id),
-      queries.getCommandItems(id as number),
+      queries.getCommandItems(id as string),
     ]);
 
     return { ...command, items };

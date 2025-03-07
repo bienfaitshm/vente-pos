@@ -1,5 +1,5 @@
 import { PointOfSaleClientPage } from "./client-page";
-import { getPointOfSales } from "@/server/actions/items";
+import { getPointOfSales } from "@/server/actions/products";
 
 export const dynamic = "force-dynamic";
 

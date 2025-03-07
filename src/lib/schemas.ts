@@ -4,7 +4,7 @@ import { z } from "zod";
 export const NoEmptyStringSchemas = z
   .string()
   .min(1, { message: "Ce Chant est requis" });
-export const IDSchemas = z.union([NoEmptyStringSchemas.trim(), z.number()]);
+export const IDSchemas = NoEmptyStringSchemas;
 export const EmptyObjet = z.object({});
 export const IdObjectSchems = z.object({ id: IDSchemas });
 
