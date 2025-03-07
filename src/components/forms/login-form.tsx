@@ -19,7 +19,6 @@ import { useForm } from "@/hooks/form";
 import { LoginCredentialSchemas, type LoginCredential } from "@/lib/schemas";
 import { HookSafeActionFn } from "next-safe-action/hooks";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ZodType, ZodTypeDef } from "zod";
 
 const defaultValues: LoginCredential = { username: "", password: "" };
@@ -38,20 +37,13 @@ export const LoginForm: React.FC<React.PropsWithChildren<LoginFormProps>> = ({
   onSubmit,
   children,
 }) => {
-  const router = useRouter();
   const { form, handleSubmitWithAction } = useForm({
     action: onSubmit,
     schemas: LoginCredentialSchemas,
     options: {
       formProps: { defaultValues },
-      actionProps: {
-        onSuccess() {
-          router.replace("/");
-        },
-      },
     },
   });
-  // const handleSubmit = (value: LoginCredential) => onSubmit?.(value);
   return (
     <Form {...form}>
       <form onSubmit={handleSubmitWithAction}>
