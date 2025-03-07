@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { addDays, format } from "date-fns";
+import { subDays, format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -20,46 +20,54 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export function DatePickerWithPresets() {
-  const [date, setDate] = React.useState<Date>();
+export interface DatePickerWithPresetsProps {
+  value?: Date;
+  onChange?(value: Date): void;
+}
+
+export const DatePickerWithPresets: React.FC<DatePickerWithPresetsProps> = ({
+  value = new Date(),
+}) => {
+  const [date, setDate] = React.useState<Date>(value);
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant={"outline"}
-          className={cn(
-            "w-[240px] justify-start text-left font-normal",
-            !date && "text-muted-foreground"
-          )}
-        >
-          <CalendarIcon />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent
-        align="start"
-        className="flex w-auto flex-col space-y-2 p-2"
+    <div className="flex items-center">
+      <Select
+        onValueChange={(value) => setDate(subDays(new Date(), parseInt(value)))}
       >
-        <Select
-          onValueChange={(value) =>
-            setDate(addDays(new Date(), parseInt(value)))
-          }
+        <SelectTrigger className="h-8 rounded-none rounded-l-md">
+          <SelectValue placeholder="Ajourd'hui" />
+        </SelectTrigger>
+        <SelectContent position="popper">
+          <SelectItem value="0">Aujourd&apos;hui</SelectItem>
+          <SelectItem value="1">hiers</SelectItem>
+          <SelectItem value="3">Il y&apos; 3 jours</SelectItem>
+          <SelectItem value="7">Il y&apos; une semaine</SelectItem>
+          <SelectItem value="30">Il y&apos; une un moi</SelectItem>
+        </SelectContent>
+      </Select>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant={"outline"}
+            className={cn(
+              "w-[240px] justify-start text-left font-normal h-8 rounded-none rounded-r-md",
+              !date && "text-muted-foreground"
+            )}
+          >
+            <CalendarIcon />
+            {date ? format(date, "dd/MM/yyyy") : <span>Choisir une date</span>}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          align="start"
+          className="flex w-auto flex-col space-y-2 p-2"
         >
-          <SelectTrigger>
-            <SelectValue placeholder="Select" />
-          </SelectTrigger>
-          <SelectContent position="popper">
-            <SelectItem value="0">Today</SelectItem>
-            <SelectItem value="1">Tomorrow</SelectItem>
-            <SelectItem value="3">In 3 days</SelectItem>
-            <SelectItem value="7">In a week</SelectItem>
-          </SelectContent>
-        </Select>
-        <div className="rounded-md border">
-          <Calendar mode="single" selected={date} onSelect={setDate} />
-        </div>
-      </PopoverContent>
-    </Popover>
+          <div className="rounded-md border">
+            <Calendar mode="single" selected={date} />
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
-}
+};
