@@ -14,3 +14,27 @@ export function useCommandProduct(
     ...params,
   });
 }
+
+//
+export function useUpdateCommandProduct(
+  params?: ParamsMutation<Awaited<ReturnType<typeof actions.commandProduct>>>
+) {
+  return useMutation({
+    networkMode: "always",
+    mutationKey: ["UPDATE_COMMAND_PRODUCT"],
+    mutationFn: (value: Invoice) => actions.commandProduct(value),
+    ...params,
+  });
+}
+
+//
+export function useDeleteCommandProduct(
+  params?: ParamsMutation<Awaited<ReturnType<typeof actions.commandProduct>>>
+) {
+  return useMutation({
+    networkMode: "always",
+    mutationKey: ["DELETE_COMMAND_PRODUCT"],
+    mutationFn: (value: Invoice) => actions.commandProduct(value),
+    ...params,
+  });
+}
