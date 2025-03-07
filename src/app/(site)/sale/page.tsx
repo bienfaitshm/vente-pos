@@ -9,8 +9,6 @@ export default async function Page() {
     auth(),
   ]);
 
-  console.log(JSON.stringify(session, null, 4));
-
   return (
     <div className="w-full">
       <div className="max-w-screen-lg mx-auto space-y-5">
