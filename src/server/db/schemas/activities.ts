@@ -12,6 +12,8 @@ import { commonFieldTable } from "./base";
 import { users } from "./accounts";
 import { Product } from "./products";
 
+export const StockHistoryActionEnum = pgEnum("action", ["ADD", "SUB"]);
+
 export const PointOfSaleStatutEnum = pgEnum("statut", [
   "OPEN",
   "CLOSE",
@@ -83,3 +85,27 @@ export const PointOfSale = pgTable("point_of_sale", {
 
 export type InsertPointOfSale = typeof PointOfSale.$inferInsert;
 export type SelectPointOfSale = typeof PointOfSale.$inferSelect;
+
+// Stock
+export const Stock = pgTable("stock", {
+  ...commonFieldTable,
+  user: text().references(() => users.id),
+  product: varchar("product_id", { length: 10 }).references(() => Product.id),
+});
+
+export type InsertStock = typeof Stock.$inferInsert;
+export type SelectStock = typeof Stock.$inferSelect;
+
+// StockHistory
+export const StockHistory = pgTable("stock_history", {
+  ...commonFieldTable,
+  quantity: integer().notNull(),
+  action: StockHistoryActionEnum().default("ADD").notNull(),
+  stock: varchar("stock_id").references(() => Stock.id),
+  saler: text("saler_id").references(() => users.id),
+  admin: text("admin_id").references(() => users.id),
+  pos: varchar("pos_id", { length: 10 }).references(() => PointOfSale.id),
+});
+
+export type InsertStockHistory = typeof StockHistory.$inferInsert;
+export type SelectStockHistory = typeof StockHistory.$inferSelect;

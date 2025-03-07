@@ -99,3 +99,9 @@ export async function getSalers() {
     .from(tables.users)
     .where(eq(tables.users.isAdmin, false));
 }
+
+export async function getSaler() {}
+
+export async function updateSaler() {}
+
+export async function deleteSaler() {}
