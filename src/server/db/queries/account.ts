@@ -1,6 +1,7 @@
-import { eq, or } from "drizzle-orm";
+import { and, eq, or } from "drizzle-orm";
 import { db } from "@/server/db/db";
 import * as tables from "@/server/db/schemas/accounts";
+import { WithID } from "../type";
 
 /**
  *
@@ -100,8 +101,30 @@ export async function getSalers() {
     .where(eq(tables.users.isAdmin, false));
 }
 
-export async function getSaler() {}
+export async function getSaler(
+  id: string
+): Promise<tables.SelectUser | undefined> {
+  const users = await db
+    .select()
+    .from(tables.users)
+    .where(and(eq(tables.users.isAdmin, false), eq(tables.users.id, id)));
+  return users[0];
+}
 
-export async function updateSaler() {}
+export async function updateSaler({
+  id,
+  ...value
+}: WithID<Pick<tables.InsertUser, "email" | "image" | "name" | "username">>) {
+  return await db
+    .update(tables.users)
+    .set(value)
+    .where(eq(tables.users.id, id))
+    .returning();
+}
 
-export async function deleteSaler() {}
+export async function deleteSaler({ id }: WithID<unknown>) {
+  return await db
+    .delete(tables.users)
+    .where(eq(tables.users.id, id))
+    .returning();
+}
