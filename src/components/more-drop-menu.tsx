@@ -8,6 +8,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import React from "react";
 
 export interface Menus {
   name: string;
@@ -34,7 +35,7 @@ export const MoreDropMenu: React.FC<MoreDropMenuProps> = ({ menus = [] }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
         {menus.map((menu, index) => (
-          <>
+          <React.Fragment key={index}>
             <DropdownMenuItem key={index} onSelect={menu.action}>
               {menu.name}
               {menu.shortcut && (
@@ -42,7 +43,7 @@ export const MoreDropMenu: React.FC<MoreDropMenuProps> = ({ menus = [] }) => {
               )}
             </DropdownMenuItem>
             {menu.separator && <DropdownMenuSeparator />}
-          </>
+          </React.Fragment>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
