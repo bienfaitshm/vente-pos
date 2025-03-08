@@ -4,9 +4,8 @@ import {
   DialogDeleteAction,
   useDeleteDialog,
 } from "@/components/dialogs/delete-action-dialog";
-import { AddProductDialogForm } from "@/components/dialogs/product-form-dialog";
-
 import {
+  SalerCreateFormDialog,
   SalerUpdateFormDialog,
   useUpdateSalerFormDialog,
 } from "@/components/dialogs/saler-form-dialog";
@@ -37,7 +36,7 @@ export const PageClient: React.FC<{ data?: SelectUser[] }> = ({
       {mutation.isPending && <AlertDelete />}
       <DataTableSaler
         data={data as SalerColumnDefType[]}
-        rightHeader={<AddProductDialogForm categories={[]} />}
+        rightHeader={<SalerCreateFormDialog />}
         menus={[
           {
             name: "Renflouer le stock",

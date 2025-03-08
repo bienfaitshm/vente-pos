@@ -48,6 +48,11 @@ export const SigninForm: React.FC<React.PropsWithChildren<SigninProps>> = ({
     schemas: RegistrationCredentialSchemas,
     options: {
       formProps: { defaultValues: { ...DEFAULT_VALUES, ...defaultValues } },
+      actionProps: {
+        onSuccess() {
+          form.reset(DEFAULT_VALUES);
+        },
+      },
     },
   });
   return (
