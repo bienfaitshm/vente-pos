@@ -31,11 +31,11 @@ export const DatePickerWithPresets: React.FC<DatePickerWithPresetsProps> = ({
   const [date, setDate] = React.useState<Date>(value);
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center gap-2">
       <Select
         onValueChange={(value) => setDate(subDays(new Date(), parseInt(value)))}
       >
-        <SelectTrigger className="h-8 rounded-none rounded-l-md">
+        <SelectTrigger className="h-8 rounded-lg border">
           <SelectValue placeholder="Ajourd'hui" />
         </SelectTrigger>
         <SelectContent position="popper">
@@ -49,11 +49,8 @@ export const DatePickerWithPresets: React.FC<DatePickerWithPresetsProps> = ({
       <Popover>
         <PopoverTrigger asChild>
           <Button
-            variant={"outline"}
-            className={cn(
-              "w-[240px] justify-start text-left font-normal h-8 rounded-none rounded-r-md",
-              !date && "text-muted-foreground"
-            )}
+            variant="outline"
+            className={cn(!date && "text-muted-foreground")}
           >
             <CalendarIcon />
             {date ? format(date, "dd/MM/yyyy") : <span>Choisir une date</span>}

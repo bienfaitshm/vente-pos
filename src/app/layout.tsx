@@ -4,6 +4,7 @@ import QueryClientProvider from "@/components/providers/tanstack-provider";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "@/components/providers/theme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +18,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Yummy foodyz",
-  description: "Suivi automatique des stocks avec des notifications en cas de faiblesse des stocks",
+  description:
+    "Suivi automatique des stocks avec des notifications en cas de faiblesse des stocks",
 };
 
 export default function RootLayout({
@@ -30,10 +32,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SessionProvider>
-          <QueryClientProvider>{children}</QueryClientProvider>
-        </SessionProvider>
-        <Toaster richColors closeButton />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SessionProvider>
+            <QueryClientProvider>{children}</QueryClientProvider>
+          </SessionProvider>
+          <Toaster richColors closeButton />
+        </ThemeProvider>
       </body>
     </html>
   );
