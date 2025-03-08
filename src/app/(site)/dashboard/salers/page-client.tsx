@@ -58,7 +58,7 @@ export const PageClient: React.FC<{ data?: SelectUser[] }> = ({
           {
             name: "Voir les stocks",
             action(row?: Row<SalerColumnDefType>) {
-              router.push(`dashboard/stocks/${row?.original.id}`);
+              router.push(`/dashboard/stocks/${row?.original.id}`);
             },
           },
           {
