@@ -1,45 +1,37 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-
-import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
-import { EditDeleteCellAction } from "../actions/table-actions";
 
-import { ColumnParamsWithAction, ColumnSalerType } from "../columns";
+import { MoreDropMenu } from "@/components/more-drop-menu";
+import { makeMenus } from "../core/utils";
+
+import type { ColumnDef } from "@tanstack/react-table";
+import type { TableRowMenu } from "../types";
 
 export type SalerColumnDefType = {
-  id: number;
+  id: string;
   name: string;
-  username: number;
-  email: number;
+  username: string;
+  email: string;
   image: string;
 };
 
 export function getSalerColumns(
-  params?: ColumnParamsWithAction<ColumnSalerType>
-): ColumnDef<ColumnSalerType>[] {
+  menus: TableRowMenu<SalerColumnDefType>[] = []
+): ColumnDef<SalerColumnDefType>[] {
   return [
-    {
-      accessorKey: "id",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="ID" />
-      ),
-      cell: ({ row }) => <span>{row.getValue("id")}</span>,
-      enableSorting: false,
-      enableHiding: false,
-    },
-
     {
       accessorKey: "image",
       enableHiding: false,
       enableResizing: true,
+      enableSorting: false,
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Profile" />
       ),
       cell: ({}): React.ReactNode => {
         return (
           <div className="flex space-x-2">
-            <Avatar className=" h-20 w-20 rounded-md">
-              <AvatarFallback>IM</AvatarFallback>
+            <Avatar className="h-10 w-10 rounded-md">
+              <AvatarFallback className="rounded-none">IM</AvatarFallback>
             </Avatar>
           </div>
         );
@@ -66,6 +58,7 @@ export function getSalerColumns(
       accessorKey: "username",
       enableHiding: true,
       enableResizing: true,
+      enableSorting: false,
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Username" />
       ),
@@ -83,6 +76,7 @@ export function getSalerColumns(
       accessorKey: "email",
       enableHiding: true,
       enableResizing: true,
+      enableSorting: false,
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Email" />
       ),
@@ -99,7 +93,7 @@ export function getSalerColumns(
     {
       id: "actions",
       cell({ row }) {
-        return <EditDeleteCellAction row={row} {...params?.actions} />;
+        return <MoreDropMenu menus={makeMenus(row, menus)} />;
       },
     },
   ];

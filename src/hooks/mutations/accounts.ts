@@ -24,3 +24,30 @@ export function useSigninUser(
     ...params,
   });
 }
+
+export function useCreateUser(
+  params?: ParamsMutation<Awaited<ReturnType<typeof actions.signinUser>>>
+) {
+  return useMutation({
+    networkMode: "always",
+    mutationKey: ["CREATE_USER"],
+    mutationFn: (value: RegistrationCredential) => actions.signinUser(value),
+    ...params,
+  });
+}
+
+export function useUpdateUser(
+  params?: ParamsMutation<Awaited<ReturnType<typeof actions.updateSaler>>>
+) {
+  return useMutation({
+    networkMode: "always",
+    mutationKey: ["UPDATE_USER"],
+    mutationFn: (
+      value: Omit<RegistrationCredential, "password" | "confirm">
+    ) => {
+      console.log(value);
+      return actions.updateSaler({ id: "1" });
+    },
+    ...params,
+  });
+}

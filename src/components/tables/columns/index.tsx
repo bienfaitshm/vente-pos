@@ -39,7 +39,7 @@ export type ColumnSalerType = {
   isAdmin: boolean;
 };
 
-type ColumnParamsWithAction<T> = { actions?: IEditDeleteActions<T> };
+export type ColumnParamsWithAction<T> = { actions?: IEditDeleteActions<T> };
 
 export function getSalerColumns(
   params?: ColumnParamsWithAction<ColumnSalerType>

@@ -7,12 +7,9 @@ import {
 import { actionClient } from "./base";
 import { hashPassword } from "@/lib/encrypt";
 import { signIn, ErrorCode, AuthError } from "@/auth";
-import { redirect } from "next/navigation";
 import * as queries from "@/server/db/queries";
 import * as schemas from "@/lib/schemas";
 import { revalidatePath } from "next/cache";
-
-const AUTH_LOGIN_ROUTE = "/auth/login";
 
 export const loginUser = actionClient
   .schema(LoginCredentialSchemas)
@@ -88,9 +85,11 @@ export const signinUser = actionClient
       username,
       password: passwordHashed,
     });
-    if (newUser) {
-      redirect(AUTH_LOGIN_ROUTE);
-    }
+
+    return newUser;
+    // if (newUser) {
+    //   redirect(AUTH_LOGIN_ROUTE);
+    // }
   });
 
 //
@@ -106,4 +105,11 @@ export const deleteSaler = actionClient
     const data = await queries.deleteSaler(values);
     revalidatePath("/");
     return data;
+  });
+
+export const updateSaler = actionClient
+  .schema(schemas.IdObjectSchems)
+  .action(async ({ parsedInput: values }) => {
+    console.log("update saler", values);
+    revalidatePath("/");
   });

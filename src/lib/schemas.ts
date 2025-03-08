@@ -9,7 +9,6 @@ export const EmptyObjet = z.object({});
 export const IdObjectSchems = z.object({ id: IDSchemas });
 
 export const UserSchemas = z.object({
-  id: IDSchemas.optional(),
   name: NoEmptyStringSchemas,
   username: NoEmptyStringSchemas,
   email: z.string().email(),

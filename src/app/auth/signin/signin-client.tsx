@@ -6,7 +6,7 @@ import { useSigninUser } from "@/hooks/mutations";
 export const SigninClient = () => {
   const mutation = useSigninUser();
   return (
-    <SigninForm onSubmit={mutation.mutateAsync}>
+    <SigninForm showPassword={true} onSubmit={mutation.mutateAsync}>
       <ButtonLoader isLoading={mutation.isPending} loadingText="Signin...">
         Signin
       </ButtonLoader>

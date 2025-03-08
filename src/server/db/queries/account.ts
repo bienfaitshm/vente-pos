@@ -95,10 +95,8 @@ export async function getByUsernameOrEmail(
 
 // Salers
 export async function getSalers() {
-  return await db
-    .select()
-    .from(tables.users)
-    .where(eq(tables.users.isAdmin, false));
+  return await db.select().from(tables.users);
+  // .where(eq(tables.users.isAdmin, false));
 }
 
 export async function getSaler(

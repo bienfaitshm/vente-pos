@@ -26,7 +26,7 @@ export const ProductClientPage: React.FC<ProductClientPageProps> = ({
   const updateFormRef = useUpdateProductFormDialog();
   const deleteDialogRef = useDeleteDialog();
 
-  const onDeleteConfirm = (value: number) => {
+  const onDeleteConfirm = (value: string) => {
     mutation.mutate(value, {
       onSuccess() {
         console.log("Deletation success");
@@ -38,7 +38,7 @@ export const ProductClientPage: React.FC<ProductClientPageProps> = ({
       <UpdateProductDialogForm categories={categories} ref={updateFormRef} />
       <DialogDeleteAction
         ref={deleteDialogRef}
-        onConfirm={(value) => onDeleteConfirm(value as number)}
+        onConfirm={(value) => onDeleteConfirm(value as string)}
       />
       {mutation.isPending && <AlertDelete />}
       <DataTableProduct
