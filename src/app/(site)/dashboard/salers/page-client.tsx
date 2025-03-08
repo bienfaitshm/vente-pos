@@ -15,17 +15,34 @@ import { PencilIcon, Trash2 } from "lucide-react";
 import type { SelectUser } from "@/server/db/schemas";
 import type { SalerColumnDefType } from "@/components/tables/salers-table/columns";
 import type { Row } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
 
+/**
+ * PageClient component
+ *
+ * This component renders the dashboard page for managing salers.
+ * It includes dialogs for updating and deleting salers, and a data table for displaying salers.
+ *
+ * @param {Object} props - Component props
+ * @param {SelectUser[]} [props.data=[]] - Array of saler data
+ */
 export const PageClient: React.FC<{ data?: SelectUser[] }> = ({
   data = [],
 }) => {
-  const mutation = useDeleteSaler();
   const updateFormRef = useUpdateSalerFormDialog();
   const deleteDialogRef = useDeleteDialog();
+  const mutation = useDeleteSaler();
+  const router = useRouter();
 
+  /**
+   * Handles the delete confirmation action
+   *
+   * @param {SalerColumnDefType} value - The saler data to be deleted
+   */
   const onDeleteConfirm = async (value: SalerColumnDefType) => {
     await mutation.mutateAsync(value.id);
   };
+
   return (
     <div>
       <SalerUpdateFormDialog ref={updateFormRef} />
@@ -39,9 +56,9 @@ export const PageClient: React.FC<{ data?: SelectUser[] }> = ({
         rightHeader={<SalerCreateFormDialog />}
         menus={[
           {
-            name: "Renflouer le stock",
+            name: "Voir les stocks",
             action(row?: Row<SalerColumnDefType>) {
-              deleteDialogRef.current?.delete(row?.original);
+              router.push(`dashboard/stocks/${row?.original.id}`);
             },
           },
           {
