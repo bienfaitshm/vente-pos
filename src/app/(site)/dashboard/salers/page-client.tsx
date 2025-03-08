@@ -23,7 +23,7 @@ export const PageClient: React.FC<{ data?: SelectUser[] }> = ({
   const updateFormRef = useUpdateSalerFormDialog();
   const deleteDialogRef = useDeleteDialog();
 
-  const onDeleteConfirm = (value: string) => {
+  const onDeleteConfirm = (value: SalerColumnDefType) => {
     console.log(value);
   };
   return (
@@ -31,7 +31,7 @@ export const PageClient: React.FC<{ data?: SelectUser[] }> = ({
       <SalerUpdateFormDialog ref={updateFormRef} />
       <DialogDeleteAction
         ref={deleteDialogRef}
-        onConfirm={(value) => onDeleteConfirm(value as string)}
+        onConfirm={(value) => onDeleteConfirm(value as SalerColumnDefType)}
       />
       {mutation.isPending && <AlertDelete />}
       <DataTableSaler
@@ -41,7 +41,7 @@ export const PageClient: React.FC<{ data?: SelectUser[] }> = ({
           {
             name: "Renflouer le stock",
             action(row?: Row<SalerColumnDefType>) {
-              console.log(row?.original);
+              deleteDialogRef.current?.delete(row?.original);
             },
           },
           {
@@ -57,7 +57,11 @@ export const PageClient: React.FC<{ data?: SelectUser[] }> = ({
           {
             name: "Suprimer",
             shortcut: <Trash2 className="h-4 w-4" />,
-            action: () => {},
+            action: (row?: Row<SalerColumnDefType>) => {
+              if (row) {
+                deleteDialogRef.current?.delete(row?.original);
+              }
+            },
           },
         ]}
       />
