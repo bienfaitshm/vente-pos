@@ -10,7 +10,7 @@ import {
   useUpdateSalerFormDialog,
 } from "@/components/dialogs/saler-form-dialog";
 import { DataTableSaler } from "@/components/tables/salers-table";
-import { useDeleteProduct } from "@/hooks/mutations";
+import { useDeleteSaler } from "@/hooks/mutations";
 import { PencilIcon, Trash2 } from "lucide-react";
 import type { SelectUser } from "@/server/db/schemas";
 import type { SalerColumnDefType } from "@/components/tables/salers-table/columns";
@@ -19,12 +19,12 @@ import type { Row } from "@tanstack/react-table";
 export const PageClient: React.FC<{ data?: SelectUser[] }> = ({
   data = [],
 }) => {
-  const mutation = useDeleteProduct();
+  const mutation = useDeleteSaler();
   const updateFormRef = useUpdateSalerFormDialog();
   const deleteDialogRef = useDeleteDialog();
 
-  const onDeleteConfirm = (value: SalerColumnDefType) => {
-    console.log(value);
+  const onDeleteConfirm = async (value: SalerColumnDefType) => {
+    await mutation.mutateAsync(value.id);
   };
   return (
     <div>

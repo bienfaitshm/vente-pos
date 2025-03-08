@@ -25,7 +25,7 @@ export function useSigninUser(
   });
 }
 
-export function useCreateUser(
+export function useCreateSaler(
   params?: ParamsMutation<Awaited<ReturnType<typeof actions.signinUser>>>
 ) {
   return useMutation({
@@ -36,7 +36,7 @@ export function useCreateUser(
   });
 }
 
-export function useUpdateUser(
+export function useUpdateSaler(
   params?: ParamsMutation<Awaited<ReturnType<typeof actions.updateSaler>>>
 ) {
   return useMutation({
@@ -48,6 +48,17 @@ export function useUpdateUser(
       console.log(value);
       return actions.updateSaler({ id: "1" });
     },
+    ...params,
+  });
+}
+
+export function useDeleteSaler(
+  params?: ParamsMutation<Awaited<ReturnType<typeof actions.deleteSaler>>>
+) {
+  return useMutation({
+    networkMode: "always",
+    mutationKey: ["UPDATE_USER"],
+    mutationFn: (id: string) => actions.deleteSaler({ id }),
     ...params,
   });
 }
