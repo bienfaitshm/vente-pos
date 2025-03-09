@@ -15,16 +15,26 @@ import React from "react";
 import { ButtonLoader } from "@/components/button-loader";
 
 import { useChangeStock } from "@/hooks/mutations";
-import { StockForm } from "@/components/forms/stock-form";
+import { StockForm, type StockFormProps } from "@/components/forms/stock-form";
 
 export interface StockFormDialogProps {
-  type?: "UPDATE" | "CREATE";
   onSucces?(): void;
+  saler: string;
 }
 
 export const StockFormDialog: React.FC<
-  React.PropsWithChildren<StockFormDialogProps>
-> = ({ children, onSucces, type = "CREATE" }) => {
+  React.PropsWithChildren<
+    StockFormDialogProps &
+      Pick<StockFormProps, "pointOfSales" | "products" | "type">
+  >
+> = ({
+  children,
+  onSucces,
+  saler,
+  pointOfSales,
+  products,
+  type = "CREATE",
+}) => {
   const btnSubmitRef = React.useRef<HTMLButtonElement>(null);
   const mutation = useChangeStock({
     onSuccess() {
@@ -46,6 +56,9 @@ export const StockFormDialog: React.FC<
         <div>
           <StockForm
             type={type}
+            pointOfSales={pointOfSales}
+            products={products}
+            defaultValues={{ saler }}
             onSubmit={(data) =>
               mutation.mutateAsync({ ...data, action: data.action ?? "ADD" })
             }

@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Activity, HistoryIcon, ShoppingBag, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StockFormDialog } from "@/components/dialogs/stock-form-dialog";
+import { getPointOfSales, getProducts } from "@/server/actions";
 
 export default async function Layout({
   children,
@@ -15,6 +16,11 @@ export default async function Layout({
   activityHistory: React.ReactNode;
   stock: React.ReactNode;
 }) {
+  const [pointOfSales, products] = await Promise.all([
+    getPointOfSales({}),
+    getProducts({}),
+  ]);
+
   return (
     <div className="m-auto max-w-screen-lg space-y-5">
       <div className="p-4 bg-muted/15 rounded-xl space-y-5">
@@ -43,7 +49,11 @@ export default async function Layout({
                 <span>Historiques du stock</span>
               </TabsTrigger>
             </div>
-            <StockFormDialog>
+            <StockFormDialog
+              saler="1bc14f8b-8fe8-46bd-9b53-13bffa2db540"
+              pointOfSales={pointOfSales?.data}
+              products={products?.data}
+            >
               <Button variant="outline" size="icon" className="rounded-full">
                 <ShoppingBag className="h-4 w-4" />
               </Button>

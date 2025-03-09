@@ -25,7 +25,7 @@ import { ZodType, ZodTypeDef } from "zod";
 import { PlusCircleIcon } from "lucide-react";
 
 const DEFAULT_VALUE: Partial<Stock> = { action: "ADD", quantity: 0 };
-interface StockFormProps {
+export interface StockFormProps {
   onSubmit: HookSafeActionFn<
     unknown,
     typeof StockSchemas,
@@ -36,6 +36,8 @@ interface StockFormProps {
   >;
   defaultValues?: Partial<Stock>;
   type?: "UPDATE" | "CREATE";
+  pointOfSales?: { id: string; name: string }[];
+  products?: { id: string; name: string }[];
 }
 
 export const StockForm: React.FC<React.PropsWithChildren<StockFormProps>> = ({
@@ -43,6 +45,8 @@ export const StockForm: React.FC<React.PropsWithChildren<StockFormProps>> = ({
   children,
   defaultValues,
   type = "CREATE",
+  pointOfSales = [],
+  products = [],
 }) => {
   const { form, handleSubmitWithAction } = useForm({
     action: onSubmit,
@@ -109,12 +113,14 @@ export const StockForm: React.FC<React.PropsWithChildren<StockFormProps>> = ({
                       defaultValue={field.value}
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Theme" />
+                        <SelectValue placeholder="Point de vente" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="light">Light</SelectItem>
-                        <SelectItem value="dark">Dark</SelectItem>
-                        <SelectItem value="system">System</SelectItem>
+                        {pointOfSales.map((pos) => (
+                          <SelectItem key={pos.id} value={pos.id}>
+                            {pos.name}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -124,7 +130,7 @@ export const StockForm: React.FC<React.PropsWithChildren<StockFormProps>> = ({
             />
             <FormField
               control={form.control}
-              name="pos"
+              name="product"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Produits</FormLabel>
@@ -135,12 +141,14 @@ export const StockForm: React.FC<React.PropsWithChildren<StockFormProps>> = ({
                       defaultValue={field.value}
                     >
                       <SelectTrigger className="">
-                        <SelectValue placeholder="Theme" />
+                        <SelectValue placeholder="Selectionne le produit" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="light">Light</SelectItem>
-                        <SelectItem value="dark">Dark</SelectItem>
-                        <SelectItem value="system">System</SelectItem>
+                        {products.map((pos) => (
+                          <SelectItem key={pos.id} value={pos.id}>
+                            {pos.name}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </FormControl>
