@@ -3,6 +3,7 @@ import { EmptyObjet, IdObjectSchems, InvoiceSchemas } from "@/lib/schemas";
 import { actionClient } from "./base";
 import { sumSubTotal } from "@/lib/utils";
 import * as queries from "../db/queries";
+import * as schemas from "@/lib/schemas/activities";
 
 export const commandProduct = actionClient
   .schema(InvoiceSchemas)
@@ -45,4 +46,12 @@ export const getInvoice = actionClient
     ]);
 
     return { ...command, items };
+  });
+
+//
+
+export const changeStock = actionClient
+  .schema(schemas.StockSchemas)
+  .action(async ({ parsedInput }) => {
+    return { parsedInput };
   });

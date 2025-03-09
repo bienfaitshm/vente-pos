@@ -13,6 +13,7 @@ import { formatCurrency } from "@/lib/formater";
 import {
   Activity,
   ChartNoAxesCombinedIcon,
+  HistoryIcon,
   Landmark,
   PencilIcon,
   ShoppingBag,
@@ -23,6 +24,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { StockFormDialog } from "@/components/dialogs/stock-form-dialog";
 
 const ItemContainerCardInfo: React.FC<
   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
@@ -164,14 +166,20 @@ export default async function Page(params: unknown) {
                 <Activity className="h-4 w-4 mr-2" />
                 <span>Activites</span>
               </TabsTrigger>
-              <TabsTrigger value="stocks">
+              <TabsTrigger value="stocks" className="rounded-full">
                 <ShoppingCart className="h-4 w-4 mr-2" />
                 <span>Stocks</span>
               </TabsTrigger>
+              <TabsTrigger value="stock-histories" className="rounded-full">
+                <HistoryIcon className="h-4 w-4 mr-2" />
+                <span>Historiques du stock</span>
+              </TabsTrigger>
             </div>
-            <Button variant="outline" size="icon" className="rounded-full">
-              <ShoppingBag className="h-4 w-4" />
-            </Button>
+            <StockFormDialog>
+              <Button variant="outline" size="icon" className="rounded-full">
+                <ShoppingBag className="h-4 w-4" />
+              </Button>
+            </StockFormDialog>
           </TabsList>
           <TabsContent value="activities">
             Make changes to your activities here.
@@ -192,13 +200,15 @@ export default async function Page(params: unknown) {
                   </div>
                   <div className="flex items-center justify-between">
                     <TypographyH3>90</TypographyH3>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="rounded-full"
-                    >
-                      <PencilIcon className="h-4 w-4" />
-                    </Button>
+                    <StockFormDialog type="UPDATE">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="rounded-full"
+                      >
+                        <PencilIcon className="h-4 w-4" />
+                      </Button>
+                    </StockFormDialog>
                   </div>
                 </div>
               ))}
