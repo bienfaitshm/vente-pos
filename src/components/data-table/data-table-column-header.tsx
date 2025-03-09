@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { TypographySmall } from "../ui/typography";
 
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -24,7 +25,7 @@ export function DataTableColumnHeader<TData, TValue>({
   className,
 }: DataTableColumnHeaderProps<TData, TValue>): React.JSX.Element {
   if (!column.getCanSort()) {
-    return <div className={cn(className)}>{title}</div>;
+    return <TypographySmall className={cn(className)}>{title}</TypographySmall>;
   }
 
   return (
@@ -36,7 +37,7 @@ export function DataTableColumnHeader<TData, TValue>({
             size="sm"
             className="-ml-3 h-8 data-[state=open]:bg-accent"
           >
-            <span className="text-xs md:text-sm">{title}</span>
+            <span className="text-xs md:text-sm/8">{title}</span>
             {column.getIsSorted() === "desc" ? (
               <MoveDown className="ml-2 h-4 w-4" />
             ) : column.getIsSorted() === "asc" ? (

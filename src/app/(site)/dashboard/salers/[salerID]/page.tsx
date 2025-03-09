@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StockFormDialog } from "@/components/dialogs/stock-form-dialog";
+import { DataTableStockHistory } from "@/components/tables/stock-history-table";
 
 const ItemContainerCardInfo: React.FC<
   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
@@ -93,11 +94,11 @@ const ItemActivitySubTextCard: React.FC<React.PropsWithChildren> = ({
 //
 
 const arrs = new Array(10).fill(0).map((_, index) => index);
-export default async function Page(params: unknown) {
-  const value = await params;
+export default async function Page() {
+  // const value = await params;
   return (
     <div className="m-auto max-w-screen-lg space-y-5">
-      <div className="p-4 bg-muted rounded-xl space-y-5">
+      <div className="p-4 bg-muted/15 rounded-xl space-y-5">
         <div className="flex items-center justify-between">
           <div className="border-l-4 border-primary pl-3">
             <TypographyH3>Detail Vendeur</TypographyH3>
@@ -158,9 +159,9 @@ export default async function Page(params: unknown) {
           </ItemActivityCard>
         </div>
       </div>
-      <div className="p-4 bg-muted rounded-xl">
+      <div className="p-4 bg-muted/15 rounded-xl">
         <Tabs defaultValue="activities" className="w-full">
-          <TabsList className="flex items-center justify-between">
+          <TabsList className="flex items-center justify-between bg-transparent">
             <div>
               <TabsTrigger value="activities">
                 <Activity className="h-4 w-4 mr-2" />
@@ -181,9 +182,12 @@ export default async function Page(params: unknown) {
               </Button>
             </StockFormDialog>
           </TabsList>
+          <TabsContent value="stock-histories" className="mt-10">
+            <DataTableStockHistory />
+          </TabsContent>
           <TabsContent value="activities">
             Make changes to your activities here.
-            {JSON.stringify(value, null, 4)}
+            {JSON.stringify("", null, 4)}
           </TabsContent>
           <TabsContent value="stocks" className="mt-10">
             <div className="grid gap-2 md:grid-cols-4 md:gap-4">
