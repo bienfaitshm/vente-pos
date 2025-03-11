@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import React from "react";
 import { cn } from "@/lib/utils";
+import { PageProps } from "@/app/type";
 
 const ItemContainerCardInfo: React.FC<
   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
@@ -81,7 +82,7 @@ const ItemActivitySubTextCard: React.FC<React.PropsWithChildren> = ({
 };
 //
 
-export default async function Page() {
+export default async function Page({}: PageProps<{ salerID: string }>) {
   // const value = await params;
   return (
     <div className="m-auto max-w-screen-lg space-y-5">

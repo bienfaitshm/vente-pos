@@ -4,6 +4,9 @@ import { actionClient } from "./base";
 import { sumSubTotal } from "@/lib/utils";
 import * as queries from "../db/queries";
 import * as schemas from "@/lib/schemas/activities";
+import { auth } from "@/auth";
+import { z } from "zod";
+import { revalidatePath } from "next/cache";
 
 export const commandProduct = actionClient
   .schema(InvoiceSchemas)
@@ -49,9 +52,40 @@ export const getInvoice = actionClient
   });
 
 //
+export const getStocksOfSaler = actionClient
+  .schema(
+    z.object({
+      saler: z.string().nonempty(),
+    })
+  )
+  .action(async () => {
+    return await queries.getStocks();
+  });
 
 export const changeStock = actionClient
   .schema(schemas.StockSchemas)
   .action(async ({ parsedInput }) => {
-    return { parsedInput };
+    const session = await auth();
+    if (session?.user.id) {
+      console.log({
+        admin: session?.user.id,
+        ...parsedInput,
+      });
+      const stock = await queries.replenishingTheStock({
+        admin: session.user.id,
+        ...parsedInput,
+      });
+      revalidatePath("");
+      return stock;
+    }
+  });
+
+export const getStockHistories = actionClient
+  .schema(
+    z.object({
+      saler: z.string().nonempty(),
+    })
+  )
+  .action(async () => {
+    return await queries.getStockHistories();
   });

@@ -1,4 +1,4 @@
 export type PageProps<TParams = unknown, TSearchParams = unknown> = {
-  params: TParams;
-  searchParams: TSearchParams;
+  params: Promise<TParams>;
+  searchParams: Promise<TSearchParams>;
 };

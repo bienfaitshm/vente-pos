@@ -3,6 +3,7 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 import type { ColumnDef } from "@tanstack/react-table";
 import { TypographySmall } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
 
 export type StockHistoryColumnDefType = {
   id: string;
@@ -28,34 +29,28 @@ export function getStockHistoryColumns(): ColumnDef<StockHistoryColumnDefType>[]
       },
     },
     {
-      accessorKey: "action",
-      enableHiding: false,
-      enableResizing: true,
-      enableSorting: false,
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Type" />
-      ),
-      cell: ({ row }): React.ReactNode => {
-        return (
-          <Badge
-            variant={row.original.action === "SUB" ? "destructive" : "default"}
-          >
-            {row.original.action}
-          </Badge>
-        );
-      },
-    },
-    {
       accessorKey: "quantity",
       enableHiding: false,
       enableResizing: true,
+      enableSorting: true,
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Quantites" />
       ),
       cell: ({ row }): React.ReactNode => {
-        return <TypographySmall>{row.original.quantity}</TypographySmall>;
+        return (
+          <Badge
+            className="rounded-full text-xs shadow-none"
+            variant={row.original.action === "SUB" ? "destructive" : "default"}
+          >
+            <p className="text-xs">
+              {row.original.action === "SUB" ? "-" : "+"}
+              {row.original.quantity}
+            </p>
+          </Badge>
+        );
       },
     },
+
     {
       accessorKey: "saler",
       enableHiding: true,
@@ -78,6 +73,21 @@ export function getStockHistoryColumns(): ColumnDef<StockHistoryColumnDefType>[]
       ),
       cell: ({ row }): React.ReactNode => {
         return <TypographySmall>{row.original.pos}</TypographySmall>;
+      },
+    },
+    {
+      accessorKey: "createdAt",
+      enableHiding: false,
+      enableResizing: true,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Date" />
+      ),
+      cell: ({ row }): React.ReactNode => {
+        return (
+          <TypographySmall>
+            {format(row.original.createdAt, "dd/MM/yyyy - hh:mm:ss")}
+          </TypographySmall>
+        );
       },
     },
   ];

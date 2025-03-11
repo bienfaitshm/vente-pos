@@ -1,36 +1,51 @@
+import { PageProps } from "@/app/type";
 import { StockFormDialog } from "@/components/dialogs/stock-form-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TypographyH3, TypographySmall } from "@/components/ui/typography";
-import { getPointOfSales, getProducts } from "@/server/actions";
+import {
+  getPointOfSales,
+  getProducts,
+  getStocksOfSaler,
+} from "@/server/actions";
 import { PencilIcon } from "lucide-react";
 import React from "react";
 
-const arrs = new Array(10).fill(0).map((_, index) => index);
-
-export default async function StockPage() {
-  const [pointOfSales, products] = await Promise.all([
+export default async function StockPage({
+  params,
+}: PageProps<{ salerID: string }>) {
+  const { salerID } = await params;
+  const [pointOfSales, products, stocks] = await Promise.all([
     getPointOfSales({}),
     getProducts({}),
+    getStocksOfSaler({ saler: salerID }),
   ]);
   return (
     <div>
       <div className="grid gap-2 md:grid-cols-4 md:gap-4">
-        {arrs.map((i) => (
+        {stocks?.data?.map((stock) => (
           <div
-            key={i}
+            key={stock.id}
             className="flex flex-col gap-4 p-3 rounded-xl bg-muted-foreground/10"
           >
             <div className="flex items-center justify-between">
               <TypographySmall className="text-muted-foreground text-xs">
-                Product Name
+                {stock.product}
               </TypographySmall>
-              <Badge className="text-xs rounded-full">Enstock</Badge>
+              <Badge
+                className="text-xs font-medium rounded-full"
+                variant={stock.quantity > 0 ? "default" : "destructive"}
+              >
+                {stock.quantity > 0 ? "Enstock" : "A cours de stock"}
+              </Badge>
             </div>
             <div className="flex items-center justify-between">
-              <TypographyH3>90</TypographyH3>
+              <TypographyH3>{stock.quantity}</TypographyH3>
               <StockFormDialog
-                saler="1bc14f8b-8fe8-46bd-9b53-13bffa2db540"
+                defaultValues={{
+                  saler: "1bc14f8b-8fe8-46bd-9b53-13bffa2db540",
+                  product: stock.productId as string,
+                }}
                 type="UPDATE"
                 pointOfSales={pointOfSales?.data}
                 products={products?.data}

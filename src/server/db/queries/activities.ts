@@ -1,4 +1,4 @@
-import { asc, eq } from "drizzle-orm";
+import { asc, desc, eq, getTableColumns } from "drizzle-orm";
 import { db } from "../db";
 import * as tables from "../schemas";
 
@@ -95,19 +95,23 @@ export async function deleteStock({ id }: TWithID) {
     .returning();
 }
 
-export async function getStocks(): Promise<tables.SelectStock[]> {
+export async function getStocks() {
   return await db
-    .select()
+    .select({
+      ...getTableColumns(tables.Stock),
+      product: tables.Product.name,
+      productId: tables.Product.id,
+    })
     .from(tables.Stock)
-    .orderBy(asc(tables.Stock.createdAt));
+    .leftJoin(tables.Product, eq(tables.Product.id, tables.Stock.product))
+    .orderBy(desc(tables.Stock.createdAt));
 }
 
-export async function getStock(
-  id: string
-): Promise<tables.SelectStock | undefined> {
+export async function getStock(id: string) {
   const command = await db
     .select()
     .from(tables.Stock)
+    .leftJoin(tables.Product, eq(tables.Product.id, tables.Stock.product))
     .where(eq(tables.Stock.id, id));
   return command[0];
 }
@@ -151,13 +155,11 @@ export async function deleteStockHistory({ id }: TWithID) {
     .returning();
 }
 
-export async function getStockHistories(): Promise<
-  tables.SelectStockHistory[]
-> {
+export async function getStockHistories() {
   return await db
     .select()
     .from(tables.StockHistory)
-    .orderBy(asc(tables.StockHistory.createdAt));
+    .orderBy(desc(tables.StockHistory.createdAt));
 }
 
 export async function getStockHistory(
