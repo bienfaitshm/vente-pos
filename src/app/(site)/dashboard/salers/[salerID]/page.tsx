@@ -46,7 +46,7 @@ const ItemActivityCard: React.FC<
   return (
     <div
       className={cn(
-        "py-2 pl-2 pr-10 flex items-center gap-4 rounded-xl bg-muted-foreground/10 w-fit",
+        "py-2 pl-2 pr-10 flex items-center gap-4 rounded-xl bg-muted-foreground/5 w-fit",
         className
       )}
       {...props}
@@ -59,7 +59,7 @@ const ItemActivityIconContainerCard: React.FC<
 > = ({ className, ...props }) => {
   return (
     <div
-      className={cn("bg-muted-foreground/20 p-2 rounded-full", className)}
+      className={cn("bg-muted-foreground/10 p-2 rounded-full", className)}
       {...props}
     />
   );

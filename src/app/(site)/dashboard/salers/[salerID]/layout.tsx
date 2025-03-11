@@ -11,10 +11,12 @@ export default async function Layout({
   children,
   activityHistory,
   stock,
+  activitySale,
 }: {
   children: React.ReactNode;
   activityHistory: React.ReactNode;
   stock: React.ReactNode;
+  activitySale: React.ReactNode;
 }) {
   const [pointOfSales, products] = await Promise.all([
     getPointOfSales({}),
@@ -35,16 +37,25 @@ export default async function Layout({
       <div className="p-4 bg-muted/15 rounded-xl">
         <Tabs defaultValue="activities" className="w-full">
           <TabsList className="flex items-center justify-between bg-transparent">
-            <div>
-              <TabsTrigger value="activities">
+            <div className="space-x-2">
+              <TabsTrigger
+                value="activities"
+                className="rounded-full border border-input"
+              >
                 <Activity className="h-4 w-4 mr-2" />
                 <span>Activites</span>
               </TabsTrigger>
-              <TabsTrigger value="stocks" className="rounded-full">
+              <TabsTrigger
+                value="stocks"
+                className="rounded-full border border-input"
+              >
                 <ShoppingCart className="h-4 w-4 mr-2" />
                 <span>Stocks</span>
               </TabsTrigger>
-              <TabsTrigger value="stock-histories" className="rounded-full">
+              <TabsTrigger
+                value="stock-histories"
+                className="rounded-full border border-input"
+              >
                 <HistoryIcon className="h-4 w-4 mr-2" />
                 <span>Historiques du stock</span>
               </TabsTrigger>
@@ -54,17 +65,17 @@ export default async function Layout({
               pointOfSales={pointOfSales?.data}
               products={products?.data}
             >
-              <Button variant="outline" size="icon" className="rounded-full">
-                <ShoppingBag className="h-4 w-4" />
+              <Button variant="outline" className="rounded-full h-7">
+                <ShoppingBag className="h-4 w-4 mr-2" />
+                <span>Ajouter au stock</span>
               </Button>
             </StockFormDialog>
           </TabsList>
           <TabsContent value="stock-histories" className="mt-10">
             {activityHistory}
           </TabsContent>
-          <TabsContent value="activities">
-            Make changes to your activities here.
-            {JSON.stringify("", null, 4)}
+          <TabsContent value="activities" className="mt-10">
+            {activitySale}
           </TabsContent>
           <TabsContent value="stocks" className="mt-10">
             {stock}

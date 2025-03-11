@@ -35,8 +35,8 @@ export const DatePickerWithPresets: React.FC<DatePickerWithPresetsProps> = ({
       <Select
         onValueChange={(value) => setDate(subDays(new Date(), parseInt(value)))}
       >
-        <SelectTrigger className="h-8 rounded-lg border">
-          <SelectValue placeholder="Ajourd'hui" />
+        <SelectTrigger className="h-8 rounded-full border">
+          <SelectValue placeholder="Ajourd'hui" className="mr-2" />
         </SelectTrigger>
         <SelectContent position="popper">
           <SelectItem value="0">Aujourd&apos;hui</SelectItem>
@@ -50,7 +50,7 @@ export const DatePickerWithPresets: React.FC<DatePickerWithPresetsProps> = ({
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className={cn(!date && "text-muted-foreground")}
+            className={cn("h-8 rounded-full", !date && "text-muted-foreground")}
           >
             <CalendarIcon />
             {date ? format(date, "dd/MM/yyyy") : <span>Choisir une date</span>}

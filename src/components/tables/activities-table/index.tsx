@@ -33,7 +33,7 @@ const DataTableActivity: FunctionComponent<DataTableActivityProps> = ({
         <div className="flex justify-between">
           <div className="flex gap-2">
             <Input
-              placeholder="Nom..."
+              placeholder="Numero facture"
               className="h-8 w-[150px] lg:w-[250px]"
               {...searchField}
             />
