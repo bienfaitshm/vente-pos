@@ -1,6 +1,7 @@
 import { asc, desc, eq, getTableColumns } from "drizzle-orm";
 import { db } from "../db";
 import * as tables from "../schemas";
+import { calculateSubTotal, getAmountFromPourcentage } from "../utils";
 
 export type TWithID<T = string> = { id: T };
 
@@ -13,6 +14,64 @@ export async function createCommandProduct(
     .values(commandProduct)
     .returning();
   return values[0];
+}
+
+/**
+ * Processes a command for products by calculating the total amount and commission,
+ * creating the command, and creating the associated command items.
+ *
+ * @param {tables.InsertCommandProduct} command - The command details to be inserted.
+ * @param {Array<{product: string, price: number, quantity: number, commission: number}>} items -
+ *   An array of items containing product details such as id, price, quantity, and commission.
+ *
+ * @returns {Promise<{command: CommandProduct, items: CommandItem[]}>} - A promise that resolves to an object containing the created command and its items.
+ *
+ * @throws {Error} - Throws an error if the command or items creation fails.
+ */
+export async function passCommandProduct(
+  command: {
+    client: string;
+    saler: string;
+  },
+  items: {
+    // id of product
+    product: string;
+    price: number;
+    quantity: number;
+    commission: number;
+  }[]
+) {
+  // 1. get amount
+  const amount: number = calculateSubTotal(
+    items,
+    (item) => item.price * item.quantity
+  );
+
+  //2. get amount commission
+  const amountCommission: number = calculateSubTotal(
+    items,
+    (item) =>
+      getAmountFromPourcentage(item.commission, item.price) * item.quantity
+  );
+
+  //3. create command
+  const commandObj = await createCommandProduct({
+    ...command,
+    amountCommission,
+    amount,
+  });
+
+  //3. create command items
+  const invoiceItems = await createCommandItems(
+    items.map((item) => ({
+      amount: item.quantity * item.price,
+      command: commandObj?.id,
+      product: item.product,
+      quantity: item.quantity,
+    }))
+  );
+
+  return { command: commandObj, items: invoiceItems };
 }
 
 export async function updateCommandProduct({

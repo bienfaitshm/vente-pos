@@ -89,6 +89,7 @@ export const CommandItemSchemas = z.object({
     name: NoEmptyStringSchemas,
     category: IDSchemas,
     price: z.coerce.number(),
+    commission: z.coerce.number(),
   }),
 });
 
