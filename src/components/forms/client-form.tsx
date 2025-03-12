@@ -1,6 +1,4 @@
 "use client";
-import type { HookSafeActionFn } from "next-safe-action/hooks";
-import type { ZodType, ZodTypeDef } from "zod";
 import React from "react";
 import {
   Form,
@@ -11,12 +9,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ClientSchemas, type Client } from "@/lib/schemas";
-import { useForm } from "@/hooks/form";
+import { ClientSchemas, type Client } from "@/lib/schemas/products";
+import { useForm, type HookSafeActionFnSubmiter } from "@/hooks/form";
 
 export type TClientDefaultValue = Client;
 
-const defaultValues: TClientDefaultValue = {
+const DEFAULT_VALUE: TClientDefaultValue = {
   name: "",
   address: "",
   phoneNumber: "",
@@ -27,31 +25,24 @@ interface ClientFormRef {
 }
 
 interface ClientFormProps {
-  onSubmit: HookSafeActionFn<
-    unknown,
-    typeof ClientSchemas,
-    readonly ZodType<unknown, ZodTypeDef, unknown>[],
-    unknown,
-    unknown,
-    unknown
-  >;
+  onSubmit: HookSafeActionFnSubmiter<typeof ClientSchemas>;
   initialValues?: Partial<TClientDefaultValue>;
   ref?: React.Ref<ClientFormRef>;
 }
 
 export const ClientForm: React.FC<ClientFormProps> = ({
   onSubmit,
-  initialValues = defaultValues,
+  initialValues = DEFAULT_VALUE,
   ref,
 }) => {
   const { form, handleSubmitWithAction } = useForm({
     action: onSubmit,
     schemas: ClientSchemas,
     options: {
-      formProps: { defaultValues: initialValues },
+      formProps: { defaultValues: { ...DEFAULT_VALUE, ...initialValues } },
       actionProps: {
         onSuccess() {
-          form.reset(defaultValues);
+          form.reset(DEFAULT_VALUE);
         },
       },
     },

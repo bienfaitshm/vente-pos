@@ -8,14 +8,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useForm } from "@/hooks/form";
+import { useForm, type HookSafeActionFnSubmiter } from "@/hooks/form";
 import {
   ProductQuantitySchemas,
   type Product,
   type ProductQuantity,
 } from "@/lib/schemas";
-import { HookSafeActionFn } from "next-safe-action/hooks";
-import { ZodType, ZodTypeDef } from "zod";
 import { Textarea } from "../ui/textarea";
 
 const defaultValues: Omit<ProductQuantity, "product"> = {
@@ -24,14 +22,7 @@ const defaultValues: Omit<ProductQuantity, "product"> = {
 };
 
 interface ProductQuantityProps {
-  onSubmit: HookSafeActionFn<
-    unknown,
-    typeof ProductQuantitySchemas,
-    readonly ZodType<unknown, ZodTypeDef, unknown>[],
-    unknown,
-    unknown,
-    unknown
-  >;
+  onSubmit: HookSafeActionFnSubmiter<typeof ProductQuantitySchemas>;
   product: Required<Product>;
 }
 

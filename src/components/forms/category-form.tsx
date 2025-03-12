@@ -8,40 +8,31 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useForm } from "@/hooks/form";
-import { CategorySchemas, type Category } from "@/lib/schemas";
-import { HookSafeActionFn } from "next-safe-action/hooks";
-import { ZodType, ZodTypeDef } from "zod";
+import { useForm, HookSafeActionFnSubmiter } from "@/hooks/form";
+import { CategorySchemas, type Category } from "@/lib/schemas/products";
 
 export type TCategoryDefaultValue = Category;
-const defaultValues: TCategoryDefaultValue = {
+const DEFAULT_VALUES: TCategoryDefaultValue = {
   name: "",
 };
 interface CategoryProps {
-  onSubmit: HookSafeActionFn<
-    unknown,
-    typeof CategorySchemas,
-    readonly ZodType<unknown, ZodTypeDef, unknown>[],
-    unknown,
-    unknown,
-    unknown
-  >;
+  onSubmit: HookSafeActionFnSubmiter<typeof CategorySchemas>;
   initialValues?: Partial<TCategoryDefaultValue>;
 }
 
 export const CategoryForm: React.FC<React.PropsWithChildren<CategoryProps>> = ({
   onSubmit,
   children,
-  initialValues = defaultValues,
+  initialValues = DEFAULT_VALUES,
 }) => {
   const { form, handleSubmitWithAction } = useForm({
     action: onSubmit,
     schemas: CategorySchemas,
     options: {
-      formProps: { defaultValues: initialValues },
+      formProps: { defaultValues: { ...DEFAULT_VALUES, ...initialValues } },
       actionProps: {
         onSuccess() {
-          form.reset(defaultValues);
+          form.reset(DEFAULT_VALUES);
         },
       },
     },
