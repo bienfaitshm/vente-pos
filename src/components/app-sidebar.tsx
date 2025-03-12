@@ -99,7 +99,7 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: session } = useSession();
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar className="bg-muted/50" collapsible="icon" {...props}>
       <SidebarHeader>
         <EnterpriseHead />
       </SidebarHeader>
