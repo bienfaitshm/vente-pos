@@ -21,6 +21,7 @@ export const ProductSchemas = z.object({
   category: IDSchemas,
   quantity: z.coerce.number().min(0),
   price: z.coerce.number().min(0),
+  commission: z.coerce.number(),
 });
 
 /**

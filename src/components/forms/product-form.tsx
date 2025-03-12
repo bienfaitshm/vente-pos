@@ -9,31 +9,27 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useForm } from "@/hooks/form";
-import { ProductSchemas, type Product, type Category } from "@/lib/schemas";
-import { HookSafeActionFn } from "next-safe-action/hooks";
-import { ZodType, ZodTypeDef } from "zod";
+import { type HookSafeActionFnSubmiter, useForm } from "@/hooks/form";
+import {
+  ProductSchemas,
+  type Product,
+  type Category,
+} from "@/lib/schemas/products";
 import { SelectCombobox } from "../fields/select-combobox";
 
 export type TProductDefaultValue = Product;
-const defaultValues: TProductDefaultValue = {
+const DEFAULT_VALUES: TProductDefaultValue = {
   name: "",
   category: "",
   quantity: 0,
   price: 0,
+  commission: 10,
 };
 
 interface ProductProps {
-  onSubmit: HookSafeActionFn<
-    unknown,
-    typeof ProductSchemas,
-    readonly ZodType<unknown, ZodTypeDef, unknown>[],
-    unknown,
-    unknown,
-    unknown
-  >;
-  categories?: Required<Category>[];
-  initialValues?: TProductDefaultValue;
+  onSubmit: HookSafeActionFnSubmiter<typeof ProductSchemas>;
+  categories?: Required<Category & { id: string }>[];
+  initialValues?: Partial<TProductDefaultValue>;
   isUpdateForm?: boolean;
 }
 
@@ -42,22 +38,20 @@ export const ProductForm: React.FC<React.PropsWithChildren<ProductProps>> = ({
   children,
   isUpdateForm,
   categories = [],
-  initialValues = defaultValues,
+  initialValues = DEFAULT_VALUES,
 }) => {
-  const _cats: { label: string; value: string | number }[] = categories.map(
-    (item) => ({
-      label: item.name,
-      value: item.id,
-    })
-  );
+  const _cats: { label: string; value: string }[] = categories.map((item) => ({
+    label: item.name,
+    value: item.id,
+  }));
   const { form, handleSubmitWithAction } = useForm({
     action: onSubmit,
     schemas: ProductSchemas,
     options: {
-      formProps: { defaultValues: initialValues },
+      formProps: { defaultValues: { ...DEFAULT_VALUES, ...initialValues } },
       actionProps: {
         onSuccess() {
-          form.reset(defaultValues);
+          form.reset(DEFAULT_VALUES);
         },
       },
     },
@@ -97,7 +91,7 @@ export const ProductForm: React.FC<React.PropsWithChildren<ProductProps>> = ({
               </FormItem>
             )}
           />
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             <FormField
               control={form.control}
               name="quantity"
@@ -121,6 +115,22 @@ export const ProductForm: React.FC<React.PropsWithChildren<ProductProps>> = ({
                   <FormControl>
                     <Input type="number" {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="commission"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Commission (%)</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    La commission en pourcentage
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
