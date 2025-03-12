@@ -24,6 +24,7 @@ export const Product = pgTable("product", {
     .notNull(),
   quantity: integer().notNull(),
   price: doublePrecision().notNull(),
+  commission: integer().default(10).notNull(),
 });
 
 export const CategoryRelation = relations(Category, ({ many }) => ({
