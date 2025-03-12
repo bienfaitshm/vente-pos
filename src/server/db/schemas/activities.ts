@@ -37,11 +37,12 @@ export type SelectClient = typeof Client.$inferSelect;
 export const CommandProduct = pgTable("command_product", {
   ...commonFieldTable,
   amount: doublePrecision().notNull(),
+  amountCommission: doublePrecision().notNull(),
   isConfirmed: boolean("is_confirmed").$default(() => false),
   client: varchar("client_id", { length: 10 })
     .references(() => Client.id, { onDelete: "cascade" })
     .notNull(),
-  seller: text("seller_id").references(() => users.id, {
+  saler: text("saler_id").references(() => users.id, {
     onDelete: "set null",
   }),
 });
