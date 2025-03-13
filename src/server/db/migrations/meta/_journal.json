@@ -15,6 +15,13 @@
       "when": 1741894799763,
       "tag": "0001_freezing_magus",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1741901859056,
+      "tag": "0002_wandering_hammerhead",
+      "breakpoints": true
     }
   ]
 }
