@@ -9,7 +9,7 @@ import { Banknote } from "lucide-react";
 interface SaleClientPageProps {
   products?: SelectProduct[];
   clients?: SelectClient[];
-  saler?: string | number;
+  saler: string;
 }
 
 export const SaleClientPage: React.FC<SaleClientPageProps> = ({

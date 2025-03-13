@@ -1,5 +1,5 @@
 "use server";
-import { EmptyObjet, IdObjectSchems, InvoiceSchemas } from "@/lib/schemas";
+import { IdObjectSchems, InvoiceSchemas } from "@/lib/schemas";
 import { actionClient } from "./base";
 import * as queries from "../db/queries";
 import * as schemas from "@/lib/schemas/activities";
@@ -34,9 +34,16 @@ export const commandProduct = actionClient
     return command;
   });
 
-export const getInvoices = actionClient
-  .schema(EmptyObjet)
-  .action(async () => {});
+export const getSalerActivities = actionClient
+  .schema(
+    z.object({
+      saler: z.string().nonempty(),
+    })
+  )
+  .action(
+    async ({ parsedInput: { saler } }) =>
+      await queries.getSalerActivities(saler)
+  );
 
 export const getInvoice = actionClient
   .schema(IdObjectSchems)

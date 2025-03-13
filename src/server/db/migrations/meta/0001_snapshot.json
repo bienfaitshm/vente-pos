@@ -1,6 +1,6 @@
 {
-  "id": "6486630d-1c83-4667-b860-94704d1ef4c8",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "8e4a86aa-dfe2-476a-a16d-e6479782b8ad",
+  "prevId": "6486630d-1c83-4667-b860-94704d1ef4c8",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -289,8 +289,7 @@
           "type": "role",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'ADMIN'"
+          "notNull": true
         }
       },
       "indexes": {},
@@ -538,8 +537,7 @@
           "type": "status",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'PENDING'"
+          "notNull": true
         }
       },
       "indexes": {},
@@ -629,8 +627,7 @@
           "type": "status",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'OPEN'"
+          "notNull": true
         }
       },
       "indexes": {},
@@ -675,8 +672,7 @@
           "type": "action",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'ADD'"
+          "notNull": true
         },
         "stock_id": {
           "name": "stock_id",

@@ -62,7 +62,7 @@ const ClientSelect: React.FC<ClientInputProps> = ({
   const handleSelect = React.useCallback(
     (currentValue: string) => {
       // 1. seleced client
-      const newValue = getSelectedClient(clients, parseInt(currentValue));
+      const newValue = getSelectedClient(clients, currentValue);
       // 2. update the value
       onChange(value?.id?.toString() === currentValue ? null : newValue);
       setOpen(false);
@@ -169,7 +169,7 @@ export const ClientDialog: React.FC<ClientDialogProps> = ({ onChange }) => {
  */
 function getSelectedClient(
   clients: SelectClient[],
-  value: number
+  value: string
 ): SelectClient | null {
   return clients.find((client) => client.id === value) || null;
 }

@@ -7,34 +7,47 @@ import {
 import { relations } from "drizzle-orm";
 import { commonFieldTable } from "./base";
 
-export const Category = pgTable("category", {
+/**
+ * categories table schema
+ */
+export const categories = pgTable("categories", {
   ...commonFieldTable,
   name: varchar({ length: 255 }).notNull(),
 });
 
-export type InsertCategory = typeof Category.$inferInsert;
-export type SelectCategory = typeof Category.$inferSelect;
+export type InsertCategory = typeof categories.$inferInsert;
+export type SelectCategory = typeof categories.$inferSelect;
 
-//
-export const Product = pgTable("product", {
+/**
+ * products table schema
+ */
+export const products = pgTable("products", {
   ...commonFieldTable,
   name: varchar({ length: 255 }).notNull(),
-  category: varchar("category_id", { length: 10 })
-    .references(() => Category.id, { onDelete: "cascade" })
+  categoriesId: varchar("category_id", { length: 10 })
+    .references(() => categories.id, { onDelete: "cascade" })
     .notNull(),
   quantity: integer().notNull(),
-  price: doublePrecision().notNull(),
+  unitPrice: doublePrecision("unit_price").notNull(),
   commission: integer().default(10).notNull(),
 });
 
-export const CategoryRelation = relations(Category, ({ many }) => ({
-  products: many(Product),
+/**
+ * Relations for categories table
+ */
+export const categoriesRelation = relations(categories, ({ many }) => ({
+  productss: many(products),
 }));
-export const ProductRelation = relations(Product, ({ one }) => ({
-  category: one(Category, {
-    fields: [Product.category],
-    references: [Category.id],
+
+/**
+ * Relations for products table
+ */
+export const productsRelation = relations(products, ({ one }) => ({
+  categories: one(categories, {
+    fields: [products.categoriesId],
+    references: [categories.id],
   }),
 }));
-export type InsertProduct = typeof Product.$inferInsert;
-export type SelectProduct = typeof Product.$inferSelect;
+
+export type InsertProduct = typeof products.$inferInsert;
+export type SelectProduct = typeof products.$inferSelect;

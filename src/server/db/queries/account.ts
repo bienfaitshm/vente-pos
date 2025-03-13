@@ -1,12 +1,8 @@
 import { and, eq, or } from "drizzle-orm";
 import { db } from "@/server/db/db";
 import * as tables from "@/server/db/schemas/accounts";
-import { WithID } from "../type";
+import { WithID } from "./type";
 
-/**
- *
- * @param data
- */
 export async function createUser(data: tables.InsertUser) {
   return await db
     .insert(tables.users)
@@ -93,26 +89,26 @@ export async function getByUsernameOrEmail(
   return users[0];
 }
 
-// Salers
-export async function getSalers() {
+// Sellers
+export async function getSellers() {
   return await db.select().from(tables.users);
   // .where(eq(tables.users.isAdmin, false));
 }
 
-export async function getSaler(
+export async function getSeller(
   id: string
 ): Promise<tables.SelectUser | undefined> {
   const users = await db
     .select()
     .from(tables.users)
-    .where(and(eq(tables.users.isAdmin, false), eq(tables.users.id, id)));
+    .where(and(eq(tables.users.role, "seller"), eq(tables.users.id, id)));
   return users[0];
 }
 
-export async function updateSaler({
+export async function updateSeller({
   id,
   ...value
-}: WithID<Pick<tables.InsertUser, "email" | "image" | "name" | "username">>) {
+}: WithID & Pick<tables.InsertUser, "email" | "image" | "name" | "username">) {
   return await db
     .update(tables.users)
     .set(value)
@@ -120,7 +116,7 @@ export async function updateSaler({
     .returning();
 }
 
-export async function deleteSaler({ id }: WithID<unknown>) {
+export async function deleteSeller({ id }: WithID) {
   return await db
     .delete(tables.users)
     .where(eq(tables.users.id, id))

@@ -5,10 +5,7 @@
  * @param price - The price to apply the percentage to.
  * @returns The calculated amount, rounded to two decimal places.
  */
-export function getAmountFromPourcentage(
-  pourcent: number,
-  price: number
-): number {
+export function getAmountPercentage(pourcent: number, price: number): number {
   return parseFloat(((pourcent / 100) * price).toFixed(2));
 }
 

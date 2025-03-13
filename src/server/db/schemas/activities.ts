@@ -1,5 +1,4 @@
 import {
-  boolean,
   pgTable,
   text,
   integer,
@@ -7,20 +6,26 @@ import {
   doublePrecision,
   pgEnum,
 } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+// import { relations } from "drizzle-orm";
 import { commonFieldTable } from "./base";
 import { users } from "./accounts";
-import { Product } from "./products";
+import { products } from "./products";
 
-export const StockHistoryActionEnum = pgEnum("action", ["ADD", "SUB"]);
+export const StockHistoryActionEnum = pgEnum("action", ["ADD", "REMOVE"]);
+export const OrderStatusEnum = pgEnum("status", [
+  "PENDING",
+  "PROCESSING",
+  "SHIPPED",
+  "COMPLETED",
+]);
 
-export const PointOfSaleStatutEnum = pgEnum("statut", [
+export const PointOfSaleStatusEnum = pgEnum("status", [
   "OPEN",
   "CLOSE",
   "RENOVATION",
 ]);
 
-export const Client = pgTable("client", {
+export const customers = pgTable("customers", {
   ...commonFieldTable,
   name: varchar({ length: 255 }).notNull(),
   address: varchar({ length: 255 }),
@@ -28,96 +33,83 @@ export const Client = pgTable("client", {
   phoneNumber: varchar({ length: 255 }),
 });
 
-export type InsertClient = typeof Client.$inferInsert;
-export type SelectClient = typeof Client.$inferSelect;
+export type InsertCustomer = typeof customers.$inferInsert;
+export type SelectCustomer = typeof customers.$inferSelect;
 
-//
-
-//
-export const CommandProduct = pgTable("command_product", {
+export const orders = pgTable("orders", {
   ...commonFieldTable,
-  amount: doublePrecision().notNull(),
-  amountCommission: doublePrecision().notNull(),
-  isConfirmed: boolean("is_confirmed").$default(() => false),
-  client: varchar("client_id", { length: 10 })
-    .references(() => Client.id, { onDelete: "cascade" })
+  customerId: varchar("customer_id", { length: 15 })
+    .references(() => customers.id)
     .notNull(),
-  saler: text("saler_id").references(() => users.id, {
+  sellerId: varchar("seller_id", { length: 15 }).references(() => users.id, {
     onDelete: "set null",
   }),
+  totalAmount: doublePrecision("total_amount").notNull(),
+  salesCommission: doublePrecision("sales_commission").notNull(),
+  status: OrderStatusEnum("status").notNull(),
 });
 
-export type InsertCommandProduct = typeof CommandProduct.$inferInsert;
-export type SelectCommandProduct = typeof CommandProduct.$inferSelect;
+export type InsertOrders = typeof orders.$inferInsert;
+export type SelectOrders = typeof orders.$inferSelect;
 
-//
-export const CommandItem = pgTable("command_item", {
-  amount: doublePrecision().notNull(),
-  quantity: integer().notNull(),
-  product: varchar("product_id", { length: 10 })
-    .references(() => Product.id)
+export const orderDetails = pgTable("order_details", {
+  ...commonFieldTable,
+  orderId: varchar("order_id", { length: 15 })
+    .references(() => customers.id)
     .notNull(),
-  commandProduct: varchar("command_id").references(() => CommandProduct.id),
+  productId: varchar("product_id", { length: 15 })
+    .references(() => products.id)
+    .notNull(),
+  quantity: integer("quantity").notNull(),
+  unitPrice: doublePrecision("unit_price").notNull(),
 });
 
-//
-export const CommandProductRelation = relations(CommandProduct, ({ many }) => ({
-  items: many(CommandItem),
-}));
-export const CommandItemRelation = relations(CommandItem, ({ one }) => ({
-  command: one(CommandProduct, {
-    fields: [CommandItem.commandProduct],
-    references: [CommandProduct.id],
-  }),
-}));
+export type InsertOrderDetails = typeof orderDetails.$inferInsert;
+export type SelectOrderDetails = typeof orderDetails.$inferSelect;
 
-export type InsertCommandItem = typeof CommandItem.$inferInsert;
-export type SelectCommandItem = typeof CommandItem.$inferSelect;
-
-//
-export const PointOfSale = pgTable("point_of_sale", {
+export const pointOfSales = pgTable("point_of_sales", {
   ...commonFieldTable,
   name: varchar({ length: 255 }).notNull(),
   address: varchar({ length: 255 }).notNull(),
   phoneNumber: varchar("phone_number", { length: 255 }).notNull(),
   description: text(),
-  statut: PointOfSaleStatutEnum().default("OPEN").notNull(),
+  status: PointOfSaleStatusEnum("status").notNull(),
 });
 
-export type InsertPointOfSale = typeof PointOfSale.$inferInsert;
-export type SelectPointOfSale = typeof PointOfSale.$inferSelect;
+export type InsertPointOfSale = typeof pointOfSales.$inferInsert;
+export type SelectPointOfSale = typeof pointOfSales.$inferSelect;
 
 // Stock
-export const Stock = pgTable("stock", {
+export const stocks = pgTable("stocks", {
   ...commonFieldTable,
   quantity: integer().notNull(),
-  saler: text().references(() => users.id),
-  product: varchar("product_id", { length: 10 })
+  sellerId: varchar("seller_id", { length: 15 }).references(() => users.id),
+  productId: varchar("products_id", { length: 10 })
     .notNull()
-    .references(() => Product.id),
+    .references(() => products.id),
 });
 
-export type InsertStock = typeof Stock.$inferInsert;
-export type SelectStock = typeof Stock.$inferSelect;
+export type InsertStock = typeof stocks.$inferInsert;
+export type SelectStock = typeof stocks.$inferSelect;
 
 // StockHistory
-export const StockHistory = pgTable("stock_history", {
+export const stockHistories = pgTable("stock_histories", {
   ...commonFieldTable,
   quantity: integer().notNull(),
-  action: StockHistoryActionEnum().default("ADD").notNull(),
-  stock: varchar("stock_id")
+  action: StockHistoryActionEnum("action").notNull(),
+  stockId: varchar("stock_id")
     .notNull()
-    .references(() => Stock.id),
-  saler: text("saler_id")
-    .notNull()
-    .references(() => users.id),
-  admin: text("admin_id")
+    .references(() => stocks.id),
+  sellerId: text("seller_id")
     .notNull()
     .references(() => users.id),
-  pos: varchar("pos_id", { length: 10 })
+  adminId: text("admin_id")
     .notNull()
-    .references(() => PointOfSale.id),
+    .references(() => users.id),
+  posId: varchar("pos_id", { length: 10 })
+    .notNull()
+    .references(() => pointOfSales.id),
 });
 
-export type InsertStockHistory = typeof StockHistory.$inferInsert;
-export type SelectStockHistory = typeof StockHistory.$inferSelect;
+export type InsertStockHistory = typeof stockHistories.$inferInsert;
+export type SelectStockHistory = typeof stockHistories.$inferSelect;

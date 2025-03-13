@@ -2,6 +2,7 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 import type { ColumnDef } from "@tanstack/react-table";
 import { TypographySmall } from "@/components/ui/typography";
 import { format } from "date-fns";
+import { formatCurrency } from "@/lib/formater";
 
 export type ActivityColumnDefType = {
   id: string;
@@ -48,7 +49,11 @@ export function getActivitiesColumns(): ColumnDef<ActivityColumnDefType>[] {
         <DataTableColumnHeader column={column} title="Montant total" />
       ),
       cell: ({ row }): React.ReactNode => {
-        return <TypographySmall>{row.original.totalAmount}</TypographySmall>;
+        return (
+          <TypographySmall>
+            {formatCurrency(row.original.totalAmount)}
+          </TypographySmall>
+        );
       },
     },
     {
@@ -61,7 +66,9 @@ export function getActivitiesColumns(): ColumnDef<ActivityColumnDefType>[] {
       ),
       cell: ({ row }): React.ReactNode => {
         return (
-          <TypographySmall>{row.original.totalCommission}</TypographySmall>
+          <TypographySmall>
+            {formatCurrency(row.original.totalCommission)}
+          </TypographySmall>
         );
       },
     },

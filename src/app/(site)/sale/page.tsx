@@ -16,7 +16,7 @@ export default async function Page() {
         <SaleClientPage
           products={products?.data}
           clients={clients?.data}
-          saler={session?.user.id}
+          saler={session?.user.id as string}
         />
       </div>
     </div>
