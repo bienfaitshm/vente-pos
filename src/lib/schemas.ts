@@ -11,7 +11,8 @@ export const IdObjectSchems = z.object({ id: IDSchemas });
 export const UserSchemas = z.object({
   name: NoEmptyStringSchemas,
   username: NoEmptyStringSchemas,
-  email: z.string().email(),
+  email: z.string().email().optional(),
+  phoneNumber: z.string().nonempty(),
   image: z.string().url().optional(),
   password: NoEmptyStringSchemas,
   isAdmin: z.boolean().optional(),

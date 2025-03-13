@@ -23,7 +23,8 @@ export const UserSchemas = z
     name: NoEmptyStringSchemas,
     email: z.string().email().optional(),
     image: z.string().url().optional(),
-    isAdmin: z.boolean().optional().default(false),
+    phoneNumber: z.string().nonempty(),
+    role: z.enum(["ADMIN", "SELLER"]).optional().default("ADMIN"),
   })
   .merge(UsernameSchemas);
 

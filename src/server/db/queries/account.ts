@@ -4,10 +4,11 @@ import * as tables from "@/server/db/schemas/accounts";
 import { WithID } from "./type";
 
 export async function createUser(data: tables.InsertUser) {
-  return await db
+  const result = await db
     .insert(tables.users)
     .values(data)
     .returning({ id: tables.users.id });
+  return result[0];
 }
 
 /**
@@ -34,6 +35,17 @@ export async function isUsernameExist(username: string): Promise<boolean> {
     .select({ id: tables.users.id })
     .from(tables.users)
     .where(eq(tables.users.username, username))
+    .limit(1);
+  return !!exist[0];
+}
+
+export async function isPhoneNumberExist(
+  phoneNumber: string
+): Promise<boolean> {
+  const exist = await db
+    .select({ id: tables.users.id })
+    .from(tables.users)
+    .where(eq(tables.users.phoneNumber, phoneNumber))
     .limit(1);
   return !!exist[0];
 }
@@ -101,14 +113,18 @@ export async function getSeller(
   const users = await db
     .select()
     .from(tables.users)
-    .where(and(eq(tables.users.role, "seller"), eq(tables.users.id, id)));
+    .where(and(eq(tables.users.role, "SELLER"), eq(tables.users.id, id)));
   return users[0];
 }
 
 export async function updateSeller({
   id,
   ...value
-}: WithID & Pick<tables.InsertUser, "email" | "image" | "name" | "username">) {
+}: WithID &
+  Pick<
+    tables.InsertUser,
+    "email" | "image" | "name" | "username" | "phoneNumber"
+  >) {
   return await db
     .update(tables.users)
     .set(value)
