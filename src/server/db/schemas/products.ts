@@ -3,6 +3,7 @@ import {
   integer,
   varchar,
   doublePrecision,
+  text,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { commonFieldTable } from "./base";
@@ -13,6 +14,7 @@ import { commonFieldTable } from "./base";
 export const categories = pgTable("categories", {
   ...commonFieldTable,
   name: varchar({ length: 255 }).notNull(),
+  description: text("description"),
 });
 
 export type InsertCategory = typeof categories.$inferInsert;
@@ -30,6 +32,7 @@ export const products = pgTable("products", {
   quantity: integer().notNull(),
   unitPrice: doublePrecision("unit_price").notNull(),
   commission: integer().default(10).notNull(),
+  description: text("description"),
 });
 
 /**
