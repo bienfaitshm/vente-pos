@@ -85,7 +85,7 @@ const data = {
     },
     {
       name: "Vendeurs",
-      url: "/dashboard/salers",
+      url: "/dashboard/sellers",
       icon: UsersRound,
     },
     {
