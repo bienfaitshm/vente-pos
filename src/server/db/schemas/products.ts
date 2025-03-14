@@ -26,7 +26,7 @@ export type SelectCategory = typeof categories.$inferSelect;
 export const products = pgTable("products", {
   ...commonFieldTable,
   name: varchar({ length: 255 }).notNull(),
-  categoriesId: varchar("category_id", { length: 10 })
+  categoryId: varchar("category_id", { length: 10 })
     .references(() => categories.id, { onDelete: "cascade" })
     .notNull(),
   quantity: integer().notNull(),
@@ -47,7 +47,7 @@ export const categoriesRelation = relations(categories, ({ many }) => ({
  */
 export const productsRelation = relations(products, ({ one }) => ({
   categories: one(categories, {
-    fields: [products.categoriesId],
+    fields: [products.categoryId],
     references: [categories.id],
   }),
 }));

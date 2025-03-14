@@ -26,7 +26,7 @@ export async function createCategory(
 export async function updateCategory({
   id,
   ...value
-}: tables.SelectCategory & WithID) {
+}: tables.InsertCategory & WithID) {
   return await db
     .update(tables.categories)
     .set(value)

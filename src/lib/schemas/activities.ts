@@ -79,7 +79,7 @@ export const OrderSchemas = z.object({
    *
    * This field is validated using the `IDSchemas` schema.
    */
-  customerID: IDSchemas,
+  customerId: IDSchemas,
 
   /**
    * An array of order details.
@@ -123,7 +123,7 @@ export const PointOfSaleSchemas = z.object({
   description: z.string().optional(),
   address: NoEmptyStringSchemas,
   phoneNumber: NoEmptyStringSchemas,
-  statut: z.enum(["OPEN", "CLOSE", "RENOVATION"]),
+  status: z.enum(["OPEN", "CLOSE", "RENOVATION"]),
 });
 
 /**

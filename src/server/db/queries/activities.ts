@@ -18,6 +18,33 @@ export async function createOrder(
 }
 
 /**
+ * Retrieves a list of orders from the database.
+ *
+ * @returns {Promise<tables.SelectOrders[]>} A promise that resolves to an array of orders.
+ *
+ * @async
+ */
+export async function getOrders(): Promise<tables.SelectOrders[]> {
+  return await db.select().from(tables.orders);
+}
+
+/**
+ * Retrieves an order from the database based on the provided order ID.
+ *
+ * @param orderId - The unique identifier of the order to retrieve.
+ * @returns A promise that resolves to an array of selected orders matching the given ID.
+ *          The array will typically contain a single order if the ID is unique.
+ */
+export async function getOrder(
+  orderId: string
+): Promise<tables.SelectOrders[]> {
+  return await db
+    .select()
+    .from(tables.orders)
+    .where(eq(tables.orders.id, orderId));
+}
+
+/**
  * Updates an existing order in the database.
  *
  * @param {Partial<tables.InsertOrders> & WithID} orderData - The order details to be updated.

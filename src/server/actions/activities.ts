@@ -1,59 +1,49 @@
 "use server";
-import { IdObjectSchems, InvoiceSchemas } from "@/lib/schemas";
 import { actionClient } from "./base";
 import * as queries from "../db/queries";
 import * as schemas from "@/lib/schemas/activities";
-import { auth } from "@/auth";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 
-/**
- * Executes the command to process a product order.
- *
- * @param parsedInput - The input parameters for the action.
- * @param parsedInput.client - The client placing the order.
- * @param parsedInput.items - The list of items being ordered.
- * @param parsedInput.saler - The salesperson handling the order.
- * @returns The result of the command to process the product order.
- */
 export const commandProduct = actionClient
-  .schema(InvoiceSchemas)
-  .action(async ({ parsedInput: { client, items, saler } }) => {
-    const command = await queries.passCommandProduct(
-      {
-        client: client?.id as string,
-        saler,
+  .schema(
+    schemas.OrderSchemas.merge(
+      z.object({
+        sellerId: z.string().nonempty(),
+      })
+    )
+  )
+  .action(async ({ parsedInput: { customerId, sellerId, orderDetails } }) => {
+    const command = await queries.placeOrder({
+      order: {
+        customerId,
+        sellerId,
       },
-      items.map((item) => ({
-        commission: item.product.commission,
-        price: item.product.price,
-        product: item.product.id,
-        quantity: item.quantity,
-      }))
-    );
+      orderDetails,
+    });
     return command;
   });
 
-export const getSalerActivities = actionClient
+export const getSellerActivities = actionClient
   .schema(
     z.object({
-      saler: z.string().nonempty(),
+      sellerId: z.string().nonempty(),
     })
   )
   .action(
-    async ({ parsedInput: { saler } }) =>
-      await queries.getSalerActivities(saler)
+    async ({ parsedInput: { sellerId } }) =>
+      await queries.getSellerActivities(sellerId)
   );
 
-export const getInvoice = actionClient
-  .schema(IdObjectSchems)
+export const getOrder = actionClient
+  .schema(z.object({ id: z.string().nonempty() }))
   .action(async ({ parsedInput: { id } }) => {
-    const [command, items] = await Promise.all([
-      queries.getCommandProduct(id),
-      queries.getCommandItems(id as string),
+    const [order, orderDetails] = await Promise.all([
+      queries.getOrder(id),
+      queries.getOrderDetails(id as string),
     ]);
 
-    return { ...command, items };
+    return { ...order, orderDetails };
   });
 
 //
@@ -68,21 +58,17 @@ export const getStocksOfSaler = actionClient
   });
 
 export const changeStock = actionClient
-  .schema(schemas.StockSchemas)
-  .action(async ({ parsedInput }) => {
-    const session = await auth();
-    if (session?.user.id) {
-      console.log({
-        admin: session?.user.id,
-        ...parsedInput,
-      });
-      const stock = await queries.replenishingTheStock({
-        admin: session.user.id,
-        ...parsedInput,
-      });
-      revalidatePath("");
-      return stock;
-    }
+  .schema(
+    schemas.StockSchemas.merge(
+      z.object({
+        adminId: z.string().nonempty(),
+      })
+    )
+  )
+  .action(async ({ parsedInput: values }) => {
+    const stock = await queries.replenishStock(values);
+    revalidatePath("");
+    return stock;
   });
 
 export const getStockHistories = actionClient
@@ -93,4 +79,83 @@ export const getStockHistories = actionClient
   )
   .action(async () => {
     return await queries.getStockHistories();
+  });
+
+// Point of sales
+
+export const getPointOfSales = actionClient
+  .schema(z.object({}))
+  .action(async ({ parsedInput: {} }) => {
+    return await queries.getPointOfSales();
+  });
+
+export const createPointOfSale = actionClient
+  .schema(schemas.PointOfSaleSchemas)
+  .action(async ({ parsedInput: values }) => {
+    const data = await queries.createPointOfSale(values);
+    revalidatePath("/");
+    return data;
+  });
+
+export const updatePointOfSale = actionClient
+  .schema(
+    schemas.PointOfSaleSchemas.merge(
+      z.object({
+        id: z.string().nonempty(),
+      })
+    )
+  )
+  .action(async ({ parsedInput: values }) => {
+    const data = await queries.updatePointOfSale(values);
+    revalidatePath("/");
+    return data;
+  });
+
+export const deletePointOfSale = actionClient
+  .schema(
+    z.object({
+      id: z.string().nonempty(),
+    })
+  )
+  .action(async ({ parsedInput: values }) => {
+    const data = await queries.deletePointOfSale(values);
+    revalidatePath("/");
+    return data;
+  });
+
+// customers
+export const getCustomers = actionClient
+  .schema(z.object({}))
+  .action(async ({ parsedInput: {} }) => {
+    return await queries.getCustomers();
+  });
+
+export const createClient = actionClient
+  .schema(schemas.CustomerSchemas)
+  .action(async ({ parsedInput: values }) => {
+    const data = await queries.createCustomer(values);
+    revalidatePath("/");
+    return data;
+  });
+
+export const updateCustomer = actionClient
+  .schema(
+    schemas.CustomerSchemas.merge(z.object({ id: z.string().nonempty() }))
+  )
+  .action(async ({ parsedInput: values }) => {
+    const data = await queries.updateCustomer(values);
+    revalidatePath("/");
+    return data;
+  });
+
+export const deleteCustomer = actionClient
+  .schema(
+    z.object({
+      id: z.string().nonempty(),
+    })
+  )
+  .action(async ({ parsedInput: values }) => {
+    const data = await queries.deleteCustomer(values);
+    revalidatePath("/");
+    return data;
   });

@@ -1,27 +1,19 @@
 "use server";
-// import { returnValidationErrors } from "next-safe-action";
-import {
-  CategorySchemas,
-  ProductSchemas,
-  ProductQuantitySchemas,
-  EmptyObjet,
-  IdObjectSchems,
-  PointOfSaleSchemas,
-  ClientSchemas,
-} from "@/lib/schemas";
+import * as schemas from "@/lib/schemas/products";
 
 import { actionClient } from "./base";
 import * as queries from "../db/queries";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 export const getCategories = actionClient
-  .schema(EmptyObjet)
+  .schema(z.object({}))
   .action(async ({ parsedInput: {} }) => {
     return await queries.getCategories();
   });
 
 export const createCategory = actionClient
-  .schema(CategorySchemas)
+  .schema(schemas.CategorySchemas)
   .action(async ({ parsedInput: values }) => {
     const data = await queries.createCategory(values);
     revalidatePath("/");
@@ -29,7 +21,13 @@ export const createCategory = actionClient
   });
 
 export const updateCategory = actionClient
-  .schema(CategorySchemas.merge(IdObjectSchems))
+  .schema(
+    schemas.CategorySchemas.merge(
+      z.object({
+        id: z.string().nonempty(),
+      })
+    )
+  )
   .action(async ({ parsedInput }) => {
     const data = await queries.updateCategory(parsedInput);
     revalidatePath("/");
@@ -37,7 +35,7 @@ export const updateCategory = actionClient
   });
 
 export const deleteCategory = actionClient
-  .schema(IdObjectSchems)
+  .schema(z.object({ id: z.string().nonempty() }))
   .action(async ({ parsedInput }) => {
     const data = await queries.deleteCategory(parsedInput);
     revalidatePath("/");
@@ -47,13 +45,13 @@ export const deleteCategory = actionClient
 // Products
 
 export const getProducts = actionClient
-  .schema(EmptyObjet)
+  .schema(z.object({}))
   .action(async ({ parsedInput: {} }) => {
     return await queries.getProducts();
   });
 
 export const createProduct = actionClient
-  .schema(ProductSchemas)
+  .schema(schemas.ProductSchemas)
   .action(async ({ parsedInput: values }) => {
     const data = await queries.createProduct(values);
     revalidatePath("/");
@@ -61,7 +59,13 @@ export const createProduct = actionClient
   });
 
 export const updateProduct = actionClient
-  .schema(ProductSchemas.merge(IdObjectSchems))
+  .schema(
+    schemas.ProductSchemas.merge(
+      z.object({
+        id: z.string().nonempty(),
+      })
+    )
+  )
   .action(async ({ parsedInput: values }) => {
     const data = await queries.updateProduct(values);
     revalidatePath("/");
@@ -69,7 +73,11 @@ export const updateProduct = actionClient
   });
 
 export const deleteProduct = actionClient
-  .schema(IdObjectSchems)
+  .schema(
+    z.object({
+      id: z.string().nonempty(),
+    })
+  )
   .action(async ({ parsedInput: values }) => {
     const data = await queries.deleteProduct(values);
     revalidatePath("/");
@@ -78,72 +86,5 @@ export const deleteProduct = actionClient
 
 // TODO: add functionnality
 export const changeProductQuantity = actionClient
-  .schema(ProductQuantitySchemas)
+  .schema(z.object({}))
   .action(async ({ parsedInput: {} }) => {});
-
-// Point of sales
-
-export const getPointOfSales = actionClient
-  .schema(EmptyObjet)
-  .action(async ({ parsedInput: {} }) => {
-    return await queries.getPointOfSales();
-  });
-
-export const createPointOfSale = actionClient
-  .schema(PointOfSaleSchemas)
-  .action(async ({ parsedInput: values }) => {
-    const data = await queries.createPointOfSale(values);
-    revalidatePath("/");
-    return data;
-  });
-
-export const updatePointOfSale = actionClient
-  .schema(PointOfSaleSchemas.merge(IdObjectSchems))
-  .action(async ({ parsedInput: values }) => {
-    const data = await queries.updatePointOfSale(values);
-    revalidatePath("/");
-    return data;
-  });
-
-export const deletePointOfSale = actionClient
-  .schema(IdObjectSchems)
-  .action(async ({ parsedInput: values }) => {
-    const data = await queries.deletePointOfSale(values);
-    revalidatePath("/");
-    return data;
-  });
-
-// Client
-export const getClients = actionClient
-  .schema(EmptyObjet)
-  .action(async ({ parsedInput: {} }) => {
-    return await queries.getClients();
-  });
-
-export const createClient = actionClient
-  .schema(ClientSchemas)
-  .action(async ({ parsedInput: values }) => {
-    const data = await queries.createClient(values);
-    revalidatePath("/");
-    return data;
-  });
-
-export const updateClient = actionClient
-  .schema(ClientSchemas.merge(IdObjectSchems))
-  .action(async ({ parsedInput: { address, phoneNumber, ...values } }) => {
-    const data = await queries.updateClient({
-      ...values,
-      address: address || "",
-      phoneNumber: phoneNumber || "",
-    });
-    revalidatePath("/");
-    return data;
-  });
-
-export const deleteClient = actionClient
-  .schema(IdObjectSchems)
-  .action(async ({ parsedInput: values }) => {
-    const data = await queries.deleteClient(values);
-    revalidatePath("/");
-    return data;
-  });
