@@ -254,12 +254,25 @@ export async function getStocks(): Promise<unknown[]> {
   return await db
     .select({
       ...getTableColumns(tables.stocks),
-      product: tables.products.name,
+      productName: tables.products.name,
       productId: tables.products.id,
     })
     .from(tables.stocks)
     .leftJoin(tables.products, eq(tables.products.id, tables.stocks.productId))
     .orderBy(desc(tables.stocks.createdAt));
+}
+
+export async function getStocksOfSeller(sellerId: string): Promise<unknown[]> {
+  return await db
+    .select({
+      ...getTableColumns(tables.stocks),
+      productName: tables.products.name,
+      productId: tables.products.id,
+    })
+    .from(tables.stocks)
+    .leftJoin(tables.products, eq(tables.products.id, tables.stocks.productId))
+    .orderBy(desc(tables.stocks.createdAt))
+    .where(eq(tables.stocks.sellerId, sellerId));
 }
 
 /**
@@ -353,6 +366,21 @@ export async function getStockHistories(): Promise<unknown[]> {
   return await db
     .select()
     .from(tables.stockHistories)
+    .orderBy(desc(tables.stockHistories.createdAt));
+}
+
+/**
+ * Retrieves all stock histories from the database of specifique seller.
+ *
+ * @returns {Promise<unknown[]>} - A promise that resolves to the list of stock histories.
+ */
+export async function getStockHistoriesOfSeller(
+  sellerId: string
+): Promise<tables.SelectStockHistory[]> {
+  return await db
+    .select()
+    .from(tables.stockHistories)
+    .where(eq(tables.stockHistories.sellerId, sellerId))
     .orderBy(desc(tables.stockHistories.createdAt));
 }
 
