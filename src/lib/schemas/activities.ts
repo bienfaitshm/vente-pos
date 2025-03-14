@@ -50,16 +50,23 @@ export const CustomerSchemas = z.object({
  */
 export type Customer = z.infer<typeof CustomerSchemas>;
 
+export const DetailOrderInputSchemas = z.object({
+  quantity: z.coerce.number().min(1),
+  productId: IDSchemas,
+});
+
+export type DetailOrderInput = z.infer<typeof DetailOrderInputSchemas>;
+
 /**
  * Schema for Command Item
  */
-export const DetailOrderSchemas = z.object({
-  quantity: z.coerce.number().min(1),
-  productId: IDSchemas,
-  productName: z.string().nonempty(),
-  unitPrice: z.coerce.number(),
-  commission: z.coerce.number(),
-});
+export const DetailOrderSchemas = DetailOrderInputSchemas.merge(
+  z.object({
+    productName: z.string().nonempty(),
+    unitPrice: z.coerce.number(),
+    commission: z.coerce.number(),
+  })
+);
 
 /**
  * Type for Command Item

@@ -9,35 +9,35 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ClientSchemas, type Client } from "@/lib/schemas/products";
+import { CustomerSchemas, type Customer } from "@/lib/schemas/activities";
 import { useForm, type HookSafeActionFnSubmiter } from "@/hooks/form";
 
-export type TClientDefaultValue = Client;
+export type TCustomerDefaultValue = Customer;
 
-const DEFAULT_VALUE: TClientDefaultValue = {
+const DEFAULT_VALUE: TCustomerDefaultValue = {
   name: "",
   address: "",
   phoneNumber: "",
 };
 
-interface ClientFormRef {
+interface CustomerFormRef {
   submit(): void;
 }
 
-interface ClientFormProps {
-  onSubmit: HookSafeActionFnSubmiter<typeof ClientSchemas>;
-  initialValues?: Partial<TClientDefaultValue>;
-  ref?: React.Ref<ClientFormRef>;
+interface CustomerFormProps {
+  onSubmit: HookSafeActionFnSubmiter<typeof CustomerSchemas>;
+  initialValues?: Partial<TCustomerDefaultValue>;
+  ref?: React.Ref<CustomerFormRef>;
 }
 
-export const ClientForm: React.FC<ClientFormProps> = ({
+export const CustomerForm: React.FC<CustomerFormProps> = ({
   onSubmit,
   initialValues = DEFAULT_VALUE,
   ref,
 }) => {
   const { form, handleSubmitWithAction } = useForm({
     action: onSubmit,
-    schemas: ClientSchemas,
+    schemas: CustomerSchemas,
     options: {
       formProps: { defaultValues: { ...DEFAULT_VALUE, ...initialValues } },
       actionProps: {
@@ -104,6 +104,6 @@ export const ClientForm: React.FC<ClientFormProps> = ({
   );
 };
 
-export function useClientForm() {
-  return React.useRef<ClientFormRef>(null);
+export function useCustomerForm() {
+  return React.useRef<CustomerFormRef>(null);
 }

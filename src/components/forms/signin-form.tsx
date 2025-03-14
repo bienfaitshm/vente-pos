@@ -9,13 +9,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useForm } from "@/hooks/form";
+import { useForm, type HookSafeActionFnSubmiter } from "@/hooks/form";
 import {
   RegistrationCredentialSchemas,
   type RegistrationCredential,
-} from "@/lib/schemas";
-import { HookSafeActionFn } from "next-safe-action/hooks";
-import { ZodType, ZodTypeDef } from "zod";
+} from "@/lib/schemas/accounts";
 
 const DEFAULT_VALUES: RegistrationCredential = {
   username: "",
@@ -23,16 +21,11 @@ const DEFAULT_VALUES: RegistrationCredential = {
   confirm: "",
   email: "",
   name: "",
+  phoneNumber: "",
+  role: "ADMIN",
 };
 interface SigninProps {
-  onSubmit: HookSafeActionFn<
-    unknown,
-    typeof RegistrationCredentialSchemas,
-    readonly ZodType<unknown, ZodTypeDef, unknown>[],
-    unknown,
-    unknown,
-    unknown
-  >;
+  onSubmit: HookSafeActionFnSubmiter<typeof RegistrationCredentialSchemas>;
   showPassword?: boolean;
   defaultValues?: Partial<RegistrationCredential>;
 }

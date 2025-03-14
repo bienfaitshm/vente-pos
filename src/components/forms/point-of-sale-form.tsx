@@ -17,7 +17,7 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { useForm } from "@/hooks/form";
-import { PointOfSaleSchemas, type PointOfSale } from "@/lib/schemas";
+import { PointOfSaleSchemas, type PointOfSale } from "@/lib/schemas/activities";
 import { HookSafeActionFn } from "next-safe-action/hooks";
 import { ZodType, ZodTypeDef } from "zod";
 import { Textarea } from "@/components/ui/textarea";
@@ -27,7 +27,7 @@ const defaultValues: TPointOfSaleDefaultValue = {
   name: "",
   address: "",
   phoneNumber: "",
-  statut: "OPEN",
+  status: "OPEN",
   description: "",
 };
 interface PointOfSaleProps {
@@ -90,7 +90,7 @@ export const PointOfSaleForm: React.FC<
             />
             <FormField
               control={form.control}
-              name="statut"
+              name="status"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Statut</FormLabel>

@@ -10,10 +10,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm, HookSafeActionFnSubmiter } from "@/hooks/form";
 import { CategorySchemas, type Category } from "@/lib/schemas/products";
+import { Textarea } from "../ui/textarea";
 
 export type TCategoryDefaultValue = Category;
 const DEFAULT_VALUES: TCategoryDefaultValue = {
   name: "",
+  description: "",
 };
 interface CategoryProps {
   onSubmit: HookSafeActionFnSubmiter<typeof CategorySchemas>;
@@ -49,6 +51,19 @@ export const CategoryForm: React.FC<React.PropsWithChildren<CategoryProps>> = ({
                 <FormLabel>Nom</FormLabel>
                 <FormControl>
                   <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

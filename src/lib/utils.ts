@@ -12,7 +12,7 @@ export function getById<T extends { id: number | string }>(
   return items.find((item) => item.id.toString() === id?.toString()) ?? null;
 }
 
-export function sumSubTotal<T>(
+export function calculateSubTotal<T>(
   items: T[],
   predicate: (value: T, index?: number, array?: T[]) => number
 ): number {

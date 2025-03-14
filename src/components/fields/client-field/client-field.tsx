@@ -20,13 +20,13 @@ export interface ProductItemProps {
   onEdit?: () => void;
   quantity: number | string;
   amount: number | string;
-  product: string;
+  productName: string;
 }
 export const ProductItem: React.FC<ProductItemProps> = ({
   onDelete,
   onEdit,
   amount,
-  product,
+  productName,
   quantity,
 }) => {
   return (
@@ -35,7 +35,7 @@ export const ProductItem: React.FC<ProductItemProps> = ({
         <div className="grid grid-cols-3 gap-5 truncate">
           <div className="w-16">
             <p className="text-xs text-muted-foreground">Produit</p>
-            <p className="font-medium">{product}</p>
+            <p className="font-medium">{productName}</p>
           </div>
           <div className="w-14">
             <p className="text-xs text-muted-foreground">Quantite</p>

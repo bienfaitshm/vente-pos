@@ -16,14 +16,16 @@ import {
   type Category,
 } from "@/lib/schemas/products";
 import { SelectCombobox } from "../fields/select-combobox";
+import { Textarea } from "../ui/textarea";
 
 export type TProductDefaultValue = Product;
 const DEFAULT_VALUES: TProductDefaultValue = {
   name: "",
-  category: "",
+  categoryId: "",
   quantity: 0,
-  price: 0,
+  unitPrice: 0,
   commission: 10,
+  description: "",
 };
 
 interface ProductProps {
@@ -75,7 +77,7 @@ export const ProductForm: React.FC<React.PropsWithChildren<ProductProps>> = ({
           />
           <FormField
             control={form.control}
-            name="category"
+            name="categoryId"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Categorie</FormLabel>
@@ -108,7 +110,7 @@ export const ProductForm: React.FC<React.PropsWithChildren<ProductProps>> = ({
             />
             <FormField
               control={form.control}
-              name="price"
+              name="unitPrice"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Prix unitaire</FormLabel>
@@ -129,13 +131,26 @@ export const ProductForm: React.FC<React.PropsWithChildren<ProductProps>> = ({
                     <Input type="number" {...field} />
                   </FormControl>
                   <FormDescription>
-                    La commission en pourcentage
+                    La commission en pourcentage (%)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           {children}
         </div>
       </form>

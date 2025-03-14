@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { Check, ChevronsUpDown, Minus, Plus } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -36,103 +35,87 @@ import {
 } from "@/components/ui/popover";
 
 import {
-  type CommandItem as CommandItemSchemasType,
-  CommandItemSchemas,
-} from "@/lib/schemas";
+  type DetailOrder,
+  type DetailOrderInput,
+  DetailOrderInputSchemas,
+} from "@/lib/schemas/activities";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectProduct } from "@/server/db";
 import { cn } from "@/lib/utils";
 import { getById } from "../item-quatity-input";
 
-const DEFAULT_VALUE: Partial<CommandItemSchemasType> = {
+const DEFAULT_VALUE: Partial<DetailOrderInput> = {
   quantity: 0,
+  productId: "",
 };
 
-type TSubmitValueParams =
-  | {
-      isEdit: true;
-      index: number;
-      value: CommandItemSchemasType;
-    }
-  | { isEdit: false; value: CommandItemSchemasType };
+type TSubmitValueParams<T = DetailOrder> =
+  | { isEdit: true; index: number; value: T }
+  | { isEdit: false; value: T };
 
 interface ClientDrawerFormRef {
-  open: (initialValues?: CommandItemSchemasType & { index: number }) => void;
+  open: (initialValues?: DetailOrderInput & { index: number }) => void;
   close: () => void;
 }
+
 interface ClientDrawerFormProps {
   ref?: React.Ref<ClientDrawerFormRef>;
-  onSubmit?: (value: TSubmitValueParams) => void;
   products?: SelectProduct[];
+  onSubmit?: (value: TSubmitValueParams<DetailOrder>) => void;
 }
 
 /**
- * Component representing a form within a drawer for managing client items.
- *
- * @component
- * @param {ClientDrawerFormProps} props - The properties for the ClientDrawerForm component.
- * @param {React.Ref} props.ref - A reference to the component, used for imperative handle.
- * @param {Array<Product>} props.products - The list of products to be displayed in the form.
- * @param {Function} props.onSubmit - Callback function to handle form submission.
- *
- * @returns {JSX.Element} The rendered ClientDrawerForm component.
- *
- * @example
- * <ClientDrawerForm
- *   ref={drawerRef}
- *   products={productList}
- *   onSubmit={handleFormSubmit}
- * />
- *
- * @remarks
- * This component uses a drawer to display a form for adding or editing client items.
- * It utilizes `useItemForm` for form handling and `React.useImperativeHandle` to expose
- * open and close methods for the drawer.
+ * A drawer component for managing client order details.
+ * Allows users to add or edit products and their quantities.
  */
-
 export const ClientDrawerForm: React.FC<ClientDrawerFormProps> = ({
   ref,
   products,
   onSubmit,
 }) => {
-  const itemForm = useItemForm();
-  const [open, setOpen] = React.useState<boolean>(false);
+  const orderDetailFormRef = useOrderDetailForm();
+  const [open, setOpen] = React.useState(false);
   const [initialValues, setInitialValues] = React.useState<
-    (CommandItemSchemasType & { index: number }) | null
+    (DetailOrderInput & { index: number }) | null
   >(null);
 
   React.useImperativeHandle(
     ref,
     () => ({
       open: (initVal) => {
-        // Open the drawer
-        if (initVal) {
-          setInitialValues(initVal);
-        }
+        if (initVal) setInitialValues(initVal);
         setOpen(true);
       },
-      close: () => {
-        // Close the drawer
-        setOpen(false);
-      },
+      close: () => setOpen(false),
     }),
     []
   );
+
   const handleSubmit = React.useCallback(
-    (value: CommandItemSchemasType) => {
-      const _value: TSubmitValueParams = initialValues
-        ? { isEdit: true, index: initialValues.index, value }
-        : { isEdit: false, value };
-      onSubmit?.(_value);
+    (inputValue: DetailOrderInput) => {
+      const selectedProduct = getById(products || [], inputValue.productId);
+      if (!selectedProduct) return;
+
+      const processedValue: DetailOrder = {
+        commission: selectedProduct.commission,
+        quantity: inputValue.quantity,
+        productId: selectedProduct.id,
+        unitPrice: selectedProduct.unitPrice,
+        productName: selectedProduct.name,
+      };
+
+      const submissionPayload: TSubmitValueParams<DetailOrder> = initialValues
+        ? { isEdit: true, index: initialValues.index, value: processedValue }
+        : { isEdit: false, value: processedValue };
+
+      onSubmit?.(submissionPayload);
     },
-    [initialValues, onSubmit]
+    [initialValues, onSubmit, products]
   );
 
   const onOpenChange = React.useCallback((state: boolean) => {
-    if (!state) {
-      setInitialValues(null);
-    }
+    if (!state) setInitialValues(null);
     setOpen(state);
   }, []);
 
@@ -142,13 +125,13 @@ export const ClientDrawerForm: React.FC<ClientDrawerFormProps> = ({
         <div className="mx-auto w-full max-w-sm">
           <DrawerHeader>
             <DrawerTitle>Items</DrawerTitle>
-            <DrawerDescription>Ajoute les produits a vendre.</DrawerDescription>
+            <DrawerDescription>Add products to sell.</DrawerDescription>
           </DrawerHeader>
           <div className="p-4 pb-10">
-            <ItemForm
+            <OrderDetailForm
               initialValues={initialValues || undefined}
               products={products}
-              ref={itemForm}
+              ref={orderDetailFormRef}
               onSubmit={handleSubmit}
             />
           </div>
@@ -156,7 +139,7 @@ export const ClientDrawerForm: React.FC<ClientDrawerFormProps> = ({
             <Button
               type="button"
               onClick={() => {
-                itemForm.current?.submit();
+                orderDetailFormRef.current?.submit();
                 setOpen(false);
               }}
             >
@@ -172,50 +155,30 @@ export const ClientDrawerForm: React.FC<ClientDrawerFormProps> = ({
   );
 };
 
-interface ItemFormRef {
+interface OrderDetailFormRef {
   submit(): void;
 }
-interface ItemFormProps {
-  initialValues?: Partial<CommandItemSchemasType>;
-  onSubmit?: (value: CommandItemSchemasType) => void;
-  ref?: React.Ref<ItemFormRef>;
+
+interface OrderDetailFormProps {
+  initialValues?: Partial<DetailOrderInput>;
+  onSubmit?: (value: DetailOrderInput) => void;
+  ref?: React.Ref<OrderDetailFormRef>;
   products?: SelectProduct[];
 }
 
 /**
- * ItemForm component renders a form for managing items with quantity and product selection.
- *
- * @param {ItemFormProps} props - The properties for the ItemForm component.
- * @param {function} props.onSubmit - Callback function to handle form submission.
- * @param {object} [props.initialValues=DEFAULT_VALUE] - Initial values for the form fields.
- * @param {Array} [props.products=[]] - List of products to choose from.
- * @param {React.Ref} props.ref - Reference to expose imperative handle methods.
- *
- * @returns {JSX.Element} The rendered ItemForm component.
- *
- * @component
- *
- * @example
- * const initialValues = { quantity: 1, product: null };
- * const products = [{ id: 1, name: 'Product 1' }, { id: 2, name: 'Product 2' }];
- * const handleSubmit = (values) => console.log(values);
- *
- * <ItemForm
- *   onSubmit={handleSubmit}
- *   initialValues={initialValues}
- *   products={products}
- *   ref={formRef}
- * />
+ * A form component for managing order details.
+ * Allows users to select a product and specify its quantity.
  */
-const ItemForm: React.FC<ItemFormProps> = ({
+export const OrderDetailForm: React.FC<OrderDetailFormProps> = ({
   onSubmit,
   initialValues = DEFAULT_VALUE,
   products = [],
   ref,
 }) => {
   const [open, setOpen] = React.useState(false);
-  const form = useForm({
-    resolver: zodResolver(CommandItemSchemas),
+  const form = useForm<DetailOrderInput>({
+    resolver: zodResolver(DetailOrderInputSchemas),
     defaultValues: initialValues,
   });
 
@@ -224,7 +187,7 @@ const ItemForm: React.FC<ItemFormProps> = ({
     () => ({
       submit() {
         form.handleSubmit((value) => {
-          onSubmit?.(value as CommandItemSchemasType);
+          onSubmit?.(value);
         })();
       },
     }),
@@ -245,9 +208,7 @@ const ItemForm: React.FC<ItemFormProps> = ({
                   variant="outline"
                   size="icon"
                   className="h-8 w-8 shrink-0 rounded-full"
-                  onClick={() => {
-                    field.onChange(Number(field.value) - 1);
-                  }}
+                  onClick={() => field.onChange(Number(field.value) - 1)}
                   disabled={Number(field.value) <= 0}
                 >
                   <Minus />
@@ -258,7 +219,7 @@ const ItemForm: React.FC<ItemFormProps> = ({
                     {field.value}
                   </div>
                   <FormLabel className="text-[0.70rem] text-muted-foreground">
-                    Quantite
+                    Quantity
                   </FormLabel>
                 </div>
                 <Button
@@ -266,9 +227,7 @@ const ItemForm: React.FC<ItemFormProps> = ({
                   variant="outline"
                   size="icon"
                   className="h-8 w-8 shrink-0 rounded-full"
-                  onClick={() => {
-                    field.onChange(Number(field.value) + 1);
-                  }}
+                  onClick={() => field.onChange(Number(field.value) + 1)}
                 >
                   <Plus />
                   <span className="sr-only">Increase</span>
@@ -280,10 +239,10 @@ const ItemForm: React.FC<ItemFormProps> = ({
       />
       <FormField
         control={form.control}
-        name="product"
+        name="productId"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Produit</FormLabel>
+            <FormLabel>Product</FormLabel>
             <FormControl>
               <Popover>
                 <PopoverTrigger asChild>
@@ -295,8 +254,8 @@ const ItemForm: React.FC<ItemFormProps> = ({
                     className="w-full justify-between"
                   >
                     {field.value
-                      ? getById(products, field.value.id.toString())?.name
-                      : "Selection Items..."}
+                      ? getById(products, field.value)?.name
+                      : "Select product..."}
                     <ChevronsUpDown className="opacity-50" />
                   </Button>
                 </PopoverTrigger>
@@ -307,14 +266,14 @@ const ItemForm: React.FC<ItemFormProps> = ({
                       className="h-9"
                     />
                     <CommandList>
-                      <CommandEmpty>Aucun produit trouvee.</CommandEmpty>
+                      <CommandEmpty>No products found.</CommandEmpty>
                       <CommandGroup>
                         {products.map((product) => (
                           <CommandItem
                             key={product.id}
                             value={product.id.toString()}
                             onSelect={(currentValue) => {
-                              field.onChange(getById(products, currentValue));
+                              field.onChange(currentValue);
                               setOpen(false);
                             }}
                           >
@@ -322,8 +281,7 @@ const ItemForm: React.FC<ItemFormProps> = ({
                             <Check
                               className={cn(
                                 "ml-auto",
-                                field.value?.id.toString() ===
-                                  product.id.toString()
+                                field.value === product.id
                                   ? "opacity-100"
                                   : "opacity-0"
                               )}
@@ -344,9 +302,16 @@ const ItemForm: React.FC<ItemFormProps> = ({
   );
 };
 
-export function useItemForm() {
-  return React.useRef<ItemFormRef>(null);
+/**
+ * Hook to create a ref for the `OrderDetailForm` component.
+ */
+export function useOrderDetailForm() {
+  return React.useRef<OrderDetailFormRef>(null);
 }
+
+/**
+ * Hook to create a ref for the `ClientDrawerForm` component.
+ */
 export function useClientDrawerForm() {
   return React.useRef<ClientDrawerFormRef>(null);
 }

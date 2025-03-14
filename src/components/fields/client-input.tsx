@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { Check, ChevronsUpDown, UserPlus2 } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,46 +27,112 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ClientForm, useClientForm } from "../forms/client-form";
 import { ButtonLoader } from "../button-loader";
-import { useCreateClient } from "@/hooks/mutations";
-import { SelectClient } from "@/server/db";
+import { CustomerForm, useCustomerForm } from "../forms/client-form";
+import { useCreateCustomer } from "@/hooks/mutations";
 
-interface ClientInputProps {
-  clients: SelectClient[];
-  value: SelectClient | null;
-  onChange: (value: SelectClient | null) => void;
+interface TCustomer {
+  id: string;
+  name: string;
+  phoneNumber?: string | null;
+  address?: string | null;
 }
 
-export const ClientInput: React.FC<ClientInputProps> = ({
-  clients,
-  onChange,
-  value,
-}) => {
+interface TCustomerContext {
+  customers: TCustomer[];
+  addCustomer(customer: TCustomer): void;
+}
+
+const CustomerContext = React.createContext<TCustomerContext>({
+  customers: [],
+  addCustomer() {},
+});
+
+export const CustomerInputContainer: React.FC<
+  React.PropsWithChildren<{ customers?: TCustomer[] }>
+> = ({ customers = [], children }) => {
+  const [state, setState] = React.useState<TCustomer[]>(customers);
+  /**
+   * Adds a new customer to the current state.
+   *
+   * This function is memoized using `React.useCallback` to ensure that it does not
+   * get recreated on every render, improving performance when passed as a prop to
+   * child components.
+   *
+   * @param customer - The customer object of type `TCustomer` to be added to the state.
+   */
+  const addCustomer = React.useCallback((customer: TCustomer) => {
+    setState((prev) => [...prev, customer]);
+  }, []);
   return (
-    <div className="w-full flex flex-row gap-2">
-      <ClientSelect clients={clients} value={value} onChange={onChange} />
-      <ClientDialog onChange={onChange} />
-    </div>
+    <CustomerContext value={{ customers: state, addCustomer }}>
+      {children}
+    </CustomerContext>
   );
 };
 
-const ClientSelect: React.FC<ClientInputProps> = ({
-  clients,
+interface CustomerSelectProps {
+  value?: string;
+  onChange?(customerId?: string): void;
+}
+
+/**
+ * A React functional component that renders a customer selection dropdown
+ * with a searchable list of customers. The component uses a popover to display
+ * the list of customers and allows the user to select a customer from the list.
+ *
+ * @component
+ * @param {CustomerSelectProps} props - The props for the `CustomerSelect` component.
+ * @param {(value: string | undefined) => void} props.onChange - Callback function triggered when a customer is selected or deselected.
+ * @param {string | undefined} props.value - The currently selected customer's ID.
+ *
+ * @returns {JSX.Element} A dropdown component for selecting a customer.
+ *
+ * @remarks
+ * - The component uses `React.useContext` to access the `CustomerContext` for the list of customers.
+ * - The `Popover` component is used to manage the dropdown's visibility.
+ * - The `Command` component provides a searchable interface for the customer list.
+ *
+ * @example
+ * ```tsx
+ * const handleCustomerChange = (customerId: string | undefined) => {
+ *   console.log("Selected customer ID:", customerId);
+ * };
+ *
+ * <CustomerSelect
+ *   value={selectedCustomerId}
+ *   onChange={handleCustomerChange}
+ * />;
+ * ```
+ *
+ * @dependencies
+ * - `Popover`, `PopoverTrigger`, `PopoverContent` for dropdown functionality.
+ * - `Command`, `CommandInput`, `CommandList`, `CommandItem` for the searchable list.
+ * - `Button` for the trigger button.
+ * - `ChevronsUpDown`, `Check` for icons.
+ *
+ * @internal
+ * - The `getSelectedCustomer` utility function is used to find the selected customer by ID.
+ * - The `cn` utility is used for conditional class names.
+ */
+export const CustomerSelect: React.FC<CustomerSelectProps> = ({
   onChange,
   value,
 }) => {
   const [open, setOpen] = React.useState(false);
-
+  const { customers } = React.useContext(CustomerContext);
+  //
+  const selectedCustomer: TCustomer | undefined = React.useMemo(
+    () => getSelectedCustomer(customers, value),
+    [value, customers]
+  );
+  //
   const handleSelect = React.useCallback(
     (currentValue: string) => {
-      // 1. seleced client
-      const newValue = getSelectedClient(clients, currentValue);
-      // 2. update the value
-      onChange(value?.id?.toString() === currentValue ? null : newValue);
+      onChange?.(currentValue === value ? undefined : value);
       setOpen(false);
     },
-    [clients, onChange, value?.id]
+    [value, onChange]
   );
 
   return (
@@ -79,7 +144,7 @@ const ClientSelect: React.FC<ClientInputProps> = ({
           aria-expanded={open}
           className="w-full justify-between"
         >
-          {value ? value.name : "Selection du client"}
+          {value ? selectedCustomer?.name : "Selection du client"}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -89,18 +154,17 @@ const ClientSelect: React.FC<ClientInputProps> = ({
           <CommandList>
             <CommandEmpty>Aucun client trouve.</CommandEmpty>
             <CommandGroup>
-              {clients.map((client) => (
+              {customers.map((customer) => (
                 <CommandItem
-                  className="capitalize"
-                  key={client.id}
-                  value={client.id.toString()}
+                  key={customer.id}
+                  value={customer.id}
                   onSelect={handleSelect}
                 >
-                  {client.name.toLowerCase()}
+                  {customer.name}
                   <Check
                     className={cn(
                       "ml-auto",
-                      value?.id === client.id ? "opacity-100" : "opacity-0"
+                      value === customer.id ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>
@@ -113,18 +177,24 @@ const ClientSelect: React.FC<ClientInputProps> = ({
   );
 };
 
-interface ClientDialogProps {
-  onChange(value: SelectClient): void;
+interface CustomerInputDialogProps {
+  onChange(customerId?: string): void;
 }
 
-export const ClientDialog: React.FC<ClientDialogProps> = ({ onChange }) => {
+export const CustomerInputDialog: React.FC<CustomerInputDialogProps> = ({
+  onChange,
+}) => {
   const [open, setOpen] = React.useState<boolean>(false);
-  const clientFormRef = useClientForm();
-  const mutation = useCreateClient({
+  const { addCustomer } = React.useContext(CustomerContext);
+
+  const customerFormRef = useCustomerForm();
+  const mutation = useCreateCustomer({
     onSuccess(reponse) {
-      if (!reponse?.data) return;
-      onChange(reponse?.data);
-      setOpen(false);
+      if (reponse?.data) {
+        addCustomer(reponse.data);
+        onChange(reponse.data.id);
+        setOpen(false);
+      }
     },
   });
   return (
@@ -141,7 +211,10 @@ export const ClientDialog: React.FC<ClientDialogProps> = ({ onChange }) => {
             <DialogDescription>Ajouter un nouveau client</DialogDescription>
           </DialogHeader>
           <div>
-            <ClientForm ref={clientFormRef} onSubmit={mutation.mutateAsync} />
+            <CustomerForm
+              ref={customerFormRef}
+              onSubmit={mutation.mutateAsync}
+            />
           </div>
           <DialogFooter>
             <ButtonLoader
@@ -149,7 +222,7 @@ export const ClientDialog: React.FC<ClientDialogProps> = ({ onChange }) => {
               isLoading={mutation.isPending}
               loadingText="Enregristement..."
               onClick={() => {
-                clientFormRef.current?.submit();
+                customerFormRef.current?.submit();
               }}
             >
               Enregistrer
@@ -161,15 +234,9 @@ export const ClientDialog: React.FC<ClientDialogProps> = ({ onChange }) => {
   );
 };
 
-/**
- *
- * @param clients
- * @param value
- * @returns
- */
-function getSelectedClient(
-  clients: SelectClient[],
-  value: string
-): SelectClient | null {
-  return clients.find((client) => client.id === value) || null;
+function getSelectedCustomer(
+  customers: TCustomer[],
+  customerId?: string
+): TCustomer | undefined {
+  return customers.find((customer) => customer.id === customerId);
 }

@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import {
   Form,
   FormControl,
@@ -20,11 +21,14 @@ import {
 } from "@/components/ui/table";
 
 import { type HookSafeActionFnSubmiter, useForm } from "@/hooks/form";
-import { InvoiceSchemas, type Invoice } from "@/lib/schemas";
-import React from "react";
+import { OrderSchemas, type Order } from "@/lib/schemas/activities";
 import { PlusCircle, UserRoundPlus } from "lucide-react";
-import { SelectClient, SelectProduct } from "@/server/db";
-import { ClientInput } from "../fields/client-input";
+import type { SelectCustomer, SelectProduct } from "@/server/db";
+import {
+  CustomerInputContainer,
+  CustomerInputDialog,
+  CustomerSelect,
+} from "../fields/client-input";
 
 import { ProductItem } from "../fields/client-field/client-field";
 import {
@@ -34,51 +38,53 @@ import {
 import { Button } from "../ui/button";
 import { formatCurrency } from "@/lib/formater";
 import { Control, useFieldArray } from "react-hook-form";
-import { sumSubTotal } from "@/lib/utils";
+import { calculateSubTotal } from "@/lib/utils";
 
-export type TInvoiceDefaultValue = Invoice;
-const defaultValues: Partial<TInvoiceDefaultValue> = {
-  items: [],
-  client: null,
+// Define default values for the order form
+export type TOrderDefaultValue = Order;
+const defaultValues: Partial<TOrderDefaultValue> = {
+  customerId: "",
+  orderDetails: [],
 };
 
-interface InvoiceFormProps {
-  onSubmit: HookSafeActionFnSubmiter<typeof InvoiceSchemas>;
-  initialValues?: Partial<TInvoiceDefaultValue>;
+interface OrderFormProps {
+  onSubmit: HookSafeActionFnSubmiter<typeof OrderSchemas>;
+  initialValues?: Partial<TOrderDefaultValue>;
   products?: SelectProduct[];
-  clients?: SelectClient[];
+  customers?: SelectCustomer[];
 }
 
-interface InvoicePropsWithForm {
-  control: Control<TInvoiceDefaultValue>;
+interface OrderPropsWithForm {
+  control: Control<TOrderDefaultValue>;
 }
 
-const InvoiceFormFields: React.FC<
-  InvoicePropsWithForm & {
+// Component for rendering the order form fields
+const OrderFormFields: React.FC<
+  OrderPropsWithForm & {
     products?: SelectProduct[];
-    clients?: SelectClient[];
+    customers?: SelectCustomer[];
   }
-> = ({ control, products = [], clients = [] }) => {
+> = ({ control, products = [], customers = [] }) => {
   const clientDrawerForm = useClientDrawerForm();
   const { update, append, remove, fields } = useFieldArray({
     control: control,
-    name: "items",
+    name: "orderDetails",
   });
 
   return (
     <div className="space-y-2">
+      {/* Customer selection field */}
       <FormField
         control={control}
-        name="client"
+        name="customerId"
         render={({ field }) => (
           <FormItem className="flex flex-col gap-2">
             <FormLabel>Client</FormLabel>
             <FormControl>
-              <ClientInput
-                clients={clients}
-                value={field.value as SelectClient}
-                onChange={field.onChange}
-              />
+              <CustomerInputContainer customers={customers}>
+                <CustomerSelect value={field.value} onChange={field.onChange} />
+                <CustomerInputDialog onChange={field.onChange} />
+              </CustomerInputContainer>
             </FormControl>
             <FormMessage />
             <FormDescription>
@@ -92,9 +98,11 @@ const InvoiceFormFields: React.FC<
           </FormItem>
         )}
       />
+
+      {/* Product selection and management field */}
       <FormField
         control={control}
-        name="items"
+        name="orderDetails"
         render={() => (
           <FormItem>
             <FormLabel>Produits</FormLabel>
@@ -104,6 +112,7 @@ const InvoiceFormFields: React.FC<
               produit ajouté, vous pourrez modifier la quantité souhaitée.
             </FormDescription>
             <div>
+              {/* Drawer form for adding/editing products */}
               <ClientDrawerForm
                 onSubmit={(newValue) => {
                   if (newValue.isEdit) {
@@ -117,19 +126,20 @@ const InvoiceFormFields: React.FC<
               />
               <FormControl>
                 <div className="space-y-2">
-                  {fields.map((item, index) => (
+                  {/* Render each product in the order */}
+                  {fields.map((orderDetail, index) => (
                     <FormField
-                      key={item.id}
+                      key={orderDetail.id}
                       control={control}
-                      name={`items.${index}`}
+                      name={`orderDetails.${index}`}
                       render={({ field: itemField }) => (
                         <FormItem>
                           <FormControl>
                             <ProductItem
-                              product={item.product?.name || ""}
-                              quantity={item.quantity}
+                              productName={orderDetail.productName}
+                              quantity={orderDetail.quantity}
                               amount={formatCurrency(
-                                item.product.price * item.quantity
+                                orderDetail.unitPrice * orderDetail.quantity
                               )}
                               onEdit={() => {
                                 clientDrawerForm.current?.open({
@@ -146,6 +156,7 @@ const InvoiceFormFields: React.FC<
                       )}
                     />
                   ))}
+                  {/* Button to add a new product */}
                   <Button
                     className="px-0 underline-offset-4 underline"
                     type="button"
@@ -166,15 +177,18 @@ const InvoiceFormFields: React.FC<
   );
 };
 
-const InvoiceSummary: React.FC<InvoicePropsWithForm> = ({ control }) => {
+// Component for rendering the order summary
+const OrderSummary: React.FC<OrderPropsWithForm> = ({ control }) => {
   return (
     <div className="space-y-4 w-full">
+      {/* Summary header */}
       <div className="flex items-center justify-center bg-primary text-muted p-4 rounded-md">
         <h1 className="text-lg">Sommaire</h1>
       </div>
+      {/* Table displaying order details */}
       <FormField
         control={control}
-        name="items"
+        name="orderDetails"
         render={({ field }) => (
           <Table className="text-xs">
             <TableHeader>
@@ -186,15 +200,17 @@ const InvoiceSummary: React.FC<InvoicePropsWithForm> = ({ control }) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {field.value.map((item, index) => (
+              {field.value.map((orderDetail, index) => (
                 <TableRow key={index}>
                   <TableCell className="font-medium">
-                    {item.product.name}
+                    {orderDetail.productName}
                   </TableCell>
-                  <TableCell>{item.quantity}</TableCell>
-                  <TableCell>{formatCurrency(item.product.price)}</TableCell>
+                  <TableCell>{orderDetail.quantity}</TableCell>
+                  <TableCell>{formatCurrency(orderDetail.unitPrice)}</TableCell>
                   <TableCell className="text-right">
-                    {formatCurrency(item.product.price * item.quantity)}
+                    {formatCurrency(
+                      orderDetail.unitPrice * orderDetail.quantity
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
@@ -204,9 +220,9 @@ const InvoiceSummary: React.FC<InvoicePropsWithForm> = ({ control }) => {
                 <TableCell colSpan={3}>Total</TableCell>
                 <TableCell className="text-right">
                   {formatCurrency(
-                    sumSubTotal(
+                    calculateSubTotal(
                       field.value,
-                      (i) => i.quantity * i.product.price
+                      (i) => i.quantity * i.unitPrice
                     )
                   )}
                 </TableCell>
@@ -219,18 +235,24 @@ const InvoiceSummary: React.FC<InvoicePropsWithForm> = ({ control }) => {
   );
 };
 
-export const InvoiceForm: React.FC<
-  React.PropsWithChildren<InvoiceFormProps>
-> = ({ onSubmit, children, initialValues, products = [], clients = [] }) => {
+// Main OrderForm component
+export const OrderForm: React.FC<React.PropsWithChildren<OrderFormProps>> = ({
+  onSubmit,
+  children,
+  initialValues,
+  products = [],
+  customers = [],
+}) => {
   const { form, handleSubmitWithAction } = useForm({
     action: onSubmit,
-    schemas: InvoiceSchemas,
+    schemas: OrderSchemas,
     options: {
       formProps: { defaultValues: { ...defaultValues, ...initialValues } },
       actionProps: {
         onSuccess(response) {
-          console.log({ response });
-          // form.reset(defaultValues);
+          if (response.data) {
+            form.reset(defaultValues);
+          }
         },
       },
     },
@@ -241,15 +263,17 @@ export const InvoiceForm: React.FC<
       <Form {...form}>
         <form onSubmit={handleSubmitWithAction}>
           <div className="grid md:grid-cols-5 gap-28">
+            {/* Left section: Order form fields */}
             <div className="md:col-span-3">
-              <InvoiceFormFields
-                clients={clients}
+              <OrderFormFields
+                customers={customers}
                 products={products}
                 control={form.control}
               />
             </div>
+            {/* Right section: Order summary and additional content */}
             <div className="md:col-span-2 space-y-5">
-              <InvoiceSummary control={form.control} />
+              <OrderSummary control={form.control} />
               {children}
             </div>
           </div>
