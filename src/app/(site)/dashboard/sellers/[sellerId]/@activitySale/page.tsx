@@ -1,12 +1,12 @@
 import { PageProps } from "@/app/type";
 import { DataTableActivity } from "@/components/tables/activities-table";
-import { getSalerActivities } from "@/server/actions";
+import { getSellerActivities } from "@/server/actions";
 
 export default async function SaleActivitySale({
   params,
-}: PageProps<{ salerID: string }>) {
-  const { salerID } = await params;
-  const activities = await getSalerActivities({ saler: salerID });
+}: PageProps<{ sellerId: string }>) {
+  const { sellerId } = await params;
+  const activities = await getSellerActivities({ sellerId });
   console.log(JSON.stringify(activities?.data, null, 4));
   return (
     <div>

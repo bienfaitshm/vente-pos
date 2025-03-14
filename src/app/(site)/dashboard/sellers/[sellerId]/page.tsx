@@ -82,7 +82,7 @@ const ItemActivitySubTextCard: React.FC<React.PropsWithChildren> = ({
 };
 //
 
-export default async function Page({}: PageProps<{ salerID: string }>) {
+export default async function Page({}: PageProps<{ sellerId: string }>) {
   // const value = await params;
   return (
     <div className="m-auto max-w-screen-lg space-y-5">

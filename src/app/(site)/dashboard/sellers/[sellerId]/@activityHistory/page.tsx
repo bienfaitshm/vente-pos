@@ -4,9 +4,9 @@ import { getStockHistories } from "@/server/actions";
 
 export default async function HistoryStockPage({
   params,
-}: PageProps<{ salerID: string }>) {
-  const { salerID } = await params;
-  const stockHistories = await getStockHistories({ saler: salerID });
+}: PageProps<{ sellerId: string }>) {
+  const { sellerId } = await params;
+  const stockHistories = await getStockHistories({ sellerId });
   return (
     <div>
       <DataTableStockHistory data={stockHistories?.data} />

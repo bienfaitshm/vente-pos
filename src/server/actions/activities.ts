@@ -64,7 +64,7 @@ export const getOrder = actionClient
   });
 
 //
-export const getStocksOfsellerr = actionClient
+export const getStocksOfSeller = actionClient
   .schema(
     z.object({
       sellerId: z.string().nonempty(),

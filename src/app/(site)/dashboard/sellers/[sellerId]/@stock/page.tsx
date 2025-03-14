@@ -6,19 +6,19 @@ import { TypographyH3, TypographySmall } from "@/components/ui/typography";
 import {
   getPointOfSales,
   getProducts,
-  getStocksOfSaler,
+  getStocksOfSeller,
 } from "@/server/actions";
 import { PencilIcon } from "lucide-react";
 import React from "react";
 
 export default async function StockPage({
   params,
-}: PageProps<{ salerID: string }>) {
-  const { salerID } = await params;
+}: PageProps<{ sellerId: string }>) {
+  const { sellerId } = await params;
   const [pointOfSales, products, stocks] = await Promise.all([
     getPointOfSales({}),
     getProducts({}),
-    getStocksOfSaler({ saler: salerID }),
+    getStocksOfSeller({ sellerId }),
   ]);
   return (
     <div>
