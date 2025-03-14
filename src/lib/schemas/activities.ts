@@ -101,13 +101,6 @@ export const OrderSchemas = z.object({
         });
       }
     }),
-
-  /**
-   * The ID of the saler associated with the order.
-   *
-   * This field is validated using the `IDSchemas` schema.
-   */
-  saler: IDSchemas,
 });
 
 /**

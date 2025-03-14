@@ -68,11 +68,11 @@ export async function updateOrder(
  * @returns {Promise<tables.SelectOrders[]>} - A promise that resolves to the deleted order.
  */
 export async function deleteOrder(
-  orderId: WithID
+  orderId: string
 ): Promise<tables.SelectOrders[]> {
   return await db
     .delete(tables.orders)
-    .where(eq(tables.orders.id, orderId.id))
+    .where(eq(tables.orders.id, orderId))
     .returning();
 }
 

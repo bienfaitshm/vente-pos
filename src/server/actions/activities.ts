@@ -41,17 +41,6 @@ export const placeOrder = actionClient
     return command;
   });
 
-export const getSellerActivities = actionClient
-  .schema(
-    z.object({
-      sellerId: z.string().nonempty(),
-    })
-  )
-  .action(
-    async ({ parsedInput: { sellerId } }) =>
-      await queries.getSellerActivities(sellerId)
-  );
-
 export const getOrder = actionClient
   .schema(z.object({ id: z.string().nonempty() }))
   .action(async ({ parsedInput: { id } }) => {
@@ -62,6 +51,46 @@ export const getOrder = actionClient
 
     return { ...order, orderDetails };
   });
+
+export const getOrders = actionClient
+  .schema(z.object({ id: z.string().nonempty() }))
+  .action(async ({ parsedInput: { id } }) => {
+    const [order, orderDetails] = await Promise.all([
+      queries.getOrder(id),
+      queries.getOrderDetails(id as string),
+    ]);
+
+    return { ...order, orderDetails };
+  });
+
+export const deleteOrder = actionClient
+  .schema(z.object({ id: z.string().nonempty() }))
+  .action(async ({ parsedInput: { id } }) => {
+    return await queries.deleteOrder(id);
+  });
+
+export const updateOrder = actionClient
+  .schema(
+    schemas.OrderSchemas.merge(
+      z.object({
+        id: z.string().nonempty(),
+      })
+    )
+  )
+  .action(async ({ parsedInput: value }) => {
+    return await queries.updateOrder(value);
+  });
+
+export const getSellerActivities = actionClient
+  .schema(
+    z.object({
+      sellerId: z.string().nonempty(),
+    })
+  )
+  .action(
+    async ({ parsedInput: { sellerId } }) =>
+      await queries.getSellerActivities(sellerId)
+  );
 
 //
 export const getStocksOfSeller = actionClient
@@ -74,7 +103,7 @@ export const getStocksOfSeller = actionClient
     return await queries.getStocksOfSeller(sellerId);
   });
 
-export const changeStock = actionClient
+export const replenishStock = actionClient
   .schema(
     schemas.StockSchemas.merge(
       z.object({
@@ -161,7 +190,7 @@ export const getCustomers = actionClient
     return await queries.getCustomers();
   });
 
-export const createClient = actionClient
+export const createCustomer = actionClient
   .schema(schemas.CustomerSchemas)
   .action(async ({ parsedInput: values }) => {
     const data = await queries.createCustomer(values);

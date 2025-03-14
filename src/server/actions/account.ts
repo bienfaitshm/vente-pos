@@ -234,7 +234,7 @@ export const deleteSeller = actionClient
  *   }
  * });
  */
-export const updateSaler = actionClient
+export const updateSeller = actionClient
   .schema(
     z.object({
       username: z.string().nonempty(),
