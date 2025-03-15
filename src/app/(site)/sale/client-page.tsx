@@ -47,9 +47,13 @@ export const SaleClientPage: React.FC<SaleClientPageProps> = ({
   const route = useRouter();
   const mutation = usePlaceOrder({
     onSuccess(reponse) {
+      console.log(reponse);
       if (reponse?.data) {
         route.push(`/orders/${reponse.data.order.id}`);
       }
+    },
+    onError(error) {
+      console.log({ error });
     },
   });
   return (

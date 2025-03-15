@@ -11,15 +11,15 @@ import { commonFieldTable } from "./base";
 import { users } from "./accounts";
 import { products } from "./products";
 
-export const StockHistoryActionEnum = pgEnum("action", ["ADD", "REMOVE"]);
-export const OrderStatusEnum = pgEnum("status", [
+export const StockHistoryActionEnum = pgEnum("stock_action", ["ADD", "REMOVE"]);
+export const OrderStatusEnum = pgEnum("order_status", [
   "PENDING",
   "PROCESSING",
   "SHIPPED",
   "COMPLETED",
 ]);
 
-export const PointOfSaleStatusEnum = pgEnum("status", [
+export const PointOfSaleStatusEnum = pgEnum("pos_status", [
   "OPEN",
   "CLOSE",
   "RENOVATION",
@@ -46,7 +46,7 @@ export const orders = pgTable("orders", {
   }),
   totalAmount: doublePrecision("total_amount").notNull(),
   salesCommission: doublePrecision("sales_commission").notNull(),
-  status: OrderStatusEnum("status").notNull(),
+  status: OrderStatusEnum().notNull(),
 });
 
 export type InsertOrders = typeof orders.$inferInsert;
@@ -73,7 +73,7 @@ export const pointOfSales = pgTable("point_of_sales", {
   address: varchar({ length: 255 }).notNull(),
   phoneNumber: varchar("phone_number", { length: 255 }).notNull(),
   description: text(),
-  status: PointOfSaleStatusEnum("status").notNull(),
+  status: PointOfSaleStatusEnum().notNull(),
 });
 
 export type InsertPointOfSale = typeof pointOfSales.$inferInsert;
@@ -96,7 +96,7 @@ export type SelectStock = typeof stocks.$inferSelect;
 export const stockHistories = pgTable("stock_histories", {
   ...commonFieldTable,
   quantity: integer().notNull(),
-  action: StockHistoryActionEnum("action").notNull(),
+  action: StockHistoryActionEnum().notNull(),
   stockId: varchar("stock_id")
     .notNull()
     .references(() => stocks.id),

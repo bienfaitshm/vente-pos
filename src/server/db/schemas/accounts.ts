@@ -21,7 +21,7 @@ import { commonFieldTable } from "./base";
  *
  * @enum {string}
  */
-export const UserRoleEnum = pgEnum("role", ["ADMIN", "SELLER"]);
+export const UserRoleEnum = pgEnum("user_role", ["ADMIN", "SELLER"]);
 /**
  * Represents the users table in the database.
  *
@@ -45,7 +45,7 @@ export const users = pgTable("users", {
   password: varchar({ length: 255 }).notNull(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
-  role: UserRoleEnum("role").notNull(),
+  role: UserRoleEnum().notNull(),
 });
 
 export type InsertUser = typeof users.$inferInsert;
