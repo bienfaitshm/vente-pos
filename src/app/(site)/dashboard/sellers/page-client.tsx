@@ -7,10 +7,10 @@ import {
 import {
   SalerCreateFormDialog,
   SalerUpdateFormDialog,
-  useUpdateSalerFormDialog,
-} from "@/components/dialogs/saler-form-dialog";
+  useDeleteSellerFormDialog,
+} from "@/components/dialogs/seller-form-dialog";
 import { DataTableSaler } from "@/components/tables/salers-table";
-import { useDeleteSaler } from "@/hooks/mutations";
+import { useDeleteSeller } from "@/hooks/mutations/accounts";
 import { PencilIcon, Trash2 } from "lucide-react";
 import type { SelectUser } from "@/server/db/schemas";
 import type { SalerColumnDefType } from "@/components/tables/salers-table/columns";
@@ -29,9 +29,9 @@ import { useRouter } from "next/navigation";
 export const PageClient: React.FC<{ data?: SelectUser[] }> = ({
   data = [],
 }) => {
-  const updateFormRef = useUpdateSalerFormDialog();
+  const updateFormRef = useDeleteSellerFormDialog();
   const deleteDialogRef = useDeleteDialog();
-  const mutation = useDeleteSaler();
+  const mutation = useDeleteSeller();
   const router = useRouter();
 
   /**

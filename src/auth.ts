@@ -68,8 +68,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
   callbacks: {
     authorized({ auth }) {
-      if (auth) return true;
-      return false;
+      return !!auth;
     },
     jwt({ token, account, user }) {
       if (account) {

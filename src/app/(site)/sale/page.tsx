@@ -1,11 +1,11 @@
-import { getProducts, getClients } from "@/server/actions";
+import { getProducts, getCustomers } from "@/server/actions";
 import { SaleClientPage } from "./client-page";
 import { auth } from "@/auth";
 
 export default async function Page() {
-  const [products, clients, session] = await Promise.all([
+  const [products, customers, session] = await Promise.all([
     getProducts({}),
-    getClients({}),
+    getCustomers({}),
     auth(),
   ]);
 
@@ -15,8 +15,8 @@ export default async function Page() {
         <h1>Vente</h1>
         <SaleClientPage
           products={products?.data}
-          clients={clients?.data}
-          saler={session?.user.id as string}
+          customers={customers?.data}
+          sellerId={session?.user.id as string}
         />
       </div>
     </div>

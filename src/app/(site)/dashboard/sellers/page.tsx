@@ -1,8 +1,8 @@
-import { getSalers } from "@/server/actions/account";
 import { PageClient } from "./page-client";
+import { getSellers } from "@/server/actions/account";
 
 export default async function Page() {
-  const salers = await getSalers({});
+  const salers = await getSellers({});
   return (
     <div className="space-y-5">
       <h1>Salers</h1>

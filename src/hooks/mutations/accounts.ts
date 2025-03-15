@@ -6,6 +6,17 @@ import type {
 } from "@/lib/schemas/accounts";
 import type { ParamsMutation } from "./types";
 
+export function useSigninUser(
+  params?: ParamsMutation<Awaited<ReturnType<typeof actions.signinUser>>>
+) {
+  return useMutation({
+    networkMode: "always",
+    mutationKey: ["CREATE_USER"],
+    mutationFn: (value: RegistrationCredential) => actions.signinUser(value),
+    ...params,
+  });
+}
+
 /**
  * Custom hook to perform the login operation for a user.
  *

@@ -17,7 +17,7 @@ import { useDialogAction } from "@/hooks/dialog-action";
 import { SigninForm } from "../forms/signin-form";
 import { RegistrationCredential } from "@/lib/schemas";
 import { PlusCircle } from "lucide-react";
-import { useUpdateSaler, useCreateSaler } from "@/hooks/mutations";
+import { useDeleteSeller, useSigninUser } from "@/hooks/mutations/accounts";
 
 export type UpdateSelerFormDataType = Pick<
   RegistrationCredential,
@@ -36,7 +36,7 @@ export const SalerUpdateFormDialog: React.FC<SalerUpdateFormDialogProps> = ({
 }) => {
   const btnSubmitRef = React.useRef<HTMLButtonElement>(null);
   const dialogAction = useDialogAction<UpdateSelerFormDataType>();
-  const mutation = useUpdateSaler();
+  const mutation = useDeleteSeller();
   React.useImperativeHandle(
     ref,
     () => ({
@@ -89,7 +89,7 @@ export const SalerUpdateFormDialog: React.FC<SalerUpdateFormDialogProps> = ({
 
 export const SalerCreateFormDialog: React.FC = ({}) => {
   const btnSubmitRef = React.useRef<HTMLButtonElement>(null);
-  const mutation = useCreateSaler();
+  const mutation = useSigninUser();
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -134,6 +134,6 @@ export const SalerCreateFormDialog: React.FC = ({}) => {
   );
 };
 
-export function useUpdateSalerFormDialog() {
+export function useDeleteSellerFormDialog() {
   return useRef<SalerUpdateFormDialogRef>(null);
 }

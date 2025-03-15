@@ -9,7 +9,7 @@ export default async function Page() {
     getCategories({}),
   ]);
   return (
-    <div className="space-y-5">
+    <div className="space-y-5  max-w-screen-lg mx-auto">
       <h1>Produits</h1>
       <ProductClientPage categories={categories?.data} data={products?.data} />
     </div>

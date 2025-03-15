@@ -66,6 +66,19 @@ export const SigninForm: React.FC<React.PropsWithChildren<SigninProps>> = ({
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="phoneNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tel.</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <div className="grid grid-cols-2 gap-2">
               <FormField
                 control={form.control}
