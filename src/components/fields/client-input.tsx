@@ -129,7 +129,7 @@ export const CustomerSelect: React.FC<CustomerSelectProps> = ({
   //
   const handleSelect = React.useCallback(
     (currentValue: string) => {
-      onChange?.(currentValue === value ? undefined : value);
+      onChange?.(currentValue === value ? undefined : currentValue);
       setOpen(false);
     },
     [value, onChange]

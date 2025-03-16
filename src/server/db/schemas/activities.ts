@@ -55,7 +55,7 @@ export type SelectOrders = typeof orders.$inferSelect;
 export const orderDetails = pgTable("order_details", {
   ...commonFieldTable,
   orderId: varchar("order_id", { length: 15 })
-    .references(() => customers.id)
+    .references(() => orders.id)
     .notNull(),
   productId: varchar("product_id", { length: 15 })
     .references(() => products.id)

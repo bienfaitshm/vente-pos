@@ -114,9 +114,15 @@ export async function placeOrder(orderData: {
     totalAmount,
     salesCommission,
   });
-  const createdOrderDetails = await createOrderDetails(
-    orderDetails.map((detail) => ({ orderId: createdOrder!.id, ...detail }))
+  const parsedOrderDetails: tables.InsertOrderDetails[] = orderDetails.map(
+    (detail) => ({
+      orderId: createdOrder!.id,
+      productId: detail.productId,
+      quantity: detail.quantity,
+      unitPrice: detail.unitPrice,
+    })
   );
+  const createdOrderDetails = await createOrderDetails(parsedOrderDetails);
 
   return { order: createdOrder!, orderDetails: createdOrderDetails };
 }
@@ -360,9 +366,11 @@ export async function deleteStockHistory(
 /**
  * Retrieves all stock histories from the database.
  *
- * @returns {Promise<unknown[]>} - A promise that resolves to the list of stock histories.
+ * @returns {Promise<tables.SelectStockHistory[]>} - A promise that resolves to the list of stock histories.
  */
-export async function getStockHistories(): Promise<unknown[]> {
+export async function getStockHistories(): Promise<
+  tables.SelectStockHistory[]
+> {
   return await db
     .select()
     .from(tables.stockHistories)
@@ -372,7 +380,7 @@ export async function getStockHistories(): Promise<unknown[]> {
 /**
  * Retrieves all stock histories from the database of specifique seller.
  *
- * @returns {Promise<unknown[]>} - A promise that resolves to the list of stock histories.
+ * @returns {Promise<tables.SelectStockHistory[]>} - A promise that resolves to the list of stock histories.
  */
 export async function getStockHistoriesOfSeller(
   sellerId: string
@@ -388,11 +396,11 @@ export async function getStockHistoriesOfSeller(
  * Retrieves a stock history entry by its ID.
  *
  * @param {string} stockHistoryId - The ID of the stock history.
- * @returns {Promise<unknown>} - A promise that resolves to the stock history entry.
+ * @returns {Promise<tables.SelectStockHistory>} - A promise that resolves to the stock history entry.
  */
 export async function getStockHistory(
   stockHistoryId: string
-): Promise<unknown> {
+): Promise<tables.SelectStockHistory> {
   const result = await db
     .select()
     .from(tables.stockHistories)
@@ -423,7 +431,7 @@ export async function replenishStock(stockData: {
   action: "ADD" | "REMOVE";
   productId: string;
   quantity: number;
-}): Promise<void> {
+}): Promise<tables.SelectStock | undefined> {
   const { adminId, sellerId, posId, action, productId, quantity } = stockData;
 
   let stock = await getStockByProduct(productId);
@@ -457,4 +465,6 @@ export async function replenishStock(stockData: {
     sellerId,
     action,
   });
+
+  return stock;
 }
