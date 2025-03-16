@@ -1,59 +1,52 @@
 "use client";
 
 import { useMemo, type FunctionComponent, type ReactNode } from "react";
+import type { ColumnPointOfSaleType } from "./columns";
 import { DataTable } from "@/components/data-table/data-table";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import { Separator } from "@/components/ui/separator";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { Input } from "@/components/ui/input";
-import { SalerColumnDefType, getSalerColumns } from "./columns";
+import { getPointOfSaleColumns } from "./columns";
 import { useHookTable } from "../core/hooks";
 import { TableRowMenu } from "../types";
 
 /**
- * Props for the `DataTableSaler` component.
+ * Props for the DataTablePointOfSale component.
  */
-interface DataTableSalerProps {
-  /**
-   * The data to be displayed in the table.
-   * @default []
-   */
-  data?: SalerColumnDefType[];
+interface DataTablePointOfSaleProps {
+  /** The data to be displayed in the table. */
+  data?: ColumnPointOfSaleType[];
 
-  /**
-   * Optional ReactNode to render as the main header.
-   */
+  /** Optional ReactNode to render as the main header. */
   mainHeader?: ReactNode;
 
-  /**
-   * Optional ReactNode to render as the right-aligned header.
-   */
+  /** Optional ReactNode to render as the right-aligned header. */
   rightHeader?: ReactNode;
 
-  /**
-   * Array of menu items for each row in the table.
-   */
-  menus?: TableRowMenu<SalerColumnDefType>[];
+  /** Context menu options for table rows. */
+  menus?: TableRowMenu<ColumnPointOfSaleType>[];
 }
 
 /**
- * `DataTableSaler` is a reusable table component for displaying saler data.
- * It includes search functionality, row selection, and pagination.
+ * DataTablePointOfSale is a reusable table component designed for displaying
+ * point-of-sale data with features like search, pagination, and row selection.
  *
- * @param {DataTableSalerProps} props - The props for the component.
- * @returns {JSX.Element} The rendered DataTableSaler component.
+ * @param {DataTablePointOfSaleProps} props - The props for the component.
+ * @returns {JSX.Element} The rendered DataTablePointOfSale component.
  */
-const DataTableSaler: FunctionComponent<DataTableSalerProps> = ({
+const DataTablePointOfSale: FunctionComponent<DataTablePointOfSaleProps> = ({
   data = [],
   mainHeader,
   rightHeader,
   menus,
 }) => {
-  // Memoize the columns to avoid unnecessary re-renders when menus change.
-  const columns = useMemo(() => getSalerColumns(menus), [menus]);
+  // Memoize the columns to avoid unnecessary recalculations.
+  const columns = useMemo(() => getPointOfSaleColumns(menus), [menus]);
 
   // Hook to manage table state, including search and row selection.
-  const { searchField, table } = useHookTable<SalerColumnDefType>({
+  const { searchField, table } = useHookTable<ColumnPointOfSaleType>({
     data,
     columns,
     enableRowSelection: true,
@@ -74,7 +67,8 @@ const DataTableSaler: FunctionComponent<DataTableSalerProps> = ({
             />
             {mainHeader}
           </div>
-          {/* Right Header: Toolbar and Right Header */}
+
+          {/* Right Header: Toolbar and Additional Header */}
           <div className="flex items-center gap-2">
             <DataTableToolbar table={table} />
             {rightHeader}
@@ -85,9 +79,9 @@ const DataTableSaler: FunctionComponent<DataTableSalerProps> = ({
       <Separator />
 
       {/* Table Section */}
-      <div className="max-w-5xl m-auto my-3">
+      <ScrollArea className="h-[calc(100%-8rem)]">
         <DataTable table={table} columns={columns} />
-      </div>
+      </ScrollArea>
 
       <Separator />
 
@@ -99,4 +93,4 @@ const DataTableSaler: FunctionComponent<DataTableSalerProps> = ({
   );
 };
 
-export { DataTableSaler };
+export { DataTablePointOfSale };

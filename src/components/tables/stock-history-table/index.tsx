@@ -49,7 +49,7 @@ const DataTableStockHistory: FunctionComponent<DataTableStockHistoryProps> = ({
     data,
     columns,
     enableRowSelection: true,
-    searchKey: "saler",
+    searchKey: "sellerName",
   });
 
   return (

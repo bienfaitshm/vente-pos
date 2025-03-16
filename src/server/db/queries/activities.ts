@@ -391,11 +391,17 @@ export async function deleteStockHistory(
  * @returns {Promise<tables.SelectStockHistory[]>} - A promise that resolves to the list of stock histories.
  */
 export async function getStockHistories(): Promise<
-  tables.SelectStockHistory[]
+  (tables.SelectStockHistory & {posName: string | null , sellerName:string | null})[]
 > {
   return await db
-    .select()
+    .select({
+      ...getTableColumns(tables.stockHistories),
+      posName: tables.pointOfSales.name,
+      sellerName : tables.users.name,
+    })
     .from(tables.stockHistories)
+    .leftJoin(tables.users, eq(tables.users.id, tables.stockHistories.sellerId))
+    .leftJoin(tables.pointOfSales, eq(tables.pointOfSales.id, tables.stockHistories.posId))
     .orderBy(desc(tables.stockHistories.createdAt));
 }
 

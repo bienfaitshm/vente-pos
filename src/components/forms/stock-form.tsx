@@ -18,28 +18,47 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useForm } from "@/hooks/form";
+import { useForm, type HookSafeActionFnSubmiter } from "@/hooks/form";
 import { StockSchemas, type Stock } from "@/lib/schemas/activities";
-import { HookSafeActionFn } from "next-safe-action/hooks";
-import { ZodType, ZodTypeDef } from "zod";
 import { PlusCircleIcon } from "lucide-react";
 
 const DEFAULT_VALUE: Partial<Stock> = { action: "ADD", quantity: 0 };
 export interface StockFormProps {
-  onSubmit: HookSafeActionFn<
-    unknown,
-    typeof StockSchemas,
-    readonly ZodType<unknown, ZodTypeDef, unknown>[],
-    unknown,
-    unknown,
-    unknown
-  >;
+  onSubmit: HookSafeActionFnSubmiter<typeof StockSchemas>;
   defaultValues?: Partial<Stock>;
   type?: "UPDATE" | "CREATE";
   pointOfSales?: { id: string; name: string }[];
   products?: { id: string; name: string }[];
 }
 
+/**
+ * A React functional component that renders a stock management form.
+ * This form allows users to perform actions such as adding or removing products
+ * from stock, selecting a point of sale, and specifying product quantities.
+ *
+ * @component
+ * @param {Object} props - The props for the StockForm component.
+ * @param {function} props.onSubmit - Callback function triggered when the form is submitted.
+ * @param {React.ReactNode} [props.children] - Optional child components to render within the form.
+ * @param {Object} [props.defaultValues] - Default values for the form fields.
+ * @param {"CREATE" | "UPDATE"} [props.type="CREATE"] - The type of form operation, either "CREATE" or "UPDATE".
+ * @param {Array<{ id: string; name: string }>} [props.pointOfSales=[]] - List of available points of sale.
+ * @param {Array<{ id: string; name: string }>} [props.products=[]] - List of available products.
+ *
+ * @returns {JSX.Element} The rendered StockForm component.
+ *
+ * @example
+ * ```tsx
+ * <StockForm
+ *   onSubmit={(data) => console.log(data)}
+ *   defaultValues={{ action: "ADD", quantity: 10 }}
+ *   pointOfSales={[{ id: "1", name: "Store A" }]}
+ *   products={[{ id: "101", name: "Product X" }]}
+ * >
+ *   <button type="submit">Submit</button>
+ * </StockForm>
+ * ```
+ */
 export const StockForm: React.FC<React.PropsWithChildren<StockFormProps>> = ({
   onSubmit,
   children,
@@ -85,7 +104,7 @@ export const StockForm: React.FC<React.PropsWithChildren<StockFormProps>> = ({
                       <span>Ajouts</span>
                     </ToggleGroupItem>
                     <ToggleGroupItem
-                      value="SUB"
+                      value="REMOVE"
                       className="h-20 w-full rounded-xl"
                     >
                       Retrait
@@ -103,7 +122,7 @@ export const StockForm: React.FC<React.PropsWithChildren<StockFormProps>> = ({
           <div className="grid grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="pos"
+              name="posId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Point de ventes</FormLabel>
@@ -130,7 +149,7 @@ export const StockForm: React.FC<React.PropsWithChildren<StockFormProps>> = ({
             />
             <FormField
               control={form.control}
-              name="product"
+              name="productId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Produits</FormLabel>

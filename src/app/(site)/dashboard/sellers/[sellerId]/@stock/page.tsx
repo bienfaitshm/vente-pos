@@ -14,6 +14,7 @@ import {
   getStocksOfSeller,
 } from "@/server/actions";
 import { PencilIcon } from "lucide-react";
+import { auth } from "@/auth";
 
 /**
  * The `StockPage` component is an asynchronous server-side rendered page
@@ -44,10 +45,11 @@ export default async function StockPage({
   params,
 }: PageProps<{ sellerId: string }>) {
   const { sellerId } = await params;
-  const [pointOfSales, products, stocks] = await Promise.all([
+  const [pointOfSales, products, stocks, session] = await Promise.all([
     getPointOfSales({}),
     getProducts({}),
     getStocksOfSeller({ sellerId }),
+    auth(),
   ]);
 
   const stockData = stocks?.data ?? [];
@@ -79,6 +81,7 @@ export default async function StockPage({
             <div className="flex items-center justify-between">
               <TypographyH3>{stock.quantity}</TypographyH3>
               <StockFormDialog
+                adminId={session?.user.id as string}
                 defaultValues={{
                   sellerId,
                   productId: stock.productId,

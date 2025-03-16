@@ -6,12 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 
 export type StockHistoryColumnDefType = {
-  id: string;
-  action: "SUB" | "ADD";
+  action: "REMOVE" | "ADD";
   quantity: number;
-  saler: string;
-  pos: string;
+  posName: string;
+  sellerName: string;
+  id: string;
   createdAt: Date;
+  stockId: string;
+  adminId?: string;
 };
 
 export function getStockHistoryColumns(): ColumnDef<StockHistoryColumnDefType>[] {
@@ -40,10 +42,12 @@ export function getStockHistoryColumns(): ColumnDef<StockHistoryColumnDefType>[]
         return (
           <Badge
             className="rounded-full text-xs shadow-none"
-            variant={row.original.action === "SUB" ? "destructive" : "default"}
+            variant={
+              row.original.action === "REMOVE" ? "destructive" : "default"
+            }
           >
             <p className="text-xs">
-              {row.original.action === "SUB" ? "-" : "+"}
+              {row.original.action === "REMOVE" ? "-" : "+"}
               {row.original.quantity}
             </p>
           </Badge>
@@ -60,7 +64,7 @@ export function getStockHistoryColumns(): ColumnDef<StockHistoryColumnDefType>[]
         <DataTableColumnHeader column={column} title="Vendeur" />
       ),
       cell: ({ row }): React.ReactNode => {
-        return <TypographySmall>{row.original.saler}</TypographySmall>;
+        return <TypographySmall>{row.original.sellerName}</TypographySmall>;
       },
     },
     {
@@ -72,7 +76,7 @@ export function getStockHistoryColumns(): ColumnDef<StockHistoryColumnDefType>[]
         <DataTableColumnHeader column={column} title="Point de vente" />
       ),
       cell: ({ row }): React.ReactNode => {
-        return <TypographySmall>{row.original.pos}</TypographySmall>;
+        return <TypographySmall>{row.original.posName}</TypographySmall>;
       },
     },
     {
