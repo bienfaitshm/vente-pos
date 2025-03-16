@@ -1,4 +1,4 @@
-import { eq, asc } from "drizzle-orm";
+import { eq, asc, getTableColumns } from "drizzle-orm";
 import { db } from "../db";
 import * as tables from "../schemas";
 import { WithID } from "./type";
@@ -101,10 +101,14 @@ export async function deleteProduct({ id }: WithID) {
  * Retrieves all products from the database.
  * @returns An array of products.
  */
-export async function getProducts(): Promise<tables.SelectProduct[]> {
+export async function getProducts(): Promise<(tables.SelectProduct & { categoryName: string | null})[]> {
   return await db
-    .select()
+    .select({
+      ...getTableColumns(tables.products),
+      categoryName: tables.categories.name
+    })
     .from(tables.products)
+    .leftJoin(tables.categories, eq(tables.categories.id, tables.products.categoryId))
     .orderBy(asc(tables.products.name));
 }
 
