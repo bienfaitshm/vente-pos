@@ -24,7 +24,7 @@ const DataTableActivity: FunctionComponent<DataTableActivityProps> = ({
     data,
     columns,
     enableRowSelection: true,
-    searchKey: "invoiceNumber",
+    searchKey: "orderId",
   });
 
   return (

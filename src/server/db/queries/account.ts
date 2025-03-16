@@ -1,4 +1,4 @@
-import { and, eq, or } from "drizzle-orm";
+import { and, eq, or, getTableColumns } from "drizzle-orm";
 import { db } from "@/server/db/db";
 import * as tables from "@/server/db/schemas/accounts";
 import { WithID } from "./type";
@@ -48,6 +48,30 @@ export async function isPhoneNumberExist(
     .where(eq(tables.users.phoneNumber, phoneNumber))
     .limit(1);
   return !!exist[0];
+}
+
+/**
+ *
+ * @param id
+ * @returns
+ */
+export async function getUser(userId: string) {
+  const { createdAt, email, id, name, phoneNumber, role, username } =
+    getTableColumns(tables.users);
+  const users = await db
+    .select({
+      createdAt,
+      email,
+      id,
+      name,
+      phoneNumber,
+      role,
+      username,
+    })
+    .from(tables.users)
+    .where(eq(tables.users.id, userId))
+    .limit(1);
+  return users[0];
 }
 
 /**
