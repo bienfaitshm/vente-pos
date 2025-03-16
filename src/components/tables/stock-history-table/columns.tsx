@@ -8,8 +8,8 @@ import { format } from "date-fns";
 export type StockHistoryColumnDefType = {
   action: "REMOVE" | "ADD";
   quantity: number;
-  posName: string;
-  sellerName: string;
+  posName?: string | null;
+  sellerName?: string | null;
   id: string;
   createdAt: Date;
   stockId: string;

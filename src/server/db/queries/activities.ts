@@ -412,12 +412,17 @@ export async function getStockHistories(): Promise<
  */
 export async function getStockHistoriesOfSeller(
   sellerId: string
-): Promise<tables.SelectStockHistory[]> {
-  return await db
-    .select()
-    .from(tables.stockHistories)
-    .where(eq(tables.stockHistories.sellerId, sellerId))
-    .orderBy(desc(tables.stockHistories.createdAt));
+): Promise<(tables.SelectStockHistory & {posName: string | null , sellerName:string | null})[]> {
+  return await db.select({
+    ...getTableColumns(tables.stockHistories),
+    posName: tables.pointOfSales.name,
+    sellerName : tables.users.name,
+  })
+  .from(tables.stockHistories)
+  .leftJoin(tables.users, eq(tables.users.id, tables.stockHistories.sellerId))
+  .leftJoin(tables.pointOfSales, eq(tables.pointOfSales.id, tables.stockHistories.posId))
+  .where(eq(tables.stockHistories.sellerId, sellerId))
+  .orderBy(desc(tables.stockHistories.createdAt));
 }
 
 /**

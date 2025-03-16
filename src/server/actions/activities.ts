@@ -123,11 +123,21 @@ export const replenishStock = actionClient
 export const getStockHistories = actionClient
   .schema(
     z.object({
-      sellerId: z.string().nonempty(),
+      
     })
   )
   .action(async () => {
     return await queries.getStockHistories();
+  });
+
+  export const getStockHistoriesOfSeller = actionClient
+  .schema(
+    z.object({
+      sellerId: z.string().nonempty(),
+    })
+  )
+  .action(async ({parsedInput: {sellerId}}) => {
+    return await queries.getStockHistoriesOfSeller(sellerId);
   });
 
 /**
