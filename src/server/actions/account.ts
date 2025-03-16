@@ -61,7 +61,7 @@ export async function createUser({
     };
   }
   // 3. check if phoneNumber exist
-  const isExistPhoneNumber = await queries.isPhoneNumberExist(username);
+  const isExistPhoneNumber = await queries.isPhoneNumberExist(phoneNumber);
   if (isExistPhoneNumber) {
     errors.phoneNumber = {
       _errors: [
