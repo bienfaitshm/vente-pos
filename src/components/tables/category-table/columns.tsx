@@ -10,7 +10,7 @@ import type { TableRowMenu } from "../types";
  * Represents the structure of a category row in the table.
  */
 export type ColumnCategoryType = {
-  id: number; // Unique identifier for the category
+  id: string; // Unique identifier for the category
   name: string; // Name of the category
   description?: string | null; // Optional description of the category
 };
