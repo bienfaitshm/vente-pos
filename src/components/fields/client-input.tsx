@@ -27,8 +27,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ButtonLoader } from "../button-loader";
-import { CustomerForm, useCustomerForm } from "../forms/client-form";
+import { ButtonLoader } from "@/components/button-loader";
+import { CustomerForm, useCustomerForm } from "@/components/forms/client-form";
 import { useCreateCustomer } from "@/hooks/mutations";
 
 interface TCustomer {
