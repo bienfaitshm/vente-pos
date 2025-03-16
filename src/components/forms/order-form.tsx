@@ -182,7 +182,7 @@ const OrderSummary: React.FC<OrderPropsWithForm> = ({ control }) => {
   return (
     <div className="space-y-4 w-full">
       {/* Summary header */}
-      <div className="flex items-center justify-center bg-primary text-muted p-4 rounded-md">
+      <div className="flex items-center justify-center bg-primary text-muted p-4 rounded-lg">
         <h1 className="text-lg">Sommaire</h1>
       </div>
       {/* Table displaying order details */}
