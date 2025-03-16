@@ -10,11 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { type HookSafeActionFnSubmiter, useForm } from "@/hooks/form";
-import {
-  ProductSchemas,
-  type Product,
-  type Category,
-} from "@/lib/schemas/products";
+import { ProductSchemas, type Product } from "@/lib/schemas/products";
 import { SelectCombobox } from "../fields/select-combobox";
 import { Textarea } from "../ui/textarea";
 
@@ -30,11 +26,50 @@ const DEFAULT_VALUES: TProductDefaultValue = {
 
 interface ProductProps {
   onSubmit: HookSafeActionFnSubmiter<typeof ProductSchemas>;
-  categories?: Required<Category & { id: string }>[];
+  categories?: Required<{ id: string; name: string }>[];
   initialValues?: Partial<TProductDefaultValue>;
   isUpdateForm?: boolean;
 }
 
+/**
+ * ProductForm Component
+ *
+ * A reusable form component for managing product data. This component is designed to handle both
+ * creation and update operations for products. It integrates with a custom `useForm` hook for
+ * form state management and validation.
+ *
+ * @component
+ * @template ProductProps
+ * @param {Object} props - The props object.
+ * @param {(data: any) => void} props.onSubmit - Callback function triggered when the form is submitted.
+ * @param {React.ReactNode} [props.children] - Optional child components to render within the form.
+ * @param {boolean} props.isUpdateForm - Indicates whether the form is in update mode. If true, certain fields (e.g., quantity) are disabled.
+ * @param {Array<{ name: string; id: string }>} [props.categories=[]] - List of categories to populate the category selection dropdown.
+ * @param {Object} [props.initialValues=DEFAULT_VALUES] - Initial values for the form fields. Defaults to `DEFAULT_VALUES`.
+ *
+ * @returns {React.ReactElement} The rendered ProductForm component.
+ *
+ * @example
+ * ```tsx
+ * const categories = [
+ *   { name: "Electronics", id: "1" },
+ *   { name: "Clothing", id: "2" },
+ * ];
+ *
+ * const handleSubmit = (data) => {
+ *   console.log("Form submitted:", data);
+ * };
+ *
+ * <ProductForm
+ *   onSubmit={handleSubmit}
+ *   isUpdateForm={false}
+ *   categories={categories}
+ *   initialValues={{ name: "Laptop", quantity: 10 }}
+ * >
+ *   <button type="submit">Submit</button>
+ * </ProductForm>
+ * ```
+ */
 export const ProductForm: React.FC<React.PropsWithChildren<ProductProps>> = ({
   onSubmit,
   children,

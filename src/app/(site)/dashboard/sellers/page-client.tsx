@@ -37,10 +37,9 @@ export const PageClient: React.FC<{ data?: SelectUser[] }> = ({
   /**
    * Handles the delete confirmation action
    *
-   * @param {SalerColumnDefType} value - The saler data to be deleted
    */
-  const onDeleteConfirm = async (value: SalerColumnDefType) => {
-    await mutation.mutateAsync(value.id);
+  const onDeleteConfirm = async (sellerId: string) => {
+    await mutation.mutateAsync(sellerId);
   };
 
   return (
@@ -48,7 +47,7 @@ export const PageClient: React.FC<{ data?: SelectUser[] }> = ({
       <SalerUpdateFormDialog ref={updateFormRef} />
       <DialogDeleteAction
         ref={deleteDialogRef}
-        onConfirm={(value) => onDeleteConfirm(value as SalerColumnDefType)}
+        onConfirm={(value) => onDeleteConfirm(value as string)}
       />
       {mutation.isPending && <AlertDelete />}
       <DataTableSaler
@@ -76,7 +75,7 @@ export const PageClient: React.FC<{ data?: SelectUser[] }> = ({
             shortcut: <Trash2 className="h-4 w-4" />,
             action: (row?: Row<SalerColumnDefType>) => {
               if (row) {
-                deleteDialogRef.current?.delete(row?.original);
+                deleteDialogRef.current?.delete(row?.original.id);
               }
             },
           },

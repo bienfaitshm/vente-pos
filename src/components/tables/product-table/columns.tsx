@@ -10,13 +10,14 @@ import { MoreDropMenu } from "@/components/more-drop-menu";
  * Represents the structure of a product column.
  */
 export type ColumnProductType = {
-  id: number;
+  id: string;
   name: string;
   unitPrice: number;
-  quantity?: number;
+  commission: number;
+  quantity: number;
   categoryId: string;
-  categoryName: string | null;
-  description?: string;
+  categoryName?: string | null;
+  description?: string | null;
 };
 
 /**
@@ -61,6 +62,15 @@ export function getProductColumns(
       cell: ({ row }) => (
         <TypographyP>{formatCurrency(row.original.unitPrice)}</TypographyP>
       ),
+    },
+    {
+      accessorKey: "categoryName",
+      enableHiding: true,
+      enableResizing: true,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Categorie" />
+      ),
+      cell: ({ row }) => <TypographyP>{row.original.categoryName}</TypographyP>,
     },
     {
       accessorKey: "description",

@@ -96,7 +96,7 @@ export const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
             action: (row?: Row<ColumnCategoryType>) => {
               if (row) {
                 // Open the delete confirmation dialog with the selected row's data
-                deleteDialogRef.current?.delete(row?.original);
+                deleteDialogRef.current?.delete(row?.original.id);
               }
             },
           },

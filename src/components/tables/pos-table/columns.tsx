@@ -9,7 +9,7 @@ export type ColumnPointOfSaleType = {
   name: string;
   phoneNumber: string;
   address: string;
-  statut: "OPEN" | "CLOSE" | "RENOVATION";
+  status: "OPEN" | "CLOSE" | "RENOVATION";
   description?: string | null;
 };
 

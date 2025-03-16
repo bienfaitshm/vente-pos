@@ -1,4 +1,6 @@
 "use client";
+
+import React, { useRef } from "react";
 import {
   Dialog,
   DialogClose,
@@ -13,14 +15,15 @@ import { Button } from "../ui/button";
 import { PlusCircle } from "lucide-react";
 import { useCreateProduct, useUpdateProduct } from "@/hooks/mutations";
 import { ProductForm, TProductDefaultValue } from "../forms/product-form";
-import React, { useRef } from "react";
 import { ButtonLoader } from "../button-loader";
 import { useDialogAction } from "@/hooks/dialog-action";
 
-type TProductDefaultValueWithID = { id: number } & TProductDefaultValue;
+type TProductDefaultValueWithID = { id: string } & TProductDefaultValue;
+
 type PropsWithCategories<Props> = Props & {
-  categories: { id: number | string; name: string }[];
+  categories: { id: string; name: string }[];
 };
+
 interface ProductUpdateFormRef {
   update(value: TProductDefaultValueWithID): void;
 }
@@ -30,17 +33,22 @@ interface UpdateProductDialogFormProps {
 }
 
 /**
- * Update Product Form
- * @param param0
- * @returns
+ * UpdateProductDialogForm Component
+ *
+ * This component renders a dialog form for updating an existing product. It uses the `ProductForm` component
+ * to handle the form fields and submission logic. The dialog can be opened programmatically using the `ref` prop.
+ *
+ * @param {PropsWithCategories<UpdateProductDialogFormProps>} props - The component props.
+ * @returns {React.ReactElement} The rendered component.
  */
 export const UpdateProductDialogForm: React.FC<
   PropsWithCategories<UpdateProductDialogFormProps>
 > = ({ ref, categories }) => {
   const btnSubmitRef = React.useRef<HTMLButtonElement>(null);
-
   const dialogAction = useDialogAction<TProductDefaultValueWithID>();
   const mutation = useUpdateProduct();
+
+  // Expose the `update` method via the ref to allow programmatic dialog opening
   React.useImperativeHandle(
     ref,
     () => ({
@@ -57,7 +65,7 @@ export const UpdateProductDialogForm: React.FC<
         <DialogHeader>
           <DialogTitle>Modification</DialogTitle>
           <DialogDescription>
-            Modifier l&apos;élément sélectionné{" "}
+            Modifier l&apos;élément sélectionné
           </DialogDescription>
         </DialogHeader>
         <div>
@@ -65,8 +73,14 @@ export const UpdateProductDialogForm: React.FC<
             isUpdateForm
             categories={categories}
             initialValues={dialogAction.value}
-            onSubmit={mutation.mutateAsync}
+            onSubmit={(data) =>
+              mutation.mutateAsync({
+                id: dialogAction.value?.id || "",
+                ...data,
+              })
+            }
           >
+            {/* Hidden submit button to trigger form submission programmatically */}
             <Button type="submit" className="hidden" ref={btnSubmitRef} />
           </ProductForm>
         </div>
@@ -94,14 +108,20 @@ export const UpdateProductDialogForm: React.FC<
 };
 
 /**
- * Add new Product Form
- * @returns
+ * AddProductDialogForm Component
+ *
+ * This component renders a dialog form for adding a new product. It uses the `ProductForm` component
+ * to handle the form fields and submission logic. The dialog is triggered by a button click.
+ *
+ * @param {PropsWithCategories<unknown>} props - The component props.
+ * @returns {React.ReactElement} The rendered component.
  */
 export const AddProductDialogForm: React.FC<PropsWithCategories<unknown>> = ({
   categories,
 }) => {
   const btnSubmitRef = React.useRef<HTMLButtonElement>(null);
   const mutation = useCreateProduct();
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -117,6 +137,7 @@ export const AddProductDialogForm: React.FC<PropsWithCategories<unknown>> = ({
         </DialogHeader>
         <div>
           <ProductForm categories={categories} onSubmit={mutation.mutateAsync}>
+            {/* Hidden submit button to trigger form submission programmatically */}
             <Button type="submit" className="hidden" ref={btnSubmitRef} />
           </ProductForm>
         </div>
@@ -143,6 +164,13 @@ export const AddProductDialogForm: React.FC<PropsWithCategories<unknown>> = ({
   );
 };
 
+/**
+ * useUpdateProductFormDialog Hook
+ *
+ * This hook provides a ref to control the `UpdateProductDialogForm` component programmatically.
+ *
+ * @returns {React.RefObject<ProductUpdateFormRef>} A ref object to control the dialog.
+ */
 export function useUpdateProductFormDialog() {
   return useRef<ProductUpdateFormRef>(null);
 }
