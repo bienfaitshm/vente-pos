@@ -71,7 +71,7 @@ export function getActivitiesColumns(): ColumnDef<ActivityColumnDefType>[] {
         <DataTableColumnHeader column={column} title="N. produit vendu" />
       ),
       cell: ({ row }): React.ReactNode => {
-        return <TypographySmall>{row.original.productsCount}</TypographySmall>;
+        return <TypographySmall>{row.original.quantitySum}</TypographySmall>;
       },
     },
     {

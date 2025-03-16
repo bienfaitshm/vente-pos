@@ -172,6 +172,13 @@ export const signinUser = actionClient
   );
 
 //
+
+export const getSeller = actionClient
+  .schema(z.object({ sellerId: z.string().nonempty() }))
+  .action(async ({ parsedInput: { sellerId } }) => {
+    return await queries.getUser(sellerId);
+  });
+
 /**
  * Retrieves a list of sellers from the database.
  *

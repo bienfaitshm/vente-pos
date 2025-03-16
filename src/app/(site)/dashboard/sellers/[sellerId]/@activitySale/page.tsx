@@ -7,7 +7,6 @@ export default async function SaleActivitySale({
 }: PageProps<{ sellerId: string }>) {
   const { sellerId } = await params;
   const activities = await getSellerActivities({ sellerId });
-  console.log(JSON.stringify(activities?.data, null, 4));
   return (
     <div>
       <DataTableActivity data={activities?.data} />

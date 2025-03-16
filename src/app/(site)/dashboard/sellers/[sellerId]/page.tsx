@@ -15,6 +15,7 @@ import {
 import React from "react";
 import { cn } from "@/lib/utils";
 import { PageProps } from "@/app/type";
+import { getSeller, getSellerActivities } from "@/server/actions";
 
 const ItemContainerCardInfo: React.FC<
   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
@@ -82,28 +83,44 @@ const ItemActivitySubTextCard: React.FC<React.PropsWithChildren> = ({
 };
 //
 
-export default async function Page({}: PageProps<{ sellerId: string }>) {
-  // const value = await params;
+export default async function Page({
+  params,
+}: PageProps<{ sellerId: string }>) {
+  const { sellerId } = await params;
+  const [seller, activities] = await Promise.all([
+    getSeller({ sellerId }),
+    getSellerActivities({ sellerId }),
+  ]);
+
+  const summury = calculateSummary(activities?.data || []);
   return (
     <div className="m-auto max-w-screen-lg space-y-5">
       <div className="flex items-center gap-5">
         <Avatar className="text-white h-28 w-28">
-          <AvatarFallback className="h-28 w-28 bg-primary">V</AvatarFallback>
+          <AvatarFallback className="h-28 w-28 bg-primary text-lg">
+            {seller?.data?.name[0]}
+          </AvatarFallback>
         </Avatar>
         <div className="flex flex-col gap-4">
-          <TypographyH2>Bienfait shomari</TypographyH2>
+          <TypographyH2>{seller?.data?.name}</TypographyH2>
           <div className="flex items-center gap-5">
             <ItemContainerCardInfo>
               <ItemSubTextCardInfo>Role</ItemSubTextCardInfo>
-              <ItemTitleCardInfo>Vendeur</ItemTitleCardInfo>
+              <ItemTitleCardInfo>
+                {seller?.data?.role === "ADMIN" ? "Administrateur" : "Vandeur"}
+              </ItemTitleCardInfo>
             </ItemContainerCardInfo>
             <ItemContainerCardInfo>
               <ItemSubTextCardInfo>Adresse Email</ItemSubTextCardInfo>
-              <ItemTitleCardInfo>bienfaitshm@gmail.com</ItemTitleCardInfo>
+              <ItemTitleCardInfo>{seller?.data?.email}</ItemTitleCardInfo>
+            </ItemContainerCardInfo>
+            <ItemContainerCardInfo>
+              <ItemSubTextCardInfo>Tel.</ItemSubTextCardInfo>
+              <ItemTitleCardInfo>{seller?.data?.phoneNumber}</ItemTitleCardInfo>
             </ItemContainerCardInfo>
             <ItemContainerCardInfo>
               <ItemSubTextCardInfo>Username</ItemSubTextCardInfo>
-              <ItemTitleCardInfo>bienfaitshm</ItemTitleCardInfo>
+              <ItemTitleCardInfo>{seller?.data?.username}</ItemTitleCardInfo>
             </ItemContainerCardInfo>
           </div>
         </div>
@@ -114,7 +131,9 @@ export default async function Page({}: PageProps<{ sellerId: string }>) {
             <Landmark className="h-5 w-5" />
           </ItemActivityIconContainerCard>
           <ItemActivityContentCard>
-            <TypographyLarge>{formatCurrency(309)}</TypographyLarge>
+            <TypographyLarge>
+              {formatCurrency(summury.totalPrice)}
+            </TypographyLarge>
             <ItemActivitySubTextCard>Total vendu</ItemActivitySubTextCard>
           </ItemActivityContentCard>
         </ItemActivityCard>
@@ -123,7 +142,9 @@ export default async function Page({}: PageProps<{ sellerId: string }>) {
             <ChartNoAxesCombinedIcon className="h-5 w-5" />
           </ItemActivityIconContainerCard>
           <ItemActivityContentCard>
-            <TypographyLarge>{formatCurrency(1500)}</TypographyLarge>
+            <TypographyLarge>
+              {formatCurrency(summury.totalCommission)}
+            </TypographyLarge>
             <ItemActivitySubTextCard>Commissions</ItemActivitySubTextCard>
           </ItemActivityContentCard>
         </ItemActivityCard>
@@ -132,7 +153,7 @@ export default async function Page({}: PageProps<{ sellerId: string }>) {
             <ShoppingBasket className="h-5 w-5" />
           </ItemActivityIconContainerCard>
           <ItemActivityContentCard>
-            <TypographyLarge>40</TypographyLarge>
+            <TypographyLarge>{summury.quantitySum}</TypographyLarge>
             <ItemActivitySubTextCard>
               Total produits vendus
             </ItemActivitySubTextCard>
@@ -140,5 +161,28 @@ export default async function Page({}: PageProps<{ sellerId: string }>) {
         </ItemActivityCard>
       </div>
     </div>
+  );
+}
+
+type TCalculateSummaryReturn = {
+  totalPrice: number;
+  totalCommission: number;
+  quantitySum: number;
+};
+
+function calculateSummary<T extends TCalculateSummaryReturn>(
+  items: T[]
+): TCalculateSummaryReturn {
+  return items.reduce(
+    (prev, cur) => ({
+      quantitySum: prev.quantitySum + cur.quantitySum,
+      totalCommission: prev.totalCommission + cur.totalCommission,
+      totalPrice: prev.totalPrice + cur.totalPrice,
+    }),
+    {
+      quantitySum: 0,
+      totalCommission: 0,
+      totalPrice: 0,
+    } as TCalculateSummaryReturn
   );
 }
