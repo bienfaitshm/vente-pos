@@ -5,38 +5,28 @@ import { format } from "date-fns";
 import { formatCurrency } from "@/lib/formater";
 
 export type ActivityColumnDefType = {
-  id: string;
-  invoiceNumber: string | number;
+  orderId: string;
+  sellerId: string | null;
   totalAmount: number;
-  totalCommission: number;
-  productSaledNumber: number;
   createdAt: Date;
+  totalCommission: number;
+  productsCount: number;
+  quantitySum: number;
+  totalPrice: number;
 };
 
 export function getActivitiesColumns(): ColumnDef<ActivityColumnDefType>[] {
   return [
     {
-      accessorKey: "id",
-      enableHiding: false,
-      enableResizing: true,
-      enableSorting: false,
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="ID" />
-      ),
-      cell: ({ row }): React.ReactNode => {
-        return <TypographySmall>{row.original.id}</TypographySmall>;
-      },
-    },
-    {
-      accessorKey: "invoiceNumber",
+      accessorKey: "orderId",
       enableHiding: false,
       enableResizing: true,
       enableSorting: true,
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="N Facture" />
+        <DataTableColumnHeader column={column} title="ID Facture" />
       ),
       cell: ({ row }): React.ReactNode => {
-        return <TypographySmall>{row.original.invoiceNumber}</TypographySmall>;
+        return <TypographySmall>{row.original.orderId}</TypographySmall>;
       },
     },
 
@@ -73,7 +63,7 @@ export function getActivitiesColumns(): ColumnDef<ActivityColumnDefType>[] {
       },
     },
     {
-      accessorKey: "productSaledNumber",
+      accessorKey: "productsCount",
       enableHiding: true,
       enableResizing: true,
       enableSorting: false,
@@ -81,9 +71,7 @@ export function getActivitiesColumns(): ColumnDef<ActivityColumnDefType>[] {
         <DataTableColumnHeader column={column} title="N. produit vendu" />
       ),
       cell: ({ row }): React.ReactNode => {
-        return (
-          <TypographySmall>{row.original.productSaledNumber}</TypographySmall>
-        );
+        return <TypographySmall>{row.original.productsCount}</TypographySmall>;
       },
     },
     {

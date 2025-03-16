@@ -61,7 +61,9 @@ export default async function Layout({
               </TabsTrigger>
             </div>
             <StockFormDialog
-              defaultValues={{ saler: "1bc14f8b-8fe8-46bd-9b53-13bffa2db540" }}
+              defaultValues={{
+                sellerId: "1bc14f8b-8fe8-46bd-9b53-13bffa2db540",
+              }}
               pointOfSales={pointOfSales?.data}
               products={products?.data}
             >

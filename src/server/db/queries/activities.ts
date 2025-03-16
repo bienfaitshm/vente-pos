@@ -178,16 +178,27 @@ export async function updateOrderDetail(
  * @param {string} sellerId - The ID of the seller.
  * @returns {Promise<unknown[]>} - A promise that resolves to the seller activities.
  */
-export async function getSellerActivities(
-  sellerId: string
-): Promise<unknown[]> {
+export async function getSellerActivities(sellerId: string): Promise<
+  {
+    orderId: string;
+    sellerId: string | null;
+    totalAmount: number;
+    createdAt: Date;
+    totalCommission: number;
+    productsCount: number;
+    quantitySum: number;
+    totalPrice: number;
+  }[]
+> {
   const result = await db
     .select({
-      id: tables.orders.id,
+      orderId: tables.orders.id,
       sellerId: tables.orders.sellerId,
       totalAmount: tables.orders.totalAmount,
+      createdAt: tables.orders.createdAt,
+      totalCommission: tables.orders.salesCommission,
       productsCount: sql<number>`cast(count(${tables.orderDetails.productId}) as int)`,
-      quantitySum: sql<number>`sum(${tables.orderDetails.quantity})`,
+      quantitySum: sql<number>`cast(sum(${tables.orderDetails.quantity}) as int)`,
       totalPrice: sql<number>`sum(${tables.orderDetails.quantity} * ${tables.orderDetails.unitPrice})`,
     })
     .from(tables.orders)

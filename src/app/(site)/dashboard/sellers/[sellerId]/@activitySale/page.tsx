@@ -10,7 +10,7 @@ export default async function SaleActivitySale({
   console.log(JSON.stringify(activities?.data, null, 4));
   return (
     <div>
-      <DataTableActivity data={activities?.data} />
+      <DataTableActivity data={[]} />
     </div>
   );
 }
