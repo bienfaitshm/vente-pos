@@ -7,7 +7,6 @@ import {
   GalleryVerticalEnd,
   ShoppingBag,
   Tags,
-  SquareUserRound,
   UsersRound,
   Store,
   Shapes,
@@ -88,11 +87,11 @@ const data = {
       url: "/dashboard/sellers",
       icon: UsersRound,
     },
-    {
-      name: "Clients",
-      url: "/dashboard/clients",
-      icon: SquareUserRound,
-    },
+    // {
+    //   name: "Clients",
+    //   url: "/dashboard/clients",
+    //   icon: SquareUserRound,
+    // },
   ],
 };
 
