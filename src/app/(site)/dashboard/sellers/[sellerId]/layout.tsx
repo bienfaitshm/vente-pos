@@ -6,18 +6,21 @@ import { Activity, HistoryIcon, ShoppingBag, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StockFormDialog } from "@/components/dialogs/stock-form-dialog";
 import { getPointOfSales, getProducts } from "@/server/actions";
+import { PageProps } from "@/app/type";
 
 export default async function Layout({
   children,
   activityHistory,
   stock,
   activitySale,
-}: {
+  params,
+}: PageProps<{ sellerId: string }> & {
   children: React.ReactNode;
   activityHistory: React.ReactNode;
   stock: React.ReactNode;
   activitySale: React.ReactNode;
 }) {
+  const { sellerId } = await params;
   const [pointOfSales, products] = await Promise.all([
     getPointOfSales({}),
     getProducts({}),
@@ -62,7 +65,7 @@ export default async function Layout({
             </div>
             <StockFormDialog
               defaultValues={{
-                sellerId: "1bc14f8b-8fe8-46bd-9b53-13bffa2db540",
+                sellerId,
               }}
               pointOfSales={pointOfSales?.data}
               products={products?.data}

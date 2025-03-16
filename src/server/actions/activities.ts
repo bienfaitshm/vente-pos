@@ -1,4 +1,5 @@
 "use server";
+
 import { actionClient } from "./base";
 import * as queries from "../db/queries";
 import * as schemas from "@/lib/schemas/activities";
@@ -6,21 +7,7 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 
 /**
- * Places an order by processing the provided customer, seller, and order details.
- *
- * @remarks
- * This function uses a schema to validate the input data before executing the action.
- * It merges the `OrderSchemas` with an additional `sellerId` field to ensure all
- * required fields are present and valid.
- *
- * @param parsedInput - The parsed input object containing the following properties:
- *   @property customerId - The ID of the customer placing the order.
- *   @property sellerId - The ID of the seller associated with the order.
- *   @property orderDetails - The details of the order being placed.
- *
- * @returns A promise that resolves to the result of the `placeOrder` query command.
- *
- * @throws Will throw an error if the input validation fails or if the query execution encounters an issue.
+ * Places an order for a customer with the specified seller and order details.
  */
 export const placeOrder = actionClient
   .schema(
@@ -31,44 +18,50 @@ export const placeOrder = actionClient
     )
   )
   .action(async ({ parsedInput: { customerId, sellerId, orderDetails } }) => {
-    const command = await queries.placeOrder({
-      order: {
-        customerId,
-        sellerId,
-      },
+    return await queries.placeOrder({
+      order: { customerId, sellerId },
       orderDetails,
     });
-    return command;
   });
 
+/**
+ * Retrieves an order and its details by ID.
+ */
 export const getOrder = actionClient
   .schema(z.object({ id: z.string().nonempty() }))
   .action(async ({ parsedInput: { id } }) => {
     const [order, orderDetails] = await Promise.all([
       queries.getOrder(id),
-      queries.getOrderDetails(id as string),
+      queries.getOrderDetails(id),
     ]);
-
     return { ...order, orderDetails };
   });
 
+/**
+ * Retrieves all orders for a specific ID.
+ */
 export const getOrders = actionClient
   .schema(z.object({ id: z.string().nonempty() }))
   .action(async ({ parsedInput: { id } }) => {
     const [order, orderDetails] = await Promise.all([
       queries.getOrder(id),
-      queries.getOrderDetails(id as string),
+      queries.getOrderDetails(id),
     ]);
-
     return { ...order, orderDetails };
   });
 
+/**
+ * Deletes an order by ID.
+ */
 export const deleteOrder = actionClient
   .schema(z.object({ id: z.string().nonempty() }))
   .action(async ({ parsedInput: { id } }) => {
     return await queries.deleteOrder(id);
   });
 
+/**
+ * Updates an order with new details.
+ */
 export const updateOrder = actionClient
   .schema(
     schemas.OrderSchemas.merge(
@@ -81,18 +74,22 @@ export const updateOrder = actionClient
     return await queries.updateOrder(value);
   });
 
+/**
+ * Retrieves activities for a specific seller.
+ */
 export const getSellerActivities = actionClient
   .schema(
     z.object({
       sellerId: z.string().nonempty(),
     })
   )
-  .action(
-    async ({ parsedInput: { sellerId } }) =>
-      await queries.getSellerActivities(sellerId)
-  );
+  .action(async ({ parsedInput: { sellerId } }) => {
+    return await queries.getSellerActivities(sellerId);
+  });
 
-//
+/**
+ * Retrieves stocks for a specific seller.
+ */
 export const getStocksOfSeller = actionClient
   .schema(
     z.object({
@@ -103,6 +100,9 @@ export const getStocksOfSeller = actionClient
     return await queries.getStocksOfSeller(sellerId);
   });
 
+/**
+ * Replenishes stock for a seller by an admin.
+ */
 export const replenishStock = actionClient
   .schema(
     schemas.StockSchemas.merge(
@@ -117,6 +117,9 @@ export const replenishStock = actionClient
     return stock;
   });
 
+/**
+ * Retrieves stock histories for a seller.
+ */
 export const getStockHistories = actionClient
   .schema(
     z.object({
@@ -127,14 +130,18 @@ export const getStockHistories = actionClient
     return await queries.getStockHistories();
   });
 
-// Point of sellers
-
+/**
+ * Retrieves all points of sale.
+ */
 export const getPointOfSales = actionClient
   .schema(z.object({}))
   .action(async () => {
     return await queries.getPointOfSales();
   });
 
+/**
+ * Creates a new point of sale.
+ */
 export const createPointOfSeller = actionClient
   .schema(schemas.PointOfSaleSchemas)
   .action(async ({ parsedInput: values }) => {
@@ -144,18 +151,7 @@ export const createPointOfSeller = actionClient
   });
 
 /**
- * Updates a Point of Sale (POS) entry in the system.
- *
- * This function uses a schema to validate the input, ensuring that the `id` field
- * is a non-empty string. It then performs the update operation using the provided
- * `queries.updatePointOfSale` function and revalidates the root path to reflect
- * the changes.
- *
- * @async
- * @function
- * @param {Object} parsedInput - The parsed input values from the schema.
- * @param {string} parsedInput.id - The unique identifier of the Point of Sale to update.
- * @returns {Promise<any>} The updated Point of Sale data.
+ * Updates an existing point of sale.
  */
 export const updatePointOfSale = actionClient
   .schema(
@@ -171,6 +167,9 @@ export const updatePointOfSale = actionClient
     return data;
   });
 
+/**
+ * Deletes a point of sale by ID.
+ */
 export const deletePointOfSale = actionClient
   .schema(
     z.object({
@@ -183,13 +182,18 @@ export const deletePointOfSale = actionClient
     return data;
   });
 
-// customers
+/**
+ * Retrieves all customers.
+ */
 export const getCustomers = actionClient
   .schema(z.object({}))
-  .action(async ({ parsedInput: {} }) => {
+  .action(async () => {
     return await queries.getCustomers();
   });
 
+/**
+ * Creates a new customer.
+ */
 export const createCustomer = actionClient
   .schema(schemas.CustomerSchemas)
   .action(async ({ parsedInput: values }) => {
@@ -198,6 +202,9 @@ export const createCustomer = actionClient
     return data;
   });
 
+/**
+ * Updates an existing customer.
+ */
 export const updateCustomer = actionClient
   .schema(
     schemas.CustomerSchemas.merge(z.object({ id: z.string().nonempty() }))
@@ -208,6 +215,9 @@ export const updateCustomer = actionClient
     return data;
   });
 
+/**
+ * Deletes a customer by ID.
+ */
 export const deleteCustomer = actionClient
   .schema(
     z.object({

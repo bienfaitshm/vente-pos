@@ -279,12 +279,23 @@ export async function getStocks(): Promise<unknown[]> {
     .orderBy(desc(tables.stocks.createdAt));
 }
 
-export async function getStocksOfSeller(sellerId: string): Promise<unknown[]> {
+/**
+ * Retrieves the stock information for a specific seller, including product details.
+ *
+ * @param sellerId - The unique identifier of the seller whose stock information is to be retrieved.
+ * @returns A promise that resolves to an array of stock records. Each record includes:
+ * - All columns from the `stocks` table.
+ * - The `productName` from the `products` table, which may be `null` if no associated product exists.
+ *
+ * The results are ordered by the `createdAt` timestamp in descending order.
+ */
+export async function getStocksOfSeller(sellerId: string): Promise<(tables.SelectStock & {
+  productName: string| null;
+})[]> {
   return await db
     .select({
       ...getTableColumns(tables.stocks),
       productName: tables.products.name,
-      productId: tables.products.id,
     })
     .from(tables.stocks)
     .leftJoin(tables.products, eq(tables.products.id, tables.stocks.productId))
