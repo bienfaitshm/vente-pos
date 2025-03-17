@@ -28,13 +28,13 @@ import {
   CustomerInputContainer,
   CustomerInputDialog,
   CustomerSelect,
-} from "../fields/client-input";
+} from "../fields/customer-input";
 
-import { ProductItem } from "../fields/client-field/client-field";
+import { ProductItem } from "../fields/customer-field/client-field";
 import {
   ClientDrawerForm,
   useClientDrawerForm,
-} from "../fields/client-field/client-drawer-form";
+} from "../fields/customer-field/client-drawer-form";
 import { Button } from "../ui/button";
 import { formatCurrency } from "@/lib/formater";
 import { Control, useFieldArray } from "react-hook-form";
