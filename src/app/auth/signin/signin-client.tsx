@@ -13,7 +13,10 @@ export const SigninClient = () => {
     },
   });
   return (
-    <SigninForm showPassword={true} onSubmit={mutation.mutateAsync}>
+    <SigninForm
+      showPassword={true}
+      onSubmit={(values) => mutation.mutateAsync({ ...values, role: "ADMIN" })}
+    >
       <ButtonLoader isLoading={mutation.isPending} loadingText="Signin...">
         Signin
       </ButtonLoader>
