@@ -37,10 +37,14 @@ export async function getOrders(): Promise<tables.SelectOrders[]> {
  */
 export async function getOrder(
   orderId: string
-): Promise<tables.SelectOrders[]> {
+): Promise<(tables.SelectOrders & { customerName: string | null})[]> {
   return await db
-    .select()
+    .select({
+      ...getTableColumns(tables.orders),
+      customerName: tables.customers.name
+    })
     .from(tables.orders)
+    .leftJoin(tables.customers, eq(tables.customers.id, tables.orders.customerId))
     .where(eq(tables.orders.id, orderId));
 }
 
@@ -127,6 +131,33 @@ export async function placeOrder(orderData: {
   return { order: createdOrder!, orderDetails: createdOrderDetails };
 }
 
+
+/**
+ * Retrieves an order along with its associated details.
+ *
+ * This function fetches the order information and its corresponding details
+ * concurrently using `Promise.all`, and then combines them into a single object.
+ *
+ * @param orderId - The unique identifier of the order to retrieve.
+ * @returns A promise that resolves to an object containing the order data
+ *          and its associated details.
+ *
+ * @throws Will throw an error if fetching the order or its details fails.
+ *
+ * @example
+ * ```typescript
+ * const orderWithDetails = await getOrderWithDetails("12345");
+ * console.log(orderWithDetails);
+ * ```
+ */
+export async function getOrderWithDetails(orderId: string){
+  const [order, orderDetails] = await Promise.all([
+    getOrder(orderId),
+    getOrderDetails(orderId)
+  ])
+ return {...order,orderDetails }
+}
+
 /**
  * Creates new order details in the database.
  *
@@ -143,14 +174,15 @@ export async function createOrderDetails(
  * Retrieves order details by order ID.
  *
  * @param {string} orderId - The ID of the order.
- * @returns {Promise<tables.SelectOrderDetails[]>} - A promise that resolves to the order details.
+ * @returns {Promise<(tables.SelectOrderDetails & { productName: string | null})[]>} - A promise that resolves to the order details.
  */
 export async function getOrderDetails(
   orderId: string
-): Promise<tables.SelectOrderDetails[]> {
+): Promise<(tables.SelectOrderDetails & { productName: string | null})[]> {
   return await db
-    .select()
+    .select({...getTableColumns(tables.orderDetails), productName: tables.products.name})
     .from(tables.orderDetails)
+    .leftJoin(tables.products, eq(tables.products.id, tables.orderDetails.productId))
     .where(eq(tables.orderDetails.orderId, orderId));
 }
 
