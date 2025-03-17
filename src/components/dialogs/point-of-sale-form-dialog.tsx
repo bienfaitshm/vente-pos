@@ -1,4 +1,6 @@
 "use client";
+
+import React, { useRef } from "react";
 import {
   Dialog,
   DialogClose,
@@ -18,29 +20,45 @@ import {
 } from "../forms/point-of-sale-form";
 import { ButtonLoader } from "../button-loader";
 import { useDialogAction } from "@/hooks/dialog-action";
-import React, { useRef } from "react";
 
-type TPointOfSaleDefaultValueWithID = { id: number } & TPointOfSaleDefaultValue;
+/**
+ * Type definition for the default values of the Point of Sale form, extended with an ID.
+ */
+type TPointOfSaleDefaultValueWithID = { id: string } & TPointOfSaleDefaultValue;
+
+/**
+ * Interface for the imperative handle of the UpdatePointOfSaleDialogForm component.
+ */
 interface PointOfSaleUpdateFormRef {
+  /**
+   * Opens the dialog and populates the form with the provided values.
+   * @param value - The default values to populate the form.
+   */
   update(value: TPointOfSaleDefaultValueWithID): void;
 }
 
+/**
+ * Props for the UpdatePointOfSaleDialogForm component.
+ */
 interface UpdatePointOfSaleDialogFormProps {
+  /**
+   * A React ref to access the imperative handle of the component.
+   */
   ref?: React.Ref<PointOfSaleUpdateFormRef>;
 }
 
 /**
- * Update PointOfSale Form
- * @param param0
- * @returns
+ * Dialog form component for updating a Point of Sale.
+ * This component allows users to modify an existing Point of Sale entry.
  */
 export const UpdatePointOfSaleDialogForm: React.FC<
   UpdatePointOfSaleDialogFormProps
 > = ({ ref }) => {
   const btnSubmitRef = React.useRef<HTMLButtonElement>(null);
-
   const dialogAction = useDialogAction<TPointOfSaleDefaultValueWithID>();
   const mutation = useUpdatePointOfSale();
+
+  // Expose the `update` method via the imperative handle
   React.useImperativeHandle(
     ref,
     () => ({
@@ -57,14 +75,20 @@ export const UpdatePointOfSaleDialogForm: React.FC<
         <DialogHeader>
           <DialogTitle>Modification</DialogTitle>
           <DialogDescription>
-            Modifier l&apos;élément sélectionné{" "}
+            Modifier l&apos;élément sélectionné
           </DialogDescription>
         </DialogHeader>
         <div>
           <PointOfSaleForm
             initialValues={dialogAction.value}
-            onSubmit={mutation.mutateAsync}
+            onSubmit={(values) =>
+              mutation.mutateAsync({
+                ...values,
+                id: dialogAction.value?.id ?? "",
+              })
+            }
           >
+            {/* Hidden submit button to trigger form submission programmatically */}
             <Button type="submit" className="hidden" ref={btnSubmitRef} />
           </PointOfSaleForm>
         </div>
@@ -92,12 +116,13 @@ export const UpdatePointOfSaleDialogForm: React.FC<
 };
 
 /**
- * Add new PointOfSale Form
- * @returns
+ * Dialog form component for adding a new Point of Sale.
+ * This component allows users to create a new Point of Sale entry.
  */
 export const AddPointOfSaleDialogForm: React.FC = () => {
   const btnSubmitRef = React.useRef<HTMLButtonElement>(null);
   const mutation = useCreatePointOfSale();
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -113,6 +138,7 @@ export const AddPointOfSaleDialogForm: React.FC = () => {
         </DialogHeader>
         <div>
           <PointOfSaleForm onSubmit={mutation.mutateAsync}>
+            {/* Hidden submit button to trigger form submission programmatically */}
             <Button type="submit" className="hidden" ref={btnSubmitRef} />
           </PointOfSaleForm>
         </div>
@@ -139,6 +165,11 @@ export const AddPointOfSaleDialogForm: React.FC = () => {
   );
 };
 
+/**
+ * Hook to create a ref for the UpdatePointOfSaleDialogForm component.
+ * This ref can be used to programmatically open the dialog and populate the form.
+ * @returns A React ref for the UpdatePointOfSaleDialogForm component.
+ */
 export function useUpdatePointOfSaleFormDialog() {
   return useRef<PointOfSaleUpdateFormRef>(null);
 }

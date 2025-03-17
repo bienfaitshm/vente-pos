@@ -14,7 +14,7 @@ export function ButtonLoader({
     <Button
       type="submit"
       disabled={isLoading}
-      className={cn("rounded-full", className)}
+      className={cn("", className)}
       {...props}
     >
       {isLoading ? (

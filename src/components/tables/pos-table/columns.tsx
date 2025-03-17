@@ -5,7 +5,7 @@ import { MoreDropMenu } from "@/components/more-drop-menu";
 import { makeMenus } from "../core/utils";
 
 export type ColumnPointOfSaleType = {
-  id: number;
+  id: string;
   name: string;
   phoneNumber: string;
   address: string;
