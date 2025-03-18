@@ -37,6 +37,25 @@ export const getOrder = actionClient
     return { ...order, orderDetails };
   });
 
+
+/**
+ * Retrieves an order along with its detailed information based on the provided order ID.
+ *
+ * @remarks
+ * This function uses a schema to validate the input, ensuring that the `orderId` is a non-empty string.
+ * It then calls the `queries.getOrderWithDetails` function to fetch the order details from the database.
+ *
+ * @param parsedInput - An object containing the `orderId` as a string.
+ * @returns A promise that resolves to the detailed information of the specified order.
+ *
+ * @throws Will throw an error if the `orderId` is invalid or if the query fails.
+ */
+export const getOrderWithDetails = actionClient.schema(z.object({
+  orderId: z.string().nonempty()
+})).action(async({parsedInput:{orderId}})=>{
+  return await queries.getOrderWithDetails(orderId)
+})
+
 /**
  * Retrieves all orders for a specific ID.
  */

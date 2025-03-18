@@ -37,15 +37,16 @@ export async function getOrders(): Promise<tables.SelectOrders[]> {
  */
 export async function getOrder(
   orderId: string
-): Promise<(tables.SelectOrders & { customerName: string | null})[]> {
-  return await db
+){
+  const result =  await db
     .select({
       ...getTableColumns(tables.orders),
-      customerName: tables.customers.name
+      ...getTableColumns(tables.customers)
     })
     .from(tables.orders)
     .leftJoin(tables.customers, eq(tables.customers.id, tables.orders.customerId))
     .where(eq(tables.orders.id, orderId));
+  return result[0]
 }
 
 /**

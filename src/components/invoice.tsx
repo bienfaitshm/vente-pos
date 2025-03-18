@@ -7,8 +7,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { formatCurrency } from "@/lib/formater";
 
-const Invoice = () => {
+interface InvoiceProps {
+  totalAmount: number;
+  details: {
+    id: string;
+    productName: string | null;
+    unitPrice: number;
+    quantity: number;
+  }[];
+}
+const Invoice: React.FC<InvoiceProps> = ({ details, totalAmount }) => {
   return (
     <div className="p-4 lg:p-8 bg-gray-100 min-h-screen flex items-center justify-center">
       <div className="bg-white rounded-lg shadow-md w-full max-w-3xl p-8">
@@ -45,18 +55,25 @@ const Invoice = () => {
           <TableHeader>
             <TableRow>
               <TableHead>Descriptions</TableHead>
-              <TableHead>Prix</TableHead>
-              <TableHead>Quantité</TableHead>
+              <TableHead className="text-right">Prix</TableHead>
+              <TableHead className="text-right">Quantité</TableHead>
               <TableHead className="text-right">Total</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell className="text-right">Π</TableCell>
-            </TableRow>
+          <TableBody className="text-sm">
+            {details.map((detail) => (
+              <TableRow key={detail.id}>
+                <TableCell>{detail.productName || detail.id}</TableCell>
+                <TableCell className="text-right">
+                  {formatCurrency(detail.unitPrice)}
+                </TableCell>
+                <TableCell className="text-right">{detail.quantity}</TableCell>
+                <TableCell className="text-right">
+                  {formatCurrency(detail.quantity * detail.unitPrice)}
+                </TableCell>
+              </TableRow>
+            ))}
+
             <TableRow>
               <TableCell></TableCell>
               <TableCell></TableCell>
@@ -72,7 +89,7 @@ const Invoice = () => {
             <p className="mr-2">Taxe</p>
             <p>0 FC</p>
           </div>
-          <p className="font-semibold">Total</p>
+          <p className="font-semibold">Total : {totalAmount}</p>
         </div>
       </div>
     </div>
