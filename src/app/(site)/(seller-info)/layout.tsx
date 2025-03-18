@@ -30,15 +30,12 @@ export default async function Layout({
   activityHistory,
   stock,
   activitySale,
-  params,
-}: PageProps<{ sellerId: string }> & {
+}: PageProps & {
   children: React.ReactNode;
   activityHistory: React.ReactNode;
   stock: React.ReactNode;
   activitySale: React.ReactNode;
 }) {
-  const { sellerId } = await params;
-
   // Fetch necessary data for the layout
   const [pointOfSales, products, session] = await Promise.all([
     getPointOfSales({}),
@@ -52,7 +49,7 @@ export default async function Layout({
       <div className="p-4 bg-muted/15 rounded-xl space-y-5">
         <div className="flex items-center justify-between">
           <div className="border-l-4 border-primary pl-3">
-            <TypographyH3>Detail Vendeur</TypographyH3>
+            <TypographyH3>Vendeur</TypographyH3>
           </div>
           <DatePickerWithPresets />
         </div>
@@ -95,7 +92,7 @@ export default async function Layout({
             {/* Add Stock Button */}
             <StockFormDialog
               adminId={session?.user.id as string}
-              defaultValues={{ sellerId }}
+              defaultValues={{ sellerId: session?.user.id as string }}
               pointOfSales={pointOfSales?.data}
               products={products?.data}
             >
