@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TypographyP } from "@/components/ui/typography";
 import { formatCurrency } from "@/lib/formater";
 import { format } from "date-fns";
 
@@ -82,7 +83,7 @@ interface InvoiceProps {
  */
 const Invoice: React.FC<InvoiceProps> = ({ customer, details, order }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md w-full max-w-3xl p-8">
+    <div className="bg-white dark:bg-black/50 rounded-lg shadow-md w-full max-w-3xl p-8">
       <div className="flex justify-between items-start mb-8">
         <div>
           <div className="w-16 h-16 bg-gray-200 mb-2"></div>
@@ -148,11 +149,15 @@ const Invoice: React.FC<InvoiceProps> = ({ customer, details, order }) => {
       </Table>
 
       <div className="mt-4 text-right text-xs md:text-sm">
-        <p>Sous Total : {formatCurrency(order.subTotalAmount || 0)}</p>
-        <p className="mr-2">Taxe: {formatCurrency(order.taxeAmount || 0)}</p>
-        <p className="font-semibold">
+        <TypographyP>
+          Sous Total : {formatCurrency(order.subTotalAmount || 0)}
+        </TypographyP>
+        <TypographyP className="mr-2">
+          Taxe: {formatCurrency(order.taxeAmount || 0)}
+        </TypographyP>
+        <TypographyP className="font-semibold">
           Total : {formatCurrency(order.totalAmount || 0)}
-        </p>
+        </TypographyP>
       </div>
     </div>
   );
