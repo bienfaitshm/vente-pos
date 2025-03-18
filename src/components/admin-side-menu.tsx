@@ -1,5 +1,3 @@
-"use client";
-
 import { type LucideIcon } from "lucide-react";
 
 import {
@@ -9,6 +7,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 
 export function AdminSideMenus({
   menus,
@@ -19,17 +18,18 @@ export function AdminSideMenus({
     icon: LucideIcon;
   }[];
 }) {
+  // className="group-data-[collapsible=icon]:hidden"
   return (
-    <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+    <SidebarGroup>
       <SidebarGroupLabel>Administration</SidebarGroupLabel>
       <SidebarMenu>
         {menus.map((item) => (
           <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton asChild>
-              <a href={item.url}>
+            <SidebarMenuButton tooltip={item.name} asChild>
+              <Link href={item.url}>
                 <item.icon />
                 <span>{item.name}</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         ))}

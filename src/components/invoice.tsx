@@ -91,23 +91,28 @@ const Invoice: React.FC<InvoiceProps> = ({ customer, details, order }) => {
         </div>
         <div className="text-right">
           <h2 className="text-3xl font-bold">INVOICE</h2>
-          <p className="text-sm">Invoice no : {order.orderNumber}</p>
-          <p className="text-sm">Date : {format(order.date, "dd/MM/yyyy")}</p>
+          <p className="text-xs md:text-sm">Invoice no : {order.orderNumber}</p>
+          <p className="text-xs md:text-sm">
+            Date : {format(order.date, "dd/MM/yyyy")}
+          </p>
         </div>
       </div>
 
       <div className="flex justify-between mb-8">
         <div>
           <h3 className="text-lg font-semibold mb-2">Invoice To</h3>
-          <p>Mr/Mme {customer.name}</p>
-          <p>{customer?.address}</p>
-          <p>{customer?.phoneNumber}</p>
-          <p>{customer?.email}</p>
+          <p className="text-xs md:text-sm">Mr/Mme {customer.name}</p>
+          <p className="text-xs md:text-sm">{customer?.address}</p>
+          <p className="text-xs md:text-sm">{customer?.phoneNumber}</p>
+          <p className="text-xs md:text-sm">{customer?.email}</p>
         </div>
         <div className="text-right">
           <p>Yummy foodyz sale force</p>
-          <p>+243 388 289</p>
-          <a href="https://vente-pos.vercel.app" className="text-blue-500">
+          <p className="text-xs md:text-sm">+243 388 289</p>
+          <a
+            href="https://vente-pos.vercel.app"
+            className="text-blue-500 text-xs md:text-sm"
+          >
             https://vente-pos.vercel.app
           </a>
         </div>
@@ -125,27 +130,24 @@ const Invoice: React.FC<InvoiceProps> = ({ customer, details, order }) => {
         <TableBody className="text-sm">
           {details.map((detail) => (
             <TableRow key={detail.id}>
-              <TableCell>{detail.productName || detail.id}</TableCell>
-              <TableCell className="text-right">
+              <TableCell className="text-xs md:text-sm">
+                {detail.productName || detail.id}
+              </TableCell>
+              <TableCell className="text-right text-xs md:text-sm">
                 {formatCurrency(detail.unitPrice)}
               </TableCell>
-              <TableCell className="text-right">{detail.quantity}</TableCell>
-              <TableCell className="text-right">
+              <TableCell className="text-right text-xs md:text-sm">
+                {detail.quantity}
+              </TableCell>
+              <TableCell className="text-right text-xs md:text-sm">
                 {formatCurrency(detail.quantity * detail.unitPrice)}
               </TableCell>
             </TableRow>
           ))}
-
-          <TableRow>
-            <TableCell></TableCell>
-            <TableCell></TableCell>
-            <TableCell></TableCell>
-            <TableCell className="text-right"></TableCell>
-          </TableRow>
         </TableBody>
       </Table>
 
-      <div className="mt-4 text-right">
+      <div className="mt-4 text-right text-xs md:text-sm">
         <p>Sous Total : {formatCurrency(order.subTotalAmount || 0)}</p>
         <p className="mr-2">Taxe: {formatCurrency(order.taxeAmount || 0)}</p>
         <p className="font-semibold">

@@ -1,5 +1,3 @@
-"use client";
-import { useSession } from "next-auth/react";
 import * as React from "react";
 import {
   AudioWaveform,
@@ -20,10 +18,13 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
+import { SideBarButtonSale } from "./sidebar/sale-button";
+import { auth } from "@/auth";
 
 // This is sample data.
 const data = {
@@ -95,14 +96,19 @@ const data = {
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: session } = useSession();
+export async function AppSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
+  const session = await auth();
   return (
-    <Sidebar className="bg-muted/50" collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <EnterpriseHead />
       </SidebarHeader>
       <SidebarContent>
+        <SidebarGroup>
+          <SideBarButtonSale />
+        </SidebarGroup>
         <AdminSideMenus menus={data.menuAdmins} />
         <NavMain items={data.navMain} />
       </SidebarContent>

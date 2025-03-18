@@ -1,7 +1,6 @@
 import { PageProps } from "@/app/type";
 import Invoice from "@/components/invoice";
 import { getDefaultStringValue } from "@/lib/formater";
-// import { TypographyH1, TypographyP } from "@/components/ui/typography";
 import { getOrderWithDetails } from "@/server/actions";
 
 export default async function Page({ params }: PageProps<{ orderId: string }>) {
