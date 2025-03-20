@@ -38,7 +38,7 @@ export default async function Page({ params }: PageProps<{ orderId: string }>) {
     <div className="max-w-screen-lg mx-auto space-y-5">
       {/*  */}
       <ButtonInvoice orderId={orderId} />
-      <div className="p-4 lg:p-8 bg-muted-foreground/10 flex items-center justify-center">
+      <div className="lg:p-8 bg-muted-foreground/10 flex items-center justify-center">
         {order?.data && (
           <Invoice
             details={order?.data?.orderDetails || []}

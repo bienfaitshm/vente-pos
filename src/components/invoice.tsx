@@ -83,7 +83,7 @@ interface InvoiceProps {
  */
 const Invoice: React.FC<InvoiceProps> = ({ customer, details, order }) => {
   return (
-    <div className="bg-white dark:bg-black/50 rounded-lg shadow-md w-full max-w-3xl p-8">
+    <div className="bg-white dark:bg-black/50 rounded-lg shadow-md w-full max-w-3xl md:p-8">
       <div className="flex justify-between items-start mb-8">
         <div>
           <div className="w-16 h-16 bg-gray-200 mb-2"></div>

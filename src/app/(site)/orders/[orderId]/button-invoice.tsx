@@ -72,13 +72,14 @@ const ButtonDownload: React.FC<ButtonInvoiceProps> = ({ orderId }) => {
 
   return (
     <Button
+      size="sm"
       className="rounded-full"
       isLoading={mutationDownload.isPending}
       loadingText="Création en cours..."
       onClick={handleDownload}
     >
       <DownloadCloudIcon />
-      <span>Télécharger la facture</span>
+      <span>Télécharger</span>
     </Button>
   );
 };
@@ -104,7 +105,7 @@ const ButtonShare: React.FC<ButtonInvoiceProps> = ({ orderId }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="rounded-full">
+        <Button className="rounded-full" size="sm">
           <Share2Icon />
           <span>Partager</span>
         </Button>
