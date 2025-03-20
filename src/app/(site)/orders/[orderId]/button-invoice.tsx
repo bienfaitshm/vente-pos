@@ -1,6 +1,19 @@
 "use client";
 
 import React, { useCallback } from "react";
+import { Copy } from "lucide-react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { ButtonLoader as Button } from "@/components/button-loader";
 import { DownloadCloudIcon, Share2Icon } from "lucide-react";
 import { useGenerateInvoiceDocument } from "@/hooks/mutations/document";
@@ -70,12 +83,79 @@ const ButtonDownload: React.FC<ButtonInvoiceProps> = ({ orderId }) => {
   );
 };
 
+/**
+ * ButtonShare is a React functional component that renders a button to share a link
+ * to an order. When clicked, it opens a dialog containing the shareable link and
+ * options to copy it.
+ *
+ * @component
+ * @param {ButtonInvoiceProps} props - The props for the ButtonShare component.
+ * @param {string} props.orderId - The unique identifier for the order, used to generate the shareable link.
+ *
+ * @returns {JSX.Element} A button that opens a dialog for sharing the order link.
+ *
+ * @example
+ * <ButtonShare orderId="12345" />
+ *
+ * The above example renders a button that, when clicked, opens a dialog with a link
+ * to the order with ID "12345".
+ */
+const ButtonShare: React.FC<ButtonInvoiceProps> = ({ orderId }) => {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button className="rounded-full">
+          <Share2Icon />
+          <span>Partager</span>
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Partager le lien</DialogTitle>
+          <DialogDescription>
+            Toute personne ayant ce lien pourra le consulter.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex items-center space-x-2">
+          <div className="grid flex-1 gap-2">
+            <Label htmlFor="link" className="sr-only">
+              Lien
+            </Label>
+            <Input
+              id="link"
+              defaultValue={`https://vente-pos.vercel.app/orders/${orderId}`}
+              readOnly
+            />
+          </div>
+          <Button type="submit" size="sm" className="px-3">
+            <span className="sr-only">Copier</span>
+            <Copy />
+          </Button>
+        </div>
+        <DialogFooter className="sm:justify-start">
+          <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              Close
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+/**
+ * A React functional component that renders a set of buttons for sharing and downloading
+ * an invoice associated with a specific order.
+ *
+ * @component
+ * @param {ButtonInvoiceProps} props - The props for the ButtonInvoice component.
+ * @param {string} props.orderId - The unique identifier of the order for which the invoice actions are performed.
+ * @returns {JSX.Element} A JSX element containing the share and download buttons.
+ */
 export const ButtonInvoice: React.FC<ButtonInvoiceProps> = ({ orderId }) => (
   <div className="flex items-center justify-end gap-4">
-    <Button className="rounded-full">
-      <Share2Icon />
-      <span>Partager</span>
-    </Button>
+    <ButtonShare orderId={orderId} />
     <ButtonDownload orderId={orderId} />
   </div>
 );
