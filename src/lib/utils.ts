@@ -20,15 +20,19 @@ export function calculateSubTotal<T>(
 }
 
 export function downloadDocumentFile(documentFile: {
-  documentBlob: Blob;
-  documentName: string;
+  data: Blob;
+  name: string;
 }) {
-  const url = URL.createObjectURL(documentFile.documentBlob);
+  const url = URL.createObjectURL(documentFile.data);
   const a = document.createElement("a");
   a.href = url;
-  a.download = documentFile.documentName;
+  a.download = documentFile.name;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+export function byteArrayToBlob(uint8Array: Uint8Array<ArrayBufferLike>, contentType: string) {
+  return new Blob([uint8Array], { type: contentType });
 }

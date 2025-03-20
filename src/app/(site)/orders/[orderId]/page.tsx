@@ -1,25 +1,43 @@
 import { PageProps } from "@/app/type";
 import Invoice from "@/components/invoice";
-import { Button } from "@/components/ui/button";
 import { getDefaultStringValue } from "@/lib/formater";
 import { getOrderWithDetails } from "@/server/actions";
-import { DownloadCloudIcon, Share2Icon } from "lucide-react";
+import { ButtonInvoice } from "./button-invoice";
 
+/**
+ * Asynchronous React Server Component that renders the order details page.
+ *
+ * @param {PageProps<{ orderId: string }>} props - The props object containing route parameters.
+ * @param {Object} props.params - The route parameters object.
+ * @param {string} props.params.orderId - The unique identifier for the order.
+ *
+ * @returns {Promise<JSX.Element>} A JSX element representing the order details page.
+ *
+ * @description
+ * This component fetches the order details using the provided `orderId` parameter
+ * and displays the order information, including an invoice and customer details.
+ * It also includes a button to generate an invoice for the order.
+ *
+ * @example
+ * ```tsx
+ * // Example usage in a route:
+ * <Page params={{ orderId: "12345" }} />
+ * ```
+ *
+ * @remarks
+ * - The `getOrderWithDetails` function is used to fetch the order data.
+ * - The `Invoice` component is used to display the order details in a structured format.
+ * - Utility functions like `getDefaultStringValue` are used to handle optional or missing data gracefully.
+ *
+ * @component
+ */
 export default async function Page({ params }: PageProps<{ orderId: string }>) {
   const { orderId } = await params;
   const order = await getOrderWithDetails({ orderId });
   return (
     <div className="max-w-screen-lg mx-auto space-y-5">
-      <div className="flex items-center justify-end gap-4">
-        <Button className="rounded-full">
-          <Share2Icon />
-          <span>Partager</span>
-        </Button>
-        <Button className="rounded-full">
-          <DownloadCloudIcon />
-          <span>Telecharger la facture</span>
-        </Button>
-      </div>
+      {/*  */}
+      <ButtonInvoice orderId={orderId} />
       <div className="p-4 lg:p-8 bg-muted-foreground/10 flex items-center justify-center">
         {order?.data && (
           <Invoice
