@@ -18,3 +18,17 @@ export function calculateSubTotal<T>(
 ): number {
   return items.reduce((acc, item) => acc + predicate(item), 0);
 }
+
+export function downloadDocumentFile(documentFile: {
+  documentBlob: Blob;
+  documentName: string;
+}) {
+  const url = URL.createObjectURL(documentFile.documentBlob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = documentFile.documentName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}

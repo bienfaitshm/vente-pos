@@ -94,13 +94,15 @@ export default async function Page() {
   return (
     <div className="m-auto max-w-screen-lg space-y-5">
       <div className="flex items-center gap-5">
-        <Avatar className="text-white h-28 w-28">
-          <AvatarFallback className="h-28 w-28 bg-primary text-lg">
+        <Avatar className="text-white h-14 w-14 lg:h-28 lg:w-28">
+          <AvatarFallback className="h-14 w-14 lg:h-28 lg:w-28 bg-primary text-lg">
             {seller?.data?.name[0]}
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col gap-4">
-          <TypographyH2>{seller?.data?.name}</TypographyH2>
+          <TypographyH2 className="text-xl md:text-3xl">
+            {seller?.data?.name}
+          </TypographyH2>
           <div className="flex items-center gap-5">
             <ItemContainerCardInfo>
               <ItemSubTextCardInfo>Role</ItemSubTextCardInfo>
@@ -112,11 +114,11 @@ export default async function Page() {
               <ItemSubTextCardInfo>Adresse Email</ItemSubTextCardInfo>
               <ItemTitleCardInfo>{seller?.data?.email}</ItemTitleCardInfo>
             </ItemContainerCardInfo>
-            <ItemContainerCardInfo>
+            <ItemContainerCardInfo className="hidden md:flex">
               <ItemSubTextCardInfo>Tel.</ItemSubTextCardInfo>
               <ItemTitleCardInfo>{seller?.data?.phoneNumber}</ItemTitleCardInfo>
             </ItemContainerCardInfo>
-            <ItemContainerCardInfo>
+            <ItemContainerCardInfo className="hidden md:flex">
               <ItemSubTextCardInfo>Username</ItemSubTextCardInfo>
               <ItemTitleCardInfo>{seller?.data?.username}</ItemTitleCardInfo>
             </ItemContainerCardInfo>
@@ -129,7 +131,7 @@ export default async function Page() {
             <Landmark className="h-5 w-5" />
           </ItemActivityIconContainerCard>
           <ItemActivityContentCard>
-            <TypographyLarge>
+            <TypographyLarge className="text-sm md:text-lg">
               {formatCurrency(summury.totalPrice)}
             </TypographyLarge>
             <ItemActivitySubTextCard>Total vendu</ItemActivitySubTextCard>
@@ -140,7 +142,7 @@ export default async function Page() {
             <ChartNoAxesCombinedIcon className="h-5 w-5" />
           </ItemActivityIconContainerCard>
           <ItemActivityContentCard>
-            <TypographyLarge>
+            <TypographyLarge className="text-sm md:text-lg">
               {formatCurrency(summury.totalCommission)}
             </TypographyLarge>
             <ItemActivitySubTextCard>Commissions</ItemActivitySubTextCard>
@@ -151,7 +153,9 @@ export default async function Page() {
             <ShoppingBasket className="h-5 w-5" />
           </ItemActivityIconContainerCard>
           <ItemActivityContentCard>
-            <TypographyLarge>{summury.quantitySum}</TypographyLarge>
+            <TypographyLarge className="text-sm md:text-lg">
+              {summury.quantitySum}
+            </TypographyLarge>
             <ItemActivitySubTextCard>
               Total produits vendus
             </ItemActivitySubTextCard>
