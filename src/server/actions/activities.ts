@@ -20,15 +20,7 @@ export const placeOrder = actionClient
     )
   )
   .action(async ({ parsedInput: { customerId, sellerId, orderDetails } }) => {
-    /**
-     * Validates order details against the seller's stock, updates stock quantities, 
-     * and places an order if validation passes.
-     *
-     * @param sellerId - The ID of the seller.
-     * @param orderDetails - Array of order details containing productId, productName, and quantity.
-     * @returns The placed order object.
-     * @throws Validation errors if stock is insufficient or missing for any product.
-     */
+  
     const errors: ValidatationErrors = {};
     const stocks = await queries.getStocksOfSeller(sellerId);
 
@@ -41,9 +33,9 @@ export const placeOrder = actionClient
       const _errors: string[] = [];
 
       if (!stock) {
-      _errors.push(`Stock not found for product: ${productName}`);
+      _errors.push(`Le produit "${productName}" est introuvable dans le stock du vendeur. Veuillez vérifier ou réapprovisionner.`);
       } else if (stock.quantity < quantity) {
-      _errors.push(`Insufficient stock for product: ${productName}`);
+      _errors.push(`Le stock est insuffisant pour le produit "${productName}". Veuillez ajuster la quantité demandée. Stock disponible : ${stock.quantity}.`);
       }
 
       if (_errors.length > 0) {

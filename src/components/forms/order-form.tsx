@@ -152,6 +152,7 @@ const OrderFormFields: React.FC<
                               }}
                             />
                           </FormControl>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />

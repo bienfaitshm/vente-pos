@@ -310,7 +310,8 @@ export async function bulkUpdateStock(stocks: (Pick<tables.InsertStock,"quantity
 
   // Combine all SQL fragments into a single SQL expression
   const finalSql: SQL = sql.join(sqlChunks, sql.raw(' '));
-  return await db.update(tables.stocks).set({ quantity: finalSql }).where(inArray(tables.stocks.id, ids)).returning();
+  return await db.update(tables.stocks).set({ quantity: sql`${finalSql}::integer` })
+  .where(inArray(tables.stocks.id, ids)).returning();
 }
 
 /**
