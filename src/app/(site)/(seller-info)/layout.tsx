@@ -2,12 +2,12 @@ import React from "react";
 import { DatePickerWithPresets } from "@/components/calendar-preset";
 import { TypographyH3 } from "@/components/ui/typography";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Activity, HistoryIcon, ShoppingBag, ShoppingCart } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { StockFormDialog } from "@/components/dialogs/stock-form-dialog";
-import { getPointOfSales, getProducts } from "@/server/actions";
-import { PageProps } from "@/app/type";
-import { auth } from "@/auth";
+import { Activity, HistoryIcon, ShoppingCart } from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import { StockFormDialog } from "@/components/dialogs/stock-form-dialog";
+// import { getPointOfSales, getProducts } from "@/server/actions";
+// import { auth } from "@/auth";
+import type { PageProps } from "@/app/type";
 
 /**
  * Layout component for the Seller Dashboard.
@@ -37,11 +37,11 @@ export default async function Layout({
   activitySale: React.ReactNode;
 }) {
   // Fetch necessary data for the layout
-  const [pointOfSales, products, session] = await Promise.all([
-    getPointOfSales({}),
-    getProducts({}),
-    auth(),
-  ]);
+  // const [pointOfSales, products, session] = await Promise.all([
+  //   getPointOfSales({}),
+  //   getProducts({}),
+  //   auth(),
+  // ]);
 
   return (
     <div className="m-auto max-w-screen-lg space-y-5">
@@ -59,50 +59,33 @@ export default async function Layout({
       {/* Tabs Section */}
       <div className="p-4 bg-muted/15 rounded-xl">
         <Tabs defaultValue="activities" className="w-full">
-          <TabsList className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between bg-transparent">
-            <div className="space-x-2">
-              {/* Activities Tab */}
-              <TabsTrigger
-                value="activities"
-                className="rounded-full border border-input"
-              >
-                <Activity className="h-4 w-4 mr-2" />
-                <span>Activites</span>
-              </TabsTrigger>
+          <TabsList>
+            {/* Activities Tab */}
+            <TabsTrigger
+              value="activities"
+              className="rounded-full border border-input"
+            >
+              <Activity className="h-4 w-4 mr-2" />
+              <span>Activites</span>
+            </TabsTrigger>
 
-              {/* Stocks Tab */}
-              <TabsTrigger
-                value="stocks"
-                className="rounded-full border border-input"
-              >
-                <ShoppingCart className="h-4 w-4 mr-2" />
-                <span>Stocks</span>
-              </TabsTrigger>
+            {/* Stocks Tab */}
+            <TabsTrigger
+              value="stocks"
+              className="rounded-full border border-input"
+            >
+              <ShoppingCart className="h-4 w-4 mr-2" />
+              <span>Stocks</span>
+            </TabsTrigger>
 
-              {/* Stock Histories Tab */}
-              <TabsTrigger
-                value="stock-histories"
-                className="rounded-full border border-input"
-              >
-                <HistoryIcon className="h-4 w-4 mr-2" />
-                <span>Historiques du stock</span>
-              </TabsTrigger>
-            </div>
-
-            {/* Add Stock Button */}
-            <div className="self-end">
-              <StockFormDialog
-                adminId={session?.user.id as string}
-                defaultValues={{ sellerId: session?.user.id as string }}
-                pointOfSales={pointOfSales?.data}
-                products={products?.data}
-              >
-                <Button variant="outline" className="rounded-full h-7">
-                  <ShoppingBag className="h-4 w-4 mr-2" />
-                  <span>Ajouter au stock</span>
-                </Button>
-              </StockFormDialog>
-            </div>
+            {/* Stock Histories Tab */}
+            <TabsTrigger
+              value="stock-histories"
+              className="rounded-full border border-input"
+            >
+              <HistoryIcon className="h-4 w-4 mr-2" />
+              <span>Historiques du stock</span>
+            </TabsTrigger>
           </TabsList>
 
           {/* Tab Content */}

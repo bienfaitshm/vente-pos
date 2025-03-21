@@ -99,7 +99,7 @@ export default async function Page() {
             {seller?.data?.name[0]}
           </AvatarFallback>
         </Avatar>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col">
           <TypographyH2 className="text-xl md:text-3xl">
             {seller?.data?.name}
           </TypographyH2>
