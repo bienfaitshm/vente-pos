@@ -101,34 +101,44 @@ export async function placeOrder(orderData: {
   order: tables.SelectOrders;
   orderDetails: tables.SelectOrderDetails[];
 }> {
+  // Destructure the order and orderDetails from the input data
   const { order, orderDetails } = orderData;
 
+  // Calculate the total amount for the order by summing up the product of unit price and quantity for each detail
   const totalAmount = calculateSubTotal(
     orderDetails,
     (detail) => detail.unitPrice * detail.quantity
   );
+
+  // Calculate the total sales commission by applying the commission percentage to the unit price and multiplying by quantity
   const salesCommission = calculateSubTotal(
     orderDetails,
     (detail) =>
       getAmountPercentage(detail.commission, detail.unitPrice) * detail.quantity
   );
 
+  // Create the order in the database with the calculated total amount and sales commission
   const createdOrder = await createOrder({
     ...order,
-    status: "PENDING",
+    status: "PENDING", // Set the initial status of the order to "PENDING"
     totalAmount,
     salesCommission,
   });
+
+  // Map the order details to the format required for insertion into the database
   const parsedOrderDetails: tables.InsertOrderDetails[] = orderDetails.map(
     (detail) => ({
-      orderId: createdOrder!.id,
+      orderId: createdOrder!.id, // Associate the order details with the created order's ID
       productId: detail.productId,
       quantity: detail.quantity,
       unitPrice: detail.unitPrice,
     })
   );
+
+  // Insert the order details into the database
   const createdOrderDetails = await createOrderDetails(parsedOrderDetails);
 
+  // Return the created order and its associated details
   return { order: createdOrder!, orderDetails: createdOrderDetails };
 }
 
