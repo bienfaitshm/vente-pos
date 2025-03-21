@@ -40,8 +40,8 @@ export async function getOrder(
 ){
   const result =  await db
     .select({
+      ...getTableColumns(tables.customers),
       ...getTableColumns(tables.orders),
-      ...getTableColumns(tables.customers)
     })
     .from(tables.orders)
     .leftJoin(tables.customers, eq(tables.customers.id, tables.orders.customerId))
