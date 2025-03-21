@@ -113,7 +113,7 @@ const ButtonShare: React.FC<ButtonInvoiceProps> = ({ orderId }) => {
     setCopie(true);
     setTimeout(() => {
       setCopie(false);
-    }, 2000);
+    }, 500);
   };
 
   return (
