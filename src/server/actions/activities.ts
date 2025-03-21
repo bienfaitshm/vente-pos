@@ -1,10 +1,12 @@
 "use server";
-
+import { returnValidationErrors } from "next-safe-action";
 import { actionClient } from "./base";
 import * as queries from "../db/queries";
 import * as schemas from "@/lib/schemas/activities";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
+
+type ValidatationErrors = { [key: string]: { _errors: string[] } };
 
 /**
  * Places an order for a customer with the specified seller and order details.
@@ -18,10 +20,56 @@ export const placeOrder = actionClient
     )
   )
   .action(async ({ parsedInput: { customerId, sellerId, orderDetails } }) => {
-    return await queries.placeOrder({
+    /**
+     * Validates order details against the seller's stock, updates stock quantities, 
+     * and places an order if validation passes.
+     *
+     * @param sellerId - The ID of the seller.
+     * @param orderDetails - Array of order details containing productId, productName, and quantity.
+     * @returns The placed order object.
+     * @throws Validation errors if stock is insufficient or missing for any product.
+     */
+    const errors: ValidatationErrors = {};
+    const stocks = await queries.getStocksOfSeller(sellerId);
+
+    // Prepare a list for bulk stock updates
+    const stockBulkUpdate: { quantity: number; id: string }[] = [];
+
+    // Validate each order detail against the seller's stock
+    orderDetails.forEach(({ productId, productName, quantity }, idx) => {
+      const stock = stocks.find((s) => s.productId === productId);
+      const _errors: string[] = [];
+
+      if (!stock) {
+      _errors.push(`Stock not found for product: ${productName}`);
+      } else if (stock.quantity < quantity) {
+      _errors.push(`Insufficient stock for product: ${productName}`);
+      }
+
+      if (_errors.length > 0) {
+      errors[`orderDetails.${idx}`] = { _errors };
+      }
+
+      if (stock) {
+      // Prepare stock update if validation passes
+      stockBulkUpdate.push({ quantity: stock.quantity - quantity, id: stock.id });
+      }
+    });
+
+    // If there are validation errors, return them and stop execution
+    if (Object.keys(errors).length > 0) {
+      returnValidationErrors(schemas.OrderSchemas, errors);
+    }
+
+    // Place the order and update stock in bulk
+    const order = await queries.placeOrder({
       order: { customerId, sellerId },
       orderDetails,
     });
+
+    await queries.bulkUpdateStock(stockBulkUpdate);
+
+    return order;
   });
 
 /**
