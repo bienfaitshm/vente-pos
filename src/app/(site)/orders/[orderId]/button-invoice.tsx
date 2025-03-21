@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback } from "react";
-import { Copy } from "lucide-react";
+import { CheckIcon, Copy } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -17,7 +17,11 @@ import { Label } from "@/components/ui/label";
 import { ButtonLoader as Button } from "@/components/button-loader";
 import { DownloadCloudIcon, Share2Icon } from "lucide-react";
 import { useGenerateInvoiceDocument } from "@/hooks/mutations/document";
-import { byteArrayToBlob, downloadDocumentFile } from "@/lib/utils";
+import {
+  byteArrayToBlob,
+  copyToClipboard,
+  downloadDocumentFile,
+} from "@/lib/utils";
 
 const DOCX_CONTENT_TYPE =
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
@@ -102,6 +106,16 @@ const ButtonDownload: React.FC<ButtonInvoiceProps> = ({ orderId }) => {
  * to the order with ID "12345".
  */
 const ButtonShare: React.FC<ButtonInvoiceProps> = ({ orderId }) => {
+  const [copie, setCopie] = React.useState<boolean>();
+
+  const handleCopy = () => {
+    copyToClipboard(`https://vente-pos.vercel.app/orders/${orderId}`);
+    setCopie(true);
+    setTimeout(() => {
+      setCopie(false);
+    }, 2000);
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -128,9 +142,9 @@ const ButtonShare: React.FC<ButtonInvoiceProps> = ({ orderId }) => {
               readOnly
             />
           </div>
-          <Button type="submit" size="sm" className="px-3">
+          <Button type="submit" size="sm" className="px-3" onClick={handleCopy}>
             <span className="sr-only">Copier</span>
-            <Copy />
+            {copie ? <CheckIcon /> : <Copy />}
           </Button>
         </div>
         <DialogFooter className="sm:justify-start">
