@@ -1,5 +1,10 @@
 "use client";
-import { useMemo, type FunctionComponent, type ReactNode } from "react";
+import {
+  useEffect,
+  useMemo,
+  type FunctionComponent,
+  type ReactNode,
+} from "react";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import { Separator } from "@/components/ui/separator";
@@ -7,6 +12,7 @@ import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { ActivityColumnDefType, getActivitiesColumns } from "./columns";
 import { useHookTable } from "../core/hooks";
 import { Input } from "@/components/ui/input";
+import { useIsMobile } from "@/hooks/use-mobile";
 // import { TableRowMenu } from "../types";
 
 interface DataTableActivityProps {
@@ -19,13 +25,20 @@ const DataTableActivity: FunctionComponent<DataTableActivityProps> = ({
   mainHeader,
   rightHeader,
 }) => {
-  const columns = useMemo(() => getActivitiesColumns(), []);
+  const isMobile = useIsMobile();
+  const columns = useMemo(getActivitiesColumns, []);
   const { table, searchField } = useHookTable<ActivityColumnDefType>({
     data,
     columns,
     enableRowSelection: true,
     searchKey: "orderId",
   });
+
+  useEffect(() => {
+    if (isMobile) {
+      table.getColumn("productsCount")?.toggleVisibility(false);
+    }
+  }, [isMobile, table]);
 
   return (
     <div className="h-full w-full">

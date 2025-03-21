@@ -21,12 +21,20 @@ export function getActivitiesColumns(): ColumnDef<ActivityColumnDefType>[] {
       accessorKey: "orderId",
       enableHiding: false,
       enableResizing: true,
-      enableSorting: true,
+      enableSorting: false,
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="ID Facture" />
+        <DataTableColumnHeader
+          className="truncate"
+          column={column}
+          title="ID Facture"
+        />
       ),
       cell: ({ row }): React.ReactNode => {
-        return <TypographySmall>{row.original.orderId}</TypographySmall>;
+        return (
+          <TypographySmall className="text-xs md:text-sm">
+            {row.original.orderId}
+          </TypographySmall>
+        );
       },
     },
 
@@ -36,11 +44,15 @@ export function getActivitiesColumns(): ColumnDef<ActivityColumnDefType>[] {
       enableResizing: true,
       enableSorting: false,
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Montant total" />
+        <DataTableColumnHeader
+          className="truncate"
+          column={column}
+          title="Montant total"
+        />
       ),
       cell: ({ row }): React.ReactNode => {
         return (
-          <TypographySmall>
+          <TypographySmall className="text-xs md:text-sm">
             {formatCurrency(row.original.totalAmount)}
           </TypographySmall>
         );
@@ -52,11 +64,15 @@ export function getActivitiesColumns(): ColumnDef<ActivityColumnDefType>[] {
       enableResizing: true,
       enableSorting: false,
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Commission" />
+        <DataTableColumnHeader
+          className="truncate"
+          column={column}
+          title="Commission"
+        />
       ),
       cell: ({ row }): React.ReactNode => {
         return (
-          <TypographySmall>
+          <TypographySmall className="text-xs md:text-sm">
             {formatCurrency(row.original.totalCommission)}
           </TypographySmall>
         );
@@ -68,10 +84,18 @@ export function getActivitiesColumns(): ColumnDef<ActivityColumnDefType>[] {
       enableResizing: true,
       enableSorting: false,
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="N. produit vendu" />
+        <DataTableColumnHeader
+          className="truncate"
+          column={column}
+          title="N. produit vendu"
+        />
       ),
       cell: ({ row }): React.ReactNode => {
-        return <TypographySmall>{row.original.quantitySum}</TypographySmall>;
+        return (
+          <TypographySmall className="text-xs md:text-sm">
+            {row.original.quantitySum}
+          </TypographySmall>
+        );
       },
     },
     {
@@ -83,7 +107,7 @@ export function getActivitiesColumns(): ColumnDef<ActivityColumnDefType>[] {
       ),
       cell: ({ row }): React.ReactNode => {
         return (
-          <TypographySmall>
+          <TypographySmall className="text-xs md:text-sm">
             {format(row.original.createdAt, "dd/MM/yyyy - hh:mm:ss")}
           </TypographySmall>
         );

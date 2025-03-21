@@ -92,7 +92,7 @@ export default async function Page() {
 
   const summury = calculateSummary(activities?.data || []);
   return (
-    <div className="m-auto max-w-screen-lg space-y-5">
+    <div className="m-auto max-w-screen-sm lg:max-w-screen-lg space-y-5">
       <div className="flex items-center gap-5">
         <Avatar className="text-white h-14 w-14 lg:h-28 lg:w-28">
           <AvatarFallback className="h-14 w-14 lg:h-28 lg:w-28 bg-primary text-lg">
@@ -110,7 +110,7 @@ export default async function Page() {
                 {seller?.data?.role === "ADMIN" ? "Administrateur" : "Vandeur"}
               </ItemTitleCardInfo>
             </ItemContainerCardInfo>
-            <ItemContainerCardInfo>
+            <ItemContainerCardInfo className="hidden md:flex">
               <ItemSubTextCardInfo>Adresse Email</ItemSubTextCardInfo>
               <ItemTitleCardInfo>{seller?.data?.email}</ItemTitleCardInfo>
             </ItemContainerCardInfo>
@@ -118,7 +118,7 @@ export default async function Page() {
               <ItemSubTextCardInfo>Tel.</ItemSubTextCardInfo>
               <ItemTitleCardInfo>{seller?.data?.phoneNumber}</ItemTitleCardInfo>
             </ItemContainerCardInfo>
-            <ItemContainerCardInfo className="hidden md:flex">
+            <ItemContainerCardInfo>
               <ItemSubTextCardInfo>Username</ItemSubTextCardInfo>
               <ItemTitleCardInfo>{seller?.data?.username}</ItemTitleCardInfo>
             </ItemContainerCardInfo>

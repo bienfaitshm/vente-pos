@@ -47,7 +47,7 @@ export default async function Layout({
     <div className="m-auto max-w-screen-lg space-y-5">
       {/* Header Section */}
       <div className="p-4 bg-muted/15 rounded-xl space-y-5">
-        <div className="flex items-center md:justify-between">
+        <div className="flex items-center justify-between">
           <div className="border-l-4 border-primary pl-3">
             <TypographyH3 className="text-xl md:text-3xl">Vendeur</TypographyH3>
           </div>
@@ -59,7 +59,7 @@ export default async function Layout({
       {/* Tabs Section */}
       <div className="p-4 bg-muted/15 rounded-xl">
         <Tabs defaultValue="activities" className="w-full">
-          <TabsList>
+          <TabsList className="gap-1 lg:gap-4 bg-transparent">
             {/* Activities Tab */}
             <TabsTrigger
               value="activities"
@@ -84,7 +84,7 @@ export default async function Layout({
               className="rounded-full border border-input"
             >
               <HistoryIcon className="h-4 w-4 mr-2" />
-              <span>Historiques du stock</span>
+              <span>Historiques</span>
             </TabsTrigger>
           </TabsList>
 

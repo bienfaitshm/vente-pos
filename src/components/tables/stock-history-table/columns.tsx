@@ -24,10 +24,18 @@ export function getStockHistoryColumns(): ColumnDef<StockHistoryColumnDefType>[]
       enableResizing: true,
       enableSorting: false,
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="ID" />
+        <DataTableColumnHeader
+          className="truncate"
+          column={column}
+          title="ID"
+        />
       ),
       cell: ({ row }): React.ReactNode => {
-        return <TypographySmall>{row.original.id}</TypographySmall>;
+        return (
+          <TypographySmall className="text-xs md:text-sm">
+            {row.original.id}
+          </TypographySmall>
+        );
       },
     },
     {
@@ -36,7 +44,11 @@ export function getStockHistoryColumns(): ColumnDef<StockHistoryColumnDefType>[]
       enableResizing: true,
       enableSorting: true,
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Quantites" />
+        <DataTableColumnHeader
+          className="truncate"
+          column={column}
+          title="Quantites"
+        />
       ),
       cell: ({ row }): React.ReactNode => {
         return (
@@ -56,15 +68,23 @@ export function getStockHistoryColumns(): ColumnDef<StockHistoryColumnDefType>[]
     },
 
     {
-      accessorKey: "saler",
+      accessorKey: "sellerName",
       enableHiding: true,
       enableResizing: true,
       enableSorting: false,
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Vendeur" />
+        <DataTableColumnHeader
+          className="truncate"
+          column={column}
+          title="Vendeur"
+        />
       ),
       cell: ({ row }): React.ReactNode => {
-        return <TypographySmall>{row.original.sellerName}</TypographySmall>;
+        return (
+          <TypographySmall className="text-xs md:text-sm">
+            {row.original.sellerName}
+          </TypographySmall>
+        );
       },
     },
     {
@@ -73,10 +93,18 @@ export function getStockHistoryColumns(): ColumnDef<StockHistoryColumnDefType>[]
       enableResizing: true,
       enableSorting: false,
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Point de vente" />
+        <DataTableColumnHeader
+          className="truncate"
+          column={column}
+          title="Point de vente"
+        />
       ),
       cell: ({ row }): React.ReactNode => {
-        return <TypographySmall>{row.original.posName}</TypographySmall>;
+        return (
+          <TypographySmall className="text-xs md:text-sm">
+            {row.original.posName}
+          </TypographySmall>
+        );
       },
     },
     {
@@ -84,11 +112,15 @@ export function getStockHistoryColumns(): ColumnDef<StockHistoryColumnDefType>[]
       enableHiding: false,
       enableResizing: true,
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Date" />
+        <DataTableColumnHeader
+          className="truncate"
+          column={column}
+          title="Date"
+        />
       ),
       cell: ({ row }): React.ReactNode => {
         return (
-          <TypographySmall>
+          <TypographySmall className="text-xs md:text-sm">
             {format(row.original.createdAt, "dd/MM/yyyy - hh:mm:ss")}
           </TypographySmall>
         );

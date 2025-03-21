@@ -19,7 +19,7 @@ export default async function SaleActivitySale() {
     sellerId: session?.user.id ?? "",
   });
   return (
-    <div>
+    <div className="max-w-screen-sm lg:max-w-screen-lg m-auto">
       <DataTableActivity data={activities?.data} />
     </div>
   );

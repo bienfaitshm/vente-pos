@@ -1,25 +1,16 @@
 import React from "react";
-import { StockFormDialog } from "@/components/dialogs/stock-form-dialog";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   TypographyH3,
   TypographyH4,
   TypographySmall,
 } from "@/components/ui/typography";
-import {
-  getPointOfSales,
-  getProducts,
-  getStocksOfSeller,
-} from "@/server/actions";
-import { PencilIcon } from "lucide-react";
+import { getStocksOfSeller } from "@/server/actions";
 import { auth } from "@/auth";
 
 export default async function StockPage() {
   const session = await auth();
-  const [pointOfSales, products, stocks] = await Promise.all([
-    getPointOfSales({}),
-    getProducts({}),
+  const [stocks] = await Promise.all([
     getStocksOfSeller({ sellerId: session?.user.id ?? "" }),
   ]);
 
@@ -51,20 +42,6 @@ export default async function StockPage() {
             </div>
             <div className="flex items-center justify-between">
               <TypographyH3>{stock.quantity}</TypographyH3>
-              <StockFormDialog
-                adminId={session?.user.id as string}
-                defaultValues={{
-                  sellerId: session?.user.id ?? "",
-                  productId: stock.productId,
-                }}
-                type="UPDATE"
-                pointOfSales={pointOfSales?.data}
-                products={products?.data}
-              >
-                <Button variant="outline" size="icon" className="rounded-full">
-                  <PencilIcon className="h-4 w-4" />
-                </Button>
-              </StockFormDialog>
             </div>
           </div>
         ))}

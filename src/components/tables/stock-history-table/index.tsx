@@ -1,12 +1,18 @@
 "use client";
 
-import { useMemo, type FunctionComponent, type ReactNode } from "react";
+import {
+  useEffect,
+  useMemo,
+  type FunctionComponent,
+  type ReactNode,
+} from "react";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import { Separator } from "@/components/ui/separator";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { StockHistoryColumnDefType, getStockHistoryColumns } from "./columns";
 import { useHookTable } from "../core/hooks";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 /**
  * Props for the DataTableStockHistory component.
@@ -41,8 +47,9 @@ const DataTableStockHistory: FunctionComponent<DataTableStockHistoryProps> = ({
   mainHeader,
   rightHeader,
 }) => {
+  const isMobile = useIsMobile();
   // Memoize the column definitions to avoid unnecessary re-renders.
-  const columns = useMemo(() => getStockHistoryColumns(), []);
+  const columns = useMemo(getStockHistoryColumns, []);
 
   // Initialize the table hook with data, columns, and additional configurations.
   const { table } = useHookTable<StockHistoryColumnDefType>({
@@ -51,6 +58,12 @@ const DataTableStockHistory: FunctionComponent<DataTableStockHistoryProps> = ({
     enableRowSelection: true,
     searchKey: "id",
   });
+
+  useEffect(() => {
+    if (isMobile) {
+      table.getColumn("sellerName")?.toggleVisibility(false);
+    }
+  }, [isMobile, table]);
 
   return (
     <div className="h-full w-full">
