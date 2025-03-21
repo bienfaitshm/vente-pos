@@ -1,4 +1,4 @@
-import { asc, desc, eq, getTableColumns, sql } from "drizzle-orm";
+import { asc, desc, eq, getTableColumns, inArray, SQL, sql } from "drizzle-orm";
 import { db } from "../db";
 import * as tables from "../schemas";
 import { calculateSubTotal, getAmountPercentage } from "../utils";
@@ -278,6 +278,29 @@ export async function updateStock(
     .where(eq(tables.stocks.id, id))
     .returning();
   return result[0];
+}
+
+
+export async function bulkUpdateStock(stocks: (Pick<tables.InsertStock,"quantity"> & WithID)[]) {
+  // Return early if there are no stocks to update
+  if (stocks.length === 0) return [];
+
+  // Initialize an array to hold SQL fragments and a list of stock IDs
+  const sqlChunks: SQL[] = [sql`(case`];
+  const ids: string[] = [];
+
+  // Construct SQL fragments for each stock update
+  for (const { id, quantity } of stocks) {
+    sqlChunks.push(sql`when ${tables.stocks.id} = ${id} then ${quantity}`);
+    ids.push(id);
+  }
+
+  // Close the SQL case statement
+  sqlChunks.push(sql`end)`);
+
+  // Combine all SQL fragments into a single SQL expression
+  const finalSql: SQL = sql.join(sqlChunks, sql.raw(' '));
+  return await db.update(tables.stocks).set({ quantity: finalSql }).where(inArray(tables.stocks.id, ids)).returning();
 }
 
 /**
