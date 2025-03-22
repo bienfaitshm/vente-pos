@@ -45,6 +45,7 @@ export const SaleClientPage: React.FC<SaleClientPageProps> = ({
   sellerId,
 }) => {
   const route = useRouter();
+
   const mutation = usePlaceOrder({
     onSuccess(reponse) {
       console.log(reponse);
