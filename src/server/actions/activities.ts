@@ -300,12 +300,12 @@ export const deleteCustomer = actionClient
   });
 
 
-  export const getCommisionsOfSeller = actionClient
+  export const getMonthlySellerCommissions = actionClient
   .schema(
     z.object({
       sellerId: z.string().nonempty(),
     })
   )
   .action(async ({ parsedInput: {sellerId} }) => {
-   return await queries.getCommisionsOfSeller(sellerId);
+   return await queries.getMonthlySellerCommissions(sellerId);
   });

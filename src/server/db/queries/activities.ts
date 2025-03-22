@@ -570,17 +570,22 @@ export async function replenishStock(stockData: {
 }
 
 
-export async function getCommisionsOfSeller(sellerId: string) {
+export async function getMonthlySellerCommissions(sellerId: string) {
+  const yearExtractor = sql<number>`EXTRACT(YEAR FROM ${tables.orders.createdAt})`;
+  const monthExtractor = sql<number>`EXTRACT(MONTH FROM ${tables.orders.createdAt})`;
+
   const result = await db
     .select({
-      sellerId: tables.orders.sellerId,
-      year: sql<number>`EXTRACT(YEAR FROM ${tables.orders.createdAt})`,
-      month: sql<number>`EXTRACT(MONTH FROM ${tables.orders.createdAt})`,
+      year: yearExtractor,
+      month: monthExtractor,
       totalCommission: sql<number>`sum(${tables.orders.salesCommission})`,
+      totalSales: sql<number>`sum(${tables.orders.totalAmount})`,
+      totalOrders: sql<number>`count(${tables.orders.id})`,
     })
     .from(tables.orders)
     .where(eq(tables.orders.sellerId, sellerId))
-    .groupBy(sql`year, month`)
-    .orderBy(sql`year, month`)
-  return result
+    .groupBy(yearExtractor, monthExtractor)
+    .orderBy(yearExtractor, monthExtractor);
+
+  return result;
 }

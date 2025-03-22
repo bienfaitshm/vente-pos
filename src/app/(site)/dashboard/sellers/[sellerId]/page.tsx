@@ -15,7 +15,11 @@ import {
 import React from "react";
 import { cn } from "@/lib/utils";
 import { PageProps } from "@/app/type";
-import { getSeller, getSellerActivities } from "@/server/actions";
+import {
+  getMonthlySellerCommissions,
+  getSeller,
+  getSellerActivities,
+} from "@/server/actions";
 
 const ItemContainerCardInfo: React.FC<
   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
@@ -87,10 +91,13 @@ export default async function Page({
   params,
 }: PageProps<{ sellerId: string }>) {
   const { sellerId } = await params;
-  const [seller, activities] = await Promise.all([
+  const [seller, activities, commisions] = await Promise.all([
     getSeller({ sellerId }),
     getSellerActivities({ sellerId }),
+    getMonthlySellerCommissions({ sellerId }),
   ]);
+
+  console.log({ commisions });
 
   const summury = calculateSummary(activities?.data || []);
   return (
