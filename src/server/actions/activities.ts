@@ -298,3 +298,14 @@ export const deleteCustomer = actionClient
     revalidatePath("/");
     return data;
   });
+
+
+  export const getCommisionsOfSeller = actionClient
+  .schema(
+    z.object({
+      sellerId: z.string().nonempty(),
+    })
+  )
+  .action(async ({ parsedInput: {sellerId} }) => {
+   return await queries.getCommisionsOfSeller(sellerId);
+  });
