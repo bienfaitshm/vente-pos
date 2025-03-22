@@ -1,4 +1,4 @@
-import { asc, desc, eq, getTableColumns, inArray, SQL, sql } from "drizzle-orm";
+import { asc, desc, eq ,getTableColumns, inArray, SQL, sql } from "drizzle-orm";
 import { db } from "../db";
 import * as tables from "../schemas";
 import { calculateSubTotal, getAmountPercentage } from "../utils";
@@ -567,4 +567,20 @@ export async function replenishStock(stockData: {
   });
 
   return stock;
+}
+
+
+export async function getCommisionsOfSeller(sellerId: string) {
+  const result = await db
+    .select({
+      sellerId: tables.orders.sellerId,
+      year: sql<number>`EXTRACT(YEAR FROM ${tables.orders.createdAt})`,
+      month: sql<number>`EXTRACT(MONTH FROM ${tables.orders.createdAt})`,
+      totalCommission: sql<number>`sum(${tables.orders.salesCommission})`,
+    })
+    .from(tables.orders)
+    .where(eq(tables.orders.sellerId, sellerId))
+    .groupBy(sql`year, month`)
+    .orderBy(sql`year, month`)
+  return result
 }
