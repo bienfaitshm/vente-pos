@@ -252,8 +252,6 @@ export async function getSellerActivities(sellerId: string): Promise<
     )
     .groupBy(tables.orders.id)
     .orderBy(asc(tables.orders.id));
-
-  console.log("Result....", result);
   return result;
 }
 
@@ -580,7 +578,7 @@ export async function getMonthlySellerCommissions(sellerId: string) {
       month: monthExtractor,
       totalCommission: sql<number>`sum(${tables.orders.salesCommission})`,
       totalSales: sql<number>`sum(${tables.orders.totalAmount})`,
-      totalOrders: sql<number>`count(${tables.orders.id})`,
+      totalOrders: sql<number>`cast(count(${tables.orders.id}) as int)`,
     })
     .from(tables.orders)
     .where(eq(tables.orders.sellerId, sellerId))
