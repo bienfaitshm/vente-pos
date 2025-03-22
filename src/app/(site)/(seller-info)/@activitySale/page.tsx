@@ -1,6 +1,10 @@
 import { auth } from "@/auth";
+import { MonthSalesView } from "@/components/mounth-sales-view";
 import { DataTableActivity } from "@/components/tables/activities-table";
-import { getSellerActivities } from "@/server/actions";
+import {
+  getSellerActivities,
+  getMonthlySellerCommissions,
+} from "@/server/actions";
 
 /**
  * Asynchronous React component that fetches and displays the activity data
@@ -15,12 +19,20 @@ import { getSellerActivities } from "@/server/actions";
  */
 export default async function SaleActivitySale() {
   const session = await auth();
-  const activities = await getSellerActivities({
-    sellerId: session?.user.id ?? "",
-  });
+  const [activities, mounthlySellerCommissions] = await Promise.all([
+    getSellerActivities({
+      sellerId: session?.user.id ?? "",
+    }),
+    getMonthlySellerCommissions({
+      sellerId: session?.user.id ?? "",
+    }),
+  ]);
   return (
     <div className="max-w-screen-sm lg:max-w-screen-lg m-auto">
-      <DataTableActivity data={activities?.data} />
+      <DataTableActivity
+        data={activities?.data}
+        mainHeader={<MonthSalesView data={mounthlySellerCommissions?.data} />}
+      />
     </div>
   );
 }
