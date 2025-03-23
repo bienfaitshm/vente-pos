@@ -12,6 +12,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { DataTableMonthlyCommission } from "./tables/mounth-commission-table";
 import React from "react";
 import { MonthlyCommissionChart } from "./charts/monthly-commissions-chart";
+import { Button } from "./ui/button";
+import { TrendingUp } from "lucide-react";
 
 type MonthSalesViewProps = {
   data?: {
@@ -27,7 +29,12 @@ export const MonthSalesView: React.FC<MonthSalesViewProps> = ({
 }) => {
   return (
     <Sheet>
-      <SheetTrigger>Open</SheetTrigger>
+      <SheetTrigger asChild>
+        <Button size="sm" variant="secondary">
+          <TrendingUp className="h-4 w-4" />
+          <span className="ml-2">Ventes et Commissions</span>
+        </Button>
+      </SheetTrigger>
       <SheetContent side="bottom" className="h-full">
         <div className="mx-auto max-w-screen-lg">
           <SheetHeader className="pb-5">

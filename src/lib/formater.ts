@@ -1,3 +1,15 @@
+import { format, parse } from 'date-fns';
+import { fr } from 'date-fns/locale'; // Importez les paramètres régionaux français
+
+export function getMonthNameWithDateFns(monthNumber: number): string | undefined {
+  if (monthNumber >= 1 && monthNumber <= 12) {
+    const date = parse(monthNumber.toString(), 'M', new Date()); // Crée une date à partir du numéro de mois
+    return format(date, 'MMMM', { locale: fr }); // Formate la date en utilisant les paramètres régionaux français
+  } else {
+    return undefined;
+  }
+}
+
 /**
  * Formats a given amount into a currency string based on the specified currency code and locale.
  *

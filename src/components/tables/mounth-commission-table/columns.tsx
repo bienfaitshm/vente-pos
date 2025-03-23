@@ -2,6 +2,7 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 import { formatCurrency } from "@/lib/formater";
 import { ColumnDef } from "@tanstack/react-table";
 import { TypographyP } from "@/components/ui/typography";
+import { getMonthNameWithDateFns } from "@/lib/formater";
 
 export type ColumnMonthCommissionType = {
   year: number;
@@ -18,7 +19,9 @@ export function getMonthCommisionColumns(): ColumnDef<ColumnMonthCommissionType>
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Mois" />
       ),
-      cell: ({ row }) => <TypographyP>{row.original.month}</TypographyP>,
+      cell: ({ row }) => (
+        <TypographyP>{getMonthNameWithDateFns(row.original.month)}</TypographyP>
+      ),
       enableSorting: false,
       enableHiding: false,
     },
