@@ -1,3 +1,30 @@
+# Solution de Gestion des Ventes Mobiles
+
+Ce projet offre une solution complète pour la gestion des ventes sur le terrain, permettant une flexibilité et une efficacité accrues pour les entreprises opérant à travers divers points de vente.
+
+## Fonctionnalités Clés
+
+* **Vente Mobile et Facturation Simplifiée :**
+    * Vente sur le terrain : Les vendeurs peuvent réaliser des ventes directement depuis leurs emplacements.
+    * Facturation instantanée : Génération de factures immédiatement après une vente.
+    * Téléchargement de factures : Les clients peuvent télécharger leurs factures au format numérique.
+* **Suivi et Analyse des Performances :**
+    * Évolution des ventes : Suivi en temps réel des tendances de vente.
+    * Performance des vendeurs : Suivi des performances individuelles des vendeurs.
+    * Rapports de vente quotidiens : Génération de rapports détaillés sur les activités de vente quotidiennes.
+
+## Avantages
+
+* Amélioration de l'efficacité des ventes sur le terrain.
+* Accélération du processus de facturation.
+* Suivi précis des performances des ventes et des vendeurs.
+* Prise de décision éclairée grâce à des rapports détaillés.
+
+## Conclusion
+
+Ce projet offre une solution robuste et conviviale pour la gestion des ventes mobiles, la facturation et le suivi des performances, permettant aux entreprises d'optimiser leurs opérations de vente et d'améliorer leur rentabilité.
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
