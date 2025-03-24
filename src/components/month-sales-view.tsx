@@ -11,7 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { DataTableMonthlyCommission } from "./tables/mounth-commission-table";
 import React from "react";
-import { MonthlyCommissionChart } from "./charts/monthly-commissions-chart";
+import { MonthlyCommissionChart, MonthlyCommissionChartLine } from "./charts/monthly-commissions-chart";
 import { Button } from "./ui/button";
 import { TrendingUp } from "lucide-react";
 
@@ -51,7 +51,7 @@ export const MonthSalesView: React.FC<MonthSalesViewProps> = ({
         <ScrollArea className="h-full">
           <div className="mx-auto max-w-screen-lg mt-5 mb-36">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <MonthlyCommissionChart data={data} />
+              <MonthlyCommissionChartLine data={data} />
               <MonthlyCommissionChart data={data} />
             </div>
             <div>

@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { MonthSalesView } from "@/components/mounth-sales-view";
+import { MonthSalesView } from "@/components/month-sales-view";
 import { DataTableActivity } from "@/components/tables/activities-table";
 import {
   getSellerActivities,
