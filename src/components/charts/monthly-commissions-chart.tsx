@@ -1,5 +1,5 @@
 import { TrendingUp } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Bar, BarChart, Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { getMonthNameWithDateFns } from "@/lib/formater"
 
 import {
@@ -44,11 +44,7 @@ type MonthlyCommissionChartProps = {
 export const MonthlyCommissionChart: React.FC<
   MonthlyCommissionChartProps
 > = ({ data = [] }) => {
-  const chartData = React.useMemo(() => data.map(d => ({
-    month: getMonthNameWithDateFns(d.month),
-    totalCommission: d.totalCommission,
-    totalSales: d.totalSales
-  })), [data])
+  const chartData = useChartData(data);
 
   return (
     <div>
@@ -89,3 +85,84 @@ export const MonthlyCommissionChart: React.FC<
     </div>
   );
 };
+
+
+
+
+
+
+export const MonthlyCommissionChartLine: React.FC<MonthlyCommissionChartProps> = ({ data }) => {
+  const chartData = useChartData(data)
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Area Chart - Stacked</CardTitle>
+        <CardDescription>
+          Showing total visitors for the last 6 months
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer config={chartConfig}>
+          <AreaChart
+            accessibilityLayer
+            data={chartData}
+            margin={{
+              left: 12,
+              right: 12,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={(value) => value.slice(0, 3)}
+            />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent indicator="dot" />}
+            />
+            <Area
+              dataKey="mobile"
+              type="natural"
+              fill="var(--color-mobile)"
+              fillOpacity={0.4}
+              stroke="var(--color-mobile)"
+              stackId="a"
+            />
+            <Area
+              dataKey="desktop"
+              type="natural"
+              fill="var(--color-desktop)"
+              fillOpacity={0.4}
+              stroke="var(--color-desktop)"
+              stackId="a"
+            />
+          </AreaChart>
+        </ChartContainer>
+      </CardContent>
+      <CardFooter>
+        <div className="flex w-full items-start gap-2 text-sm">
+          <div className="grid gap-2">
+            <div className="flex items-center gap-2 font-medium leading-none">
+              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+            </div>
+            <div className="flex items-center gap-2 leading-none text-muted-foreground">
+              January - June 2024
+            </div>
+          </div>
+        </div>
+      </CardFooter>
+    </Card>
+  )
+}
+
+
+function useChartData(data: MonthType[] = []) {
+  return React.useMemo(() => data.map(d => ({
+    month: getMonthNameWithDateFns(d.month),
+    totalCommission: d.totalCommission,
+    totalSales: d.totalSales
+  })), [data])
+}
