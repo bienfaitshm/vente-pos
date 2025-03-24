@@ -1,5 +1,6 @@
 import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { getMonthNameWithDateFns } from "@/lib/formater"
 
 import {
   Card,
@@ -15,34 +16,40 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import React from "react";
 
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-];
+type MonthType = {
+  year: number;
+  month: number;
+  totalCommission: number;
+  totalSales: number;
+  totalOrders: number;
+}
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  totalCommission: {
+    label: "Commission",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
+  totalSales: {
+    label: "Vente",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
 
 type MonthlyCommissionChartProps = {
-  data: unknown[];
+  data?: MonthType[];
 };
 
 export const MonthlyCommissionChart: React.FC<
   MonthlyCommissionChartProps
-> = ({}) => {
+> = ({ data = [] }) => {
+  const chartData = React.useMemo(() => data.map(d => ({
+    month: getMonthNameWithDateFns(d.month),
+    totalCommission: d.totalCommission,
+    totalSales: d.totalSales
+  })), [data])
+
   return (
     <div>
       <Card>
@@ -65,8 +72,8 @@ export const MonthlyCommissionChart: React.FC<
                 cursor={false}
                 content={<ChartTooltipContent indicator="dashed" />}
               />
-              <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-              <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+              <Bar dataKey="totalCommission" fill="var(--color-totalCommission)" radius={4} />
+              <Bar dataKey="totalSales" fill="var(--color-totalSales)" radius={4} />
             </BarChart>
           </ChartContainer>
         </CardContent>
