@@ -124,19 +124,19 @@ export const MonthlyCommissionChartLine: React.FC<MonthlyCommissionChartProps> =
               content={<ChartTooltipContent indicator="dot" />}
             />
             <Area
-              dataKey="mobile"
+              dataKey="totalCommission"
               type="natural"
-              fill="var(--color-mobile)"
+              fill="var(--color-totalCommission)"
               fillOpacity={0.4}
-              stroke="var(--color-mobile)"
+              stroke="var(--color-totalCommission)"
               stackId="a"
             />
             <Area
-              dataKey="desktop"
+              dataKey="totalSales"
               type="natural"
-              fill="var(--color-desktop)"
+              fill="var(--color-totalSales)"
               fillOpacity={0.4}
-              stroke="var(--color-desktop)"
+              stroke="var(--color-totalSales)"
               stackId="a"
             />
           </AreaChart>
