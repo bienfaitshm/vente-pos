@@ -21,7 +21,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20-nightly
+          node-version: 20.8.1
           check-latest: false
           # cache: "pnpm"
 
