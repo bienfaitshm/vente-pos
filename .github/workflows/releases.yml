@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: 20.8.1
           check-latest: false
-          cache: "pnpm"
+          # cache: "pnpm"
 
       - name: Install pnpm
         run: npm install -g pnpm
