@@ -14,17 +14,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        # with:
-        #   fetch-depth: 0
-        #   persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 16-nightly
           check-latest: false
           cache: "pnpm"
-      - run: npm install -g pnpm
+      - name: Install Dependencies
+        run: npm install -g pnpm
       - run: pnpm ci
       - run: pnpm run lint
+      - name: Debug PATH
+        run: echo $PATH
+
       - name: Get Release Token
         id: get_workflow_token
         uses: peter-murray/workflow-application-token-action@v3
