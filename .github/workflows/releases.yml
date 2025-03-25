@@ -13,14 +13,20 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 16-nightly
           check-latest: false
-          cache: "pnpm"
+          # cache: "pnpm"
+
       - name: Install Dependencies
         run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
       - run: pnpm ci
       - run: pnpm run lint
       - name: Debug PATH
