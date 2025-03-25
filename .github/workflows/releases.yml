@@ -32,12 +32,12 @@ jobs:
       - name: Debug PATH
         run: echo $PATH
 
-      - name: Get Release Token
-        id: get_workflow_token
-        uses: peter-murray/workflow-application-token-action@v3
-        with:
-          application_id: ${{ secrets.RELEASE_APP_ID  }}
-          application_private_key: ${{ secrets.RELEASE_APP_CERT}}
-      - run: pnpm dlx semantic-release
-        env:
-          GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+      # - name: Get Release Token
+      #   id: get_workflow_token
+      #   uses: peter-murray/workflow-application-token-action@v3
+      #   with:
+      #     application_id: ${{ secrets.RELEASE_APP_ID  }}
+      #     application_private_key: ${{ secrets.RELEASE_APP_CERT}}
+      # - run: pnpm dlx semantic-release
+      #   env:
+      #     GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
