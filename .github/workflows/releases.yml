@@ -14,13 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        # with:
+        #   fetch-depth: 0
+        #   persist-credentials: false
+      - uses: actions/setup-node@v4
         with:
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: actions/setup-node@latest
-        with:
-          node-version: "22"
-          check-latest: true
+          node-version: "lastest"
+          check-latest: false
           cache: "npm"
       - run: npm ci
       - run: npm run lint
