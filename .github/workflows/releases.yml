@@ -27,7 +27,7 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-      - run: pnpm ci
+      - run: pnpm install --frozen-lockfile
       - run: pnpm run lint
       - name: Debug PATH
         run: echo $PATH
