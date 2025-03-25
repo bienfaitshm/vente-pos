@@ -1,7 +1,9 @@
 name: Release
 
 on:
-  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
 
 jobs:
   release:
@@ -20,7 +22,7 @@ jobs:
           node-version: "22"
           cache: "npm"
       - run: npm ci
-      - run: npm run build
+      - run: npm run lint
       - name: Get Release Token
         id: get_workflow_token
         uses: peter-murray/workflow-application-token-action@v3
