@@ -19,7 +19,7 @@ jobs:
         #   persist-credentials: false
       - uses: actions/setup-node@v4
         with:
-          node-version: "lastest"
+          node-version: 16-nightly
           check-latest: false
           cache: "npm"
       - run: npm ci
