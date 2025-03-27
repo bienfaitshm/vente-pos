@@ -10,6 +10,7 @@ export type StockHistoryColumnDefType = {
   quantity: number;
   posName?: string | null;
   sellerName?: string | null;
+  productName?: string | null;
   id: string;
   createdAt: Date;
   stockId: string;
@@ -19,7 +20,7 @@ export type StockHistoryColumnDefType = {
 export function getStockHistoryColumns(): ColumnDef<StockHistoryColumnDefType>[] {
   return [
     {
-      accessorKey: "id",
+      accessorKey: "productName",
       enableHiding: false,
       enableResizing: true,
       enableSorting: false,
@@ -33,7 +34,7 @@ export function getStockHistoryColumns(): ColumnDef<StockHistoryColumnDefType>[]
       cell: ({ row }): React.ReactNode => {
         return (
           <TypographySmall className="text-xs md:text-sm">
-            {row.original.id}
+            {row.original.productName}
           </TypographySmall>
         );
       },
