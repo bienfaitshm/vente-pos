@@ -456,7 +456,7 @@ export async function deleteStockHistory(
  * @returns {Promise<tables.SelectStockHistory[]>} - A promise that resolves to the list of stock histories.
  */
 export async function getStockHistories(): Promise<
-  (tables.SelectStockHistory & {posName: string | null , sellerName:string | null})[]
+  (tables.SelectStockHistory & {posName: string | null , sellerName:string | null, poductName: string|null})[]
 > {
   return await db
     .select({
