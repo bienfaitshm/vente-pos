@@ -1,29 +1,64 @@
-# Solution de Gestion des Ventes Mobiles
+# Mobile Sales Management Solution
 
-Ce projet offre une solution complète pour la gestion des ventes sur le terrain, permettant une flexibilité et une efficacité accrues pour les entreprises opérant à travers divers points de vente.
+This project provides a comprehensive solution for managing field sales, offering increased flexibility and efficiency for businesses operating across various points of sale.
 
-Ce projet offre une solution robuste et conviviale pour la gestion des ventes mobiles, la facturation et le suivi des performances, permettant aux entreprises d'optimiser leurs opérations de vente et d'améliorer leur rentabilité.
+This project delivers a robust and user-friendly solution for mobile sales management, invoicing, and performance tracking, enabling businesses to optimize their sales operations and improve profitability.
 
-## Fonctionnalités Clés
+## Key Features
 
-* **Vente Mobile et Facturation Simplifiée :**
-    * Vente sur le terrain : Les vendeurs peuvent réaliser des ventes directement depuis leurs emplacements.
-    * Facturation instantanée : Génération de factures immédiatement après une vente.
-    * Téléchargement de factures : Les clients peuvent télécharger leurs factures au format numérique.
-* **Suivi et Analyse des Performances :**
-    * Évolution des ventes : Suivi en temps réel des tendances de vente.
-    * Performance des vendeurs : Suivi des performances individuelles des vendeurs.
-    * Rapports de vente quotidiens : Génération de rapports détaillés sur les activités de vente quotidiennes.
+### Simplified Mobile Sales and Invoicing
+- **Field sales**: Sales representatives can make sales directly from their locations.
+- **Instant invoicing**: Generate invoices immediately after a sale.
+- **Invoice downloads**: Customers can download their invoices in digital format.
 
-## Avantages
+### Performance Tracking and Analysis
+- **Sales trends**: Real-time tracking of sales trends.
+- **Sales representative performance**: Monitor individual performance of sales representatives.
+- **Daily sales reports**: Generate detailed reports on daily sales activities.
 
-* Amélioration de l'efficacité des ventes sur le terrain.
-* Accélération du processus de facturation.
-* Suivi précis des performances des ventes et des vendeurs.
-* Prise de décision éclairée grâce à des rapports détaillés.
+## Benefits
 
+- Improved efficiency of field sales operations.
+- Accelerated invoicing process.
+- Accurate tracking of sales and sales representatives' performance.
+- Informed decision-making through detailed reports.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+## Documentation for Environment Variables
+
+This `.env` file contains configuration settings for the application. Below is a detailed explanation of each variable:
+
+### Authentication
+- **AUTH_SECRET**: Secret key used for authentication purposes. Keep this value secure and do not expose it publicly.
+- **AUTH_RESEND_KEY**: Key used for resending authentication-related requests.
+
+### Resend API
+- **RESEND_API_KEY**: (Optional) API key for accessing the Resend service. Ensure this key is kept confidential.
+
+### PostgreSQL Database Configuration
+- **POSTGRES_URL**: (Required) Connection string for the PostgreSQL database with SSL enabled (pooled connection).
+
+### [Optional]
+- **POSTGRES_HOST**: Hostname of the PostgreSQL database server (pooled connection).
+- **POSTGRES_URL_NON_POOLING**: Connection string for the PostgreSQL database without pooling, with SSL enabled.
+- **POSTGRES_DATABASE**: Name of the PostgreSQL database.
+- **POSTGRES_PASSWORD**: Password for the PostgreSQL database user. Keep this value secure.
+- **PGUSER**: Username for the PostgreSQL database.
+- **POSTGRES_URL_NO_SSL**: Connection string for the PostgreSQL database without SSL.
+- **PGHOST_UNPOOLED**: Hostname of the PostgreSQL database server (non-pooled connection).
+- **PGDATABASE**: Name of the PostgreSQL database (alternative variable).
+- **POSTGRES_PRISMA_URL**: Connection string for the PostgreSQL database optimized for Prisma, with pooling and additional parameters.
+- **PGPASSWORD**: Password for the PostgreSQL database user (alternative variable).
+- **DATABASE_URL**: General connection string for the PostgreSQL database with SSL enabled.
+- **POSTGRES_USER**: Username for the PostgreSQL database (alternative variable).
+- **PGHOST**: Hostname of the PostgreSQL database server (pooled connection, alternative variable).
+- **DATABASE_URL_UNPOOLED**: Connection string for the PostgreSQL database without pooling, with SSL enabled.
+
+### Notes
+- Ensure all sensitive information such as passwords, API keys, and secrets are stored securely and not exposed in version control systems.
+- Use environment variable management tools or services to handle these values securely in production environments.
+- The connection strings include parameters like `sslmode=require` to enforce secure connections to the database.
 
 ## Getting Started
 
