@@ -22,7 +22,7 @@ jobs:
           # cache: "npm"
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v4
