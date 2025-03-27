@@ -456,19 +456,21 @@ export async function deleteStockHistory(
  * @returns {Promise<tables.SelectStockHistory[]>} - A promise that resolves to the list of stock histories.
  */
 export async function getStockHistories(): Promise<
-  (tables.SelectStockHistory & {posName: string | null , sellerName:string | null, poductName: string|null})[]
+  (tables.SelectStockHistory & {posName: string | null , sellerName:string | null, productName: string|null})[]
 > {
   return await db
     .select({
       ...getTableColumns(tables.stockHistories),
       posName: tables.pointOfSales.name,
       sellerName : tables.users.name,
-      poductName: tables.products.name,
+      productName: tables.products.name,
+      productId:  tables.stocks.productId
     })
     .from(tables.stockHistories)
-    .leftJoin(tables.products, eq(tables.products.id, tables.stocks.productId))
+    .leftJoin(tables.stocks, eq(tables.stocks.id, tables.stockHistories.stockId))
     .leftJoin(tables.users, eq(tables.users.id, tables.stockHistories.sellerId))
     .leftJoin(tables.pointOfSales, eq(tables.pointOfSales.id, tables.stockHistories.posId))
+    .leftJoin(tables.products, eq(tables.products.id, tables.stocks.productId))
     .orderBy(desc(tables.stockHistories.createdAt));
 }
 
@@ -479,17 +481,22 @@ export async function getStockHistories(): Promise<
  */
 export async function getStockHistoriesOfSeller(
   sellerId: string
-): Promise<(tables.SelectStockHistory & {posName: string | null , sellerName:string | null})[]> {
-  return await db.select({
-    ...getTableColumns(tables.stockHistories),
-    posName: tables.pointOfSales.name,
-    sellerName : tables.users.name,
-  })
-  .from(tables.stockHistories)
-  .leftJoin(tables.users, eq(tables.users.id, tables.stockHistories.sellerId))
-  .leftJoin(tables.pointOfSales, eq(tables.pointOfSales.id, tables.stockHistories.posId))
-  .where(eq(tables.stockHistories.sellerId, sellerId))
-  .orderBy(desc(tables.stockHistories.createdAt));
+): Promise<(tables.SelectStockHistory & {posName: string | null , sellerName:string | null, productName: string|null})[]> {
+  return await db
+    .select({
+      ...getTableColumns(tables.stockHistories),
+      posName: tables.pointOfSales.name,
+      sellerName : tables.users.name,
+      productName: tables.products.name,
+      productId:  tables.products.id
+    })
+    .from(tables.stockHistories)
+    .leftJoin(tables.stocks, eq(tables.stocks.id, tables.stockHistories.stockId))
+    .leftJoin(tables.users, eq(tables.users.id, tables.stockHistories.sellerId))
+    .leftJoin(tables.pointOfSales, eq(tables.pointOfSales.id, tables.stockHistories.posId))
+    .leftJoin(tables.products, eq(tables.products.id, tables.stocks.productId))
+    .where(eq(tables.stockHistories.sellerId, sellerId))
+    .orderBy(desc(tables.stockHistories.createdAt))
 }
 
 /**
