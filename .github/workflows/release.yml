@@ -1,37 +1,37 @@
-# name: Release
+name: Release
 
-# on:
-#   push:
-#     branches:
-#       - main # Or your main branch name (e.g., master)
+on:
+  push:
+    branches:
+      - main # Or your main branch name (e.g., master)
 
-# jobs:
-#   release:
-#     name: Release
-#     runs-on: ubuntu-latest
-#     permissions:
-#       contents: write
-#       issues: write
-#       pull-requests: write
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v4
-#         with:
-#           fetch-depth: 0 # Get all history for semantic-release to work correctly
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Get all history for semantic-release to work correctly
 
-#       - name: Set up Node.js
-#         uses: actions/setup-node@v4
-#         with:
-#           node-version: "lts/*" # Or your desired Node.js version
-#           # cache: "npm"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*" # Or your desired Node.js version
+          # cache: "npm"
 
-#       - name: Install dependencies
-#         run: npm install --legacy-peer-deps
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
 
-#       - name: Semantic Release
-#         uses: cycjimmy/semantic-release-action@v4
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#           # You can specify other options here if needed, e.g.:
-#           # npm-token: ${{ secrets.NPM_TOKEN }} # If you publish to npm
-#           # dry-run: true # For testing without actually publishing
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # You can specify other options here if needed, e.g.:
+          # npm-token: ${{ secrets.NPM_TOKEN }} # If you publish to npm
+          # dry-run: true # For testing without actually publishing
