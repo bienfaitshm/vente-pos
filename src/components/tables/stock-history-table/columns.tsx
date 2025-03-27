@@ -28,7 +28,7 @@ export function getStockHistoryColumns(): ColumnDef<StockHistoryColumnDefType>[]
         <DataTableColumnHeader
           className="truncate"
           column={column}
-          title="ID"
+          title="Produit"
         />
       ),
       cell: ({ row }): React.ReactNode => {
