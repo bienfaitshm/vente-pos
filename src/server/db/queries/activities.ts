@@ -463,8 +463,10 @@ export async function getStockHistories(): Promise<
       ...getTableColumns(tables.stockHistories),
       posName: tables.pointOfSales.name,
       sellerName : tables.users.name,
+      poductName: tables.products.name,
     })
     .from(tables.stockHistories)
+    .leftJoin(tables.products, eq(tables.products.id, tables.stocks.productId))
     .leftJoin(tables.users, eq(tables.users.id, tables.stockHistories.sellerId))
     .leftJoin(tables.pointOfSales, eq(tables.pointOfSales.id, tables.stockHistories.posId))
     .orderBy(desc(tables.stockHistories.createdAt));
