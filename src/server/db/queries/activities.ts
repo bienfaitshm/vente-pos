@@ -457,6 +457,7 @@ export async function deleteStockHistory(
  */
 export async function getStockHistories(): Promise<
   (tables.SelectStockHistory & {posName: string | null , sellerName:string | null, productName: string|null})[]
+
 > {
   return await db
     .select({
@@ -468,6 +469,7 @@ export async function getStockHistories(): Promise<
     })
     .from(tables.stockHistories)
     .leftJoin(tables.stocks, eq(tables.stocks.id, tables.stockHistories.stockId))
+
     .leftJoin(tables.users, eq(tables.users.id, tables.stockHistories.sellerId))
     .leftJoin(tables.pointOfSales, eq(tables.pointOfSales.id, tables.stockHistories.posId))
     .leftJoin(tables.products, eq(tables.products.id, tables.stocks.productId))
