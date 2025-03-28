@@ -20,7 +20,7 @@ export const ProductBagCard: React.FC<{ id: string, productName: string, unitPri
         }
     }
     return (
-        <div className="border p-4 rounded-xl shadow-md">
+        <div className="border p-4 rounded-xl shadow-sm">
             <TypographyH4>{productName}</TypographyH4>
             <div>
                 <TypographyH2>{formatCurrency(unitPrice)}</TypographyH2>
