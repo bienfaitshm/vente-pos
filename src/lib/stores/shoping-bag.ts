@@ -19,7 +19,7 @@ interface ShopingBagStore {
 /**
  * A Zustand store for managing a shopping bag.
  */
-export const shopingBagStore = create<ShopingBagStore>((set, get) => ({
+export const useShopingBagStore = create<ShopingBagStore>((set, get) => ({
     /**
      * The list of items currently in the shopping bag.
      */
