@@ -1,1 +1,0 @@
-ALTER TYPE "public"."role" RENAME TO "user_role";

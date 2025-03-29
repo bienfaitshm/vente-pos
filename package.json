@@ -7,11 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "release": "semantic-release",
+    "release": "pnpm semantic-release",
     "generate": "pnpm drizzle-kit generate",
     "migrate": "pnpm drizzle-kit migrate",
     "pull": "pnpm drizzle-kit pull",
-    "push": "pnpm drizzle-kit push"
+    "push": "pnpm drizzle-kit push",
+    "introspect":"pnpm drizzle-kit introspect"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.7.4",

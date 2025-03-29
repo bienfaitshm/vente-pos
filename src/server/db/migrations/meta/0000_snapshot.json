@@ -1,5 +1,5 @@
 {
-  "id": "6486630d-1c83-4667-b860-94704d1ef4c8",
+  "id": "11ae6f04-2474-4246-a64f-d6fc56d77da0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -264,6 +264,12 @@
           "name": "email",
           "type": "varchar(255)",
           "primaryKey": false,
+          "notNull": false
+        },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "varchar(255)",
+          "primaryKey": false,
           "notNull": true
         },
         "password": {
@@ -286,11 +292,10 @@
         },
         "role": {
           "name": "role",
-          "type": "role",
+          "type": "user_role",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'ADMIN'"
+          "notNull": true
         }
       },
       "indexes": {},
@@ -309,6 +314,13 @@
           "nullsNotDistinct": false,
           "columns": [
             "email"
+          ]
+        },
+        "users_phone_number_unique": {
+          "name": "users_phone_number_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "phone_number"
           ]
         }
       },
@@ -453,10 +465,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "order_details_order_id_customers_id_fk": {
-          "name": "order_details_order_id_customers_id_fk",
+        "order_details_order_id_orders_id_fk": {
+          "name": "order_details_order_id_orders_id_fk",
           "tableFrom": "order_details",
-          "tableTo": "customers",
+          "tableTo": "orders",
           "columnsFrom": [
             "order_id"
           ],
@@ -513,7 +525,7 @@
           "name": "customer_id",
           "type": "varchar(15)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "seller_id": {
           "name": "seller_id",
@@ -535,11 +547,16 @@
         },
         "status": {
           "name": "status",
-          "type": "status",
+          "type": "order_status",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'PENDING'"
+          "notNull": true
+        },
+        "order_number": {
+          "name": "order_number",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
@@ -626,11 +643,10 @@
         },
         "status": {
           "name": "status",
-          "type": "status",
+          "type": "pos_status",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'OPEN'"
+          "notNull": true
         }
       },
       "indexes": {},
@@ -672,11 +688,10 @@
         },
         "action": {
           "name": "action",
-          "type": "action",
+          "type": "stock_action",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'ADD'"
+          "notNull": true
         },
         "stock_id": {
           "name": "stock_id",
@@ -869,6 +884,12 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -932,6 +953,12 @@
           "primaryKey": false,
           "notNull": true,
           "default": 10
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -958,16 +985,26 @@
     }
   },
   "enums": {
-    "public.role": {
-      "name": "role",
+    "public.user_role": {
+      "name": "user_role",
       "schema": "public",
       "values": [
         "ADMIN",
         "SELLER"
       ]
     },
-    "public.status": {
-      "name": "status",
+    "public.order_status": {
+      "name": "order_status",
+      "schema": "public",
+      "values": [
+        "PENDING",
+        "PROCESSING",
+        "SHIPPED",
+        "COMPLETED"
+      ]
+    },
+    "public.pos_status": {
+      "name": "pos_status",
       "schema": "public",
       "values": [
         "OPEN",
@@ -975,8 +1012,8 @@
         "RENOVATION"
       ]
     },
-    "public.action": {
-      "name": "action",
+    "public.stock_action": {
+      "name": "stock_action",
       "schema": "public",
       "values": [
         "ADD",

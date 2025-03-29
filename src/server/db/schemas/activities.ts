@@ -5,6 +5,7 @@ import {
   varchar,
   doublePrecision,
   pgEnum,
+  serial,
 } from "drizzle-orm/pg-core";
 // import { relations } from "drizzle-orm";
 import { commonFieldTable } from "./base";
@@ -46,6 +47,7 @@ export const orders = pgTable("orders", {
   totalAmount: doublePrecision("total_amount").notNull(),
   salesCommission: doublePrecision("sales_commission").notNull(),
   status: OrderStatusEnum().notNull(),
+  orderNumber: serial("order_number").notNull(),
 });
 
 export type InsertOrders = typeof orders.$inferInsert;
