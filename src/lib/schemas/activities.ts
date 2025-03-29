@@ -86,7 +86,7 @@ export const OrderSchemas = z.object({
    *
    * This field is validated using the `IDSchemas` schema.
    */
-  customerId: IDSchemas,
+  customerId: IDSchemas.optional(),
 
   /**
    * An array of order details.

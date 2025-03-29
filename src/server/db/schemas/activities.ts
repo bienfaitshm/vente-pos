@@ -39,8 +39,7 @@ export type SelectCustomer = typeof customers.$inferSelect;
 export const orders = pgTable("orders", {
   ...commonFieldTable,
   customerId: varchar("customer_id", { length: 15 })
-    .references(() => customers.id)
-    .notNull(),
+    .references(() => customers.id),
   sellerId: varchar("seller_id", { length: 15 }).references(() => users.id, {
     onDelete: "set null",
   }),
