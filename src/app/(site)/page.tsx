@@ -20,9 +20,9 @@ export default async function Page() {
                 ))
             }
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {products?.data?.map(product => (
-                <ProductBagCard key={product.id} id={product.id} productName={product.name} unitPrice={product.unitPrice} />
+                <ProductBagCard key={product.id} id={product.id} productName={product.name} unitPrice={product.unitPrice} categoryName={product.categoryName ?? undefined} />
             ))}
         </div>
     </div>)
