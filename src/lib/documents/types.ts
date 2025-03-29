@@ -18,6 +18,7 @@ export interface InvoiceDocument {
     totalAmount: number | string;
     subTotalAmount: number | string;
     taxeAmount: number | string;
+    sellerName: string;
     customer: InvoiceCustomer;
     items: InvoiceItemDetail[];
 }

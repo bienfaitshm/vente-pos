@@ -42,8 +42,10 @@ export async function getOrder(
     .select({
       ...getTableColumns(tables.customers),
       ...getTableColumns(tables.orders),
+      sellerName: tables.users.name,
     })
     .from(tables.orders)
+    .innerJoin(tables.users, eq(tables.users.id, tables.orders.sellerId))
     .leftJoin(tables.customers, eq(tables.customers.id, tables.orders.customerId))
     .where(eq(tables.orders.id, orderId));
   return result[0]

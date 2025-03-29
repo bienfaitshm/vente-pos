@@ -37,6 +37,7 @@ export const generateInvoice = actionClient
 
     // Prepare invoice data
     const invoiceData = {
+      sellerName: order.sellerName || "Unknown Seller",
       invoiceNumber: order.id || "No number number Provided",
       invoiceDate: format(order.createdAt||new Date(), "dd-MM-yyyy"),
       totalAmount: formatCurrency(order.totalAmount || 0),
