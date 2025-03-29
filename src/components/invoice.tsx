@@ -13,6 +13,7 @@ import { format } from "date-fns";
 
 interface InvoiceProps {
   order: {
+    sellerName: string;
     orderNumber: string;
     totalAmount?: number;
     taxeAmount?: number;
@@ -49,6 +50,7 @@ interface InvoiceProps {
  * @param {number} props.details[].quantity - The quantity of the product ordered.
  * @param {Object} props.order - The order information.
  * @param {string} props.order.orderNumber - The unique identifier for the order.
+ * @param {string} props.order.sellerName - The name of seller.
  * @param {Date} props.order.date - The date of the order.
  * @param {number} [props.order.subTotalAmount] - The subtotal amount of the order.
  * @param {number} [props.order.taxeAmount] - The tax amount applied to the order.
@@ -116,6 +118,7 @@ const Invoice: React.FC<InvoiceProps> = ({ customer, details, order }) => {
           >
             https://vente-pos.vercel.app
           </a>
+          <p className="text-xs md:text-sm">Vendeur: {order.sellerName}</p>
         </div>
       </div>
 

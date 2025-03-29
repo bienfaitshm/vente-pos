@@ -34,28 +34,47 @@ import { ButtonInvoice } from "./button-invoice";
 export default async function Page({ params }: PageProps<{ orderId: string }>) {
   const { orderId } = await params;
   const order = await getOrderWithDetails({ orderId });
+
+  if (!order?.data) {
+    return (
+      <div className="max-w-screen-lg mx-auto flex items-center justify-center h-screen">
+        <p className="text-muted-foreground">Order details not found.</p>
+      </div>
+    );
+  }
+
+  const {
+    sellerName,
+    id: orderNumber,
+    totalAmount,
+    createdAt,
+    name: customerName,
+    address: customerAddress,
+    phoneNumber: customerPhone,
+    email: customerEmail,
+    orderDetails,
+  } = order.data;
+
   return (
     <div className="max-w-screen-lg mx-auto space-y-5">
-      {/*  */}
       <ButtonInvoice orderId={orderId} />
       <div className="lg:p-8 bg-muted-foreground/10 flex items-center justify-center">
-        {order?.data && (
-          <Invoice
-            details={order?.data?.orderDetails || []}
-            order={{
-              orderNumber: getDefaultStringValue(order?.data?.id),
-              totalAmount: order.data.totalAmount,
-              subTotalAmount: order.data.totalAmount,
-              date: order.data.createdAt || new Date(),
-            }}
-            customer={{
-              name: getDefaultStringValue(order.data.name),
-              address: getDefaultStringValue(order.data.address),
-              phoneNumber: getDefaultStringValue(order.data.phoneNumber),
-              email: getDefaultStringValue(order.data.email),
-            }}
-          />
-        )}
+        <Invoice
+          details={orderDetails || []}
+          order={{
+            sellerName: getDefaultStringValue(sellerName, ""),
+            orderNumber: getDefaultStringValue(orderNumber, ""),
+            totalAmount,
+            subTotalAmount: totalAmount,
+            date: createdAt || new Date(),
+          }}
+          customer={{
+            name: getDefaultStringValue(customerName, ""),
+            address: getDefaultStringValue(customerAddress, ""),
+            phoneNumber: getDefaultStringValue(customerPhone, ""),
+            email: getDefaultStringValue(customerEmail, ""),
+          }}
+        />
       </div>
     </div>
   );
